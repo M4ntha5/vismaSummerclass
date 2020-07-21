@@ -1,26 +1,27 @@
 ﻿using AnagramSolver.Contracts.Interfaces;
+using AnagramSolver.Contracts.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AnagramSolver.BusinessLogic.Repositories
+namespace AnagramSolver.BusinessLogic.Services
 {
-    public class AnagramRepository : IAnagramSolver
+    public class AnagramSolver : IAnagramSolver
     {
-        public IFileRepository FileRepository { get; set; }
+        public IWordRepository FileRepository { get; set; }
 
         public IList<string> GetAnagrams(string inputWords)
         {        
             var data = FileRepository.ReadDataFromFile();
             var sortedInput = String.Concat(inputWords.OrderBy(x => x));
-
+            
             if (data.ContainsKey(sortedInput))
             {
                 var results = new List<string>();
 
                 data[sortedInput].ForEach(x => results.Add(x.Word));
-                //removes user input as result
+                //removes user input from results
                 results.Remove(inputWords);
                 return results;
             }
