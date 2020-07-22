@@ -1,13 +1,10 @@
 ﻿using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace AnagramSolver.BusinessLogic.Repositories
 {
@@ -25,14 +22,15 @@ namespace AnagramSolver.BusinessLogic.Repositories
             foreach (string line in lines)
             {
                 var lineParts = line.Split('\t');
-                //if same line found skip to the next one
-                if (lineParts[0] == previousWord)
-                    continue;
 
                 string word = lineParts[0].ToLower();
                 string wordCase = lineParts[1].ToLower();
 
-                //sortingh string chars alphabetical order
+                //if same line found skip to the next one
+                if (word == previousWord)
+                    continue;
+
+                //sorting string chars alphabetical order
                 var sortedWord = String.Concat(word.OrderBy(x => x));
                 sortedWord = sortedWord.ToLower();
 
@@ -60,30 +58,6 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 previousWord = word;
             }
             return data;
-        }
-
-        public void ReadSettingsFile(string filePath = @"../../../appsettings.json")
-        {
-            if (!File.Exists(filePath))
-                throw new Exception($"Settings file '{filePath}' does not exist!");
-
-            var builder = new ConfigurationBuilder()
-            .SetBasePath(Path.Combine(
-                Path.GetDirectoryName(Environment.CurrentDirectory), @"../../../AnagramSolver.Console"))
-            .AddJsonFile("appsettings.json");
-
-
-            int.TryParse(builder.Build().GetSection("AnagramsToGenerate").Value, out int anagramsCount);
-            int.TryParse(builder.Build().GetSection("MinInputLength").Value, out int minLength);
-            var dataFile = builder.Build().GetSection("DataFileName").Value;
-
-            if (anagramsCount > 10 || anagramsCount < 1)
-                throw new Exception("Generated anagrams count must be between 1 and 10");
-
-            Settings.AnagramsToGenerate = anagramsCount;
-            Settings.MinInputLength = minLength;
-            Settings.DataFileName = dataFile;
-
         }
     }
 }
