@@ -1,5 +1,6 @@
 ﻿using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
+using AnagramSolver.Contracts.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +57,7 @@ namespace AnagramSolver.BusinessLogic.Services
             }
 
             singleWordResult.AddRange(multiWordResult);
-            return singleWordResult;
+            return singleWordResult.Take(Settings.AnagramsToGenerate).ToList();
         }
 
         private List<string> GetAllSingleWordAnagrams(

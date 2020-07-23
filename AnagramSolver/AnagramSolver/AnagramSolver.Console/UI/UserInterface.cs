@@ -23,14 +23,7 @@ namespace AnagramSolver.Console.UI
             if (angarams != null)
             {
                 System.Console.WriteLine("Anagrams found:");
-                //if must show less than found
-               /* if (angarams.Count > Settings.AnagramsToGenerate)
-                    for (int i = 0; i < Settings.AnagramsToGenerate; i++)
-                        System.Console.WriteLine(angarams[i]);
-
-                //if must show all or more than found
-                else*/
-                    angarams.ForEach(x => System.Console.WriteLine(x));
+                angarams.ForEach(x => System.Console.WriteLine(x));
             }
             else
                 System.Console.WriteLine("No anagrams found for yuor input!");
