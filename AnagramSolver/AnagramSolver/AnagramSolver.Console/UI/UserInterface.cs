@@ -9,8 +9,10 @@ namespace AnagramSolver.Console.UI
     {
         public string GetInput()
         {
-            System.Console.WriteLine("Enter word or phrase:");
+            System.Console.WriteLine("Enter word or phrase (enter x to exit):");
             var userInput = System.Console.ReadLine().ToLower();
+            if (userInput == "x")
+                return null;
             //validating user input
             userInput = ValidateInputData(userInput);
             return userInput;
