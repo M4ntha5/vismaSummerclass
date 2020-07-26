@@ -13,7 +13,7 @@ namespace AnagramSolver.Tests
         [SetUp]
         public void Setup()
         {
-            wordRepository = new FileRepository();         
+            wordRepository = new FileRepository();
         }
 
         [Test]

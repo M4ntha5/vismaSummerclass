@@ -16,6 +16,8 @@ namespace AnagramSolver.Tests
     {
         IAnagramSolver solver;
         IWordRepository wordMock;
+        List<Anagram> list1;
+        List<Anagram> list2;
         [SetUp]
         public void Setup()
         {
@@ -27,6 +29,28 @@ namespace AnagramSolver.Tests
             Configuration.ReadAppSettingsFile();
 
             wordMock = Substitute.For<IWordRepository>();
+
+            list1 = new List<Anagram>()
+            {
+                new Anagram
+                {
+                    Case = "case1",
+                    Word = "word1"
+                },
+                new Anagram
+                {
+                    Case = "case2",
+                    Word = "word2"
+                }
+            };
+            list2 = new List<Anagram>()
+            {
+                new Anagram
+                {
+                    Case = "case1",
+                    Word = "word1"
+                }
+            };
         }
 
         [Test]
@@ -52,7 +76,25 @@ namespace AnagramSolver.Tests
         [Test]
         public void TestCanGetFixedNumberOfAnagrams()
         {
-            Settings.AnagramsToGenerate = 2;
+            //adding one more to list to check if it will return less than total found 
+            list1.Add(new Anagram { Case = "case3", Word = "word3" });
+            Settings.AnagramsToGenerate = list1.Count-1;
+
+            var sortedInput = String.Concat("labasrytas".OrderBy(x => x));          
+
+            var data = new Dictionary<string, List<Anagram>>()
+            {
+                { sortedInput, list1 },
+                { "key2", list2 }
+            };
+
+            wordMock.ReadDataFromFile().Returns(data);
+
+            solver = new BusinessLogic.Services.AnagramSolver()
+            {
+                FileRepository = wordMock
+            };
+
             var result = solver.GetAnagrams("labasrytas");
             Assert.AreEqual(Settings.AnagramsToGenerate, result.Count);
         }
@@ -61,28 +103,7 @@ namespace AnagramSolver.Tests
         public void TestGetAnagramsWithMock()
         {
             Settings.AnagramsToGenerate = 3;
-            var list1 = new List<Anagram>()
-            {
-                new Anagram
-                {
-                    Case = "case1",
-                    Word = "word1"
-                },
-                new Anagram
-                {
-                    Case = "case2",
-                    Word = "word2"
-                }
-            };
-            var list2 = new List<Anagram>()
-            {
-                new Anagram
-                {
-                    Case = "case1",
-                    Word = "word1"
-                }
-            };
-
+            
             var inputWord = "naujas";
             var sortedInput = String.Concat(inputWord.OrderBy(x => x));
 
@@ -99,7 +120,7 @@ namespace AnagramSolver.Tests
                 FileRepository = wordMock
             };
 
-            var result = solver.GetAnagrams("naujas");
+            var result = solver.GetAnagrams(inputWord);
 
             wordMock.Received().ReadDataFromFile();
             Assert.LessOrEqual(result.Count, Settings.AnagramsToGenerate);
