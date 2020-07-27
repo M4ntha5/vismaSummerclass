@@ -7,5 +7,6 @@ namespace AnagramSolver.Contracts.Interfaces
     public interface IWordRepository
     {
         Dictionary<string, List<Anagram>> ReadDataFromFile();
+        List<Anagram> GetSelectedWordAnagrams(string key);
     }
 }

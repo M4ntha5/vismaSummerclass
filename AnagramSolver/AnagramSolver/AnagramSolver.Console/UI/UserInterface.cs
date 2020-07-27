@@ -29,7 +29,7 @@ namespace AnagramSolver.Console.UI
                 System.Console.WriteLine("No anagrams found for yuor input!");
         }
 
-        private string ValidateInputData(string userInput)
+        public string ValidateInputData(string userInput)
         {
             var userWords = userInput.Split(' ').ToList();
             foreach (var word in userWords)

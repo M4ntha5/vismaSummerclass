@@ -1,0 +1,28 @@
+﻿@model IDictionary<string, List<AnagramSolver.Contracts.Models.Anagram>>
+@{
+    ViewData["Title"] = "All Words";
+}
+
+<div>
+    <a asp-action="Create" style="float:right;">Add new word</a>
+</div>
+<table class="table">
+        
+    <thead>
+        <tr>
+            <th>Word</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Value[0].Word</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Key">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

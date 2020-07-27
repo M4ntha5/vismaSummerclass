@@ -1,0 +1,23 @@
+﻿@model IEnumerable<AnagramSolver.Contracts.Models.Anagram>
+@{
+    ViewData["Title"] = "Word Details";
+}
+
+
+<div>
+    <h4>All anagrams</h4>
+    <hr />
+    @foreach (var anagram in Model)
+    {
+        <dl class="row">
+            <dt class="col">
+                @anagram.Word
+            </dt>         
+        </dl>
+    }
+    <hr />
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

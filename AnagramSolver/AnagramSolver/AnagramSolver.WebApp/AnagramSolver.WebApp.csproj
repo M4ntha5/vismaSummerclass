@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AnagramSolver.BusinessLogic\AnagramSolver.BusinessLogic.csproj" />
+    <ProjectReference Include="..\AnagramSolver.Console\AnagramSolver.Console.csproj" />
+    <ProjectReference Include="..\AnagramSolver.Contracts\AnagramSolver.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

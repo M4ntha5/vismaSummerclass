@@ -12,10 +12,11 @@ namespace AnagramSolver.BusinessLogic.Repositories
     {
         public Dictionary<string, List<Anagram>> ReadDataFromFile()
         {
-            if (!File.Exists(@Settings.DataFileName))
-                throw new Exception($"File '{Settings.DataFileName}' does not exist!");
+            var path = @"E:\Github\Visma\vismaSummerclass\AnagramSolver\AnagramSolver\AnagramSolver.WebApp\bin\Debug\netcoreapp3.1\" + Settings.DataFileName;
+            if (!File.Exists(path))
+                throw new Exception($"File '{path}' does not exist!");
 
-            string[] lines = File.ReadAllLines(@Settings.DataFileName);
+            string[] lines = File.ReadAllLines(path);
 
             var data = new Dictionary<string, List<Anagram>>();
             string previousWord = string.Empty;
@@ -58,6 +59,16 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 previousWord = word;
             }
             return data;
+        }
+
+        public List<Anagram> GetSelectedWordAnagrams(string key)
+        {
+            var allData = ReadDataFromFile();
+
+            if (allData.ContainsKey(key))
+                return allData[key];
+            else
+                return null;
         }
     }
 }

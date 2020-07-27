@@ -7,14 +7,11 @@ namespace AnagramSolver.Console
 {
     class Program
     {
-        static readonly IAnagramSolver AnagramSolver = new BusinessLogic.Services.AnagramSolver()
-        {
-            FileRepository = new FileRepository()
-        };
         static readonly UserInterface UserInterface = new UserInterface();
 
         static void Main(string[] args)
         {
+            var AnagramSolver = new BusinessLogic.Services.AnagramSolver(new FileRepository());
             //loading data from settings file
             Configuration.ReadAppSettingsFile();
 

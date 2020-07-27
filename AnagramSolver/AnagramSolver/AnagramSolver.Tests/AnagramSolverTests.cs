@@ -22,10 +22,7 @@ namespace AnagramSolver.Tests
         public void Setup()
         {
             Settings.DataFileName = "zodynas.txt";
-            solver = new BusinessLogic.Services.AnagramSolver()
-            {
-                FileRepository = new FileRepository()
-            };
+            solver = new BusinessLogic.Services.AnagramSolver(new FileRepository());
             Configuration.ReadAppSettingsFile();
 
             wordMock = Substitute.For<IWordRepository>();
@@ -90,10 +87,7 @@ namespace AnagramSolver.Tests
 
             wordMock.ReadDataFromFile().Returns(data);
 
-            solver = new BusinessLogic.Services.AnagramSolver()
-            {
-                FileRepository = wordMock
-            };
+            solver = new BusinessLogic.Services.AnagramSolver(wordMock);
 
             var result = solver.GetAnagrams("labasrytas");
             Assert.AreEqual(Settings.AnagramsToGenerate, result.Count);
@@ -115,10 +109,7 @@ namespace AnagramSolver.Tests
 
             wordMock.ReadDataFromFile().Returns(data);
 
-            solver = new BusinessLogic.Services.AnagramSolver()
-            {
-                FileRepository = wordMock
-            };
+            solver = new BusinessLogic.Services.AnagramSolver(wordMock);
 
             var result = solver.GetAnagrams(inputWord);
 
