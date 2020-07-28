@@ -1,36 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace AnagramSolver.WebApp.Controllers
 {
     public class AnagramsController : Controller
     {
-        private readonly ILogger<AnagramsController> _logger;
         private readonly IWordRepository _fileRepository;
 
-        public AnagramsController(ILogger<AnagramsController> logger, IWordRepository fileRepository)
+        public AnagramsController( IWordRepository fileRepository)
         {
-            _logger = logger;
             _fileRepository = fileRepository;
         }
 
-        public IActionResult Index(int? pageNumber)
+        public IActionResult Index(int? pageNumber, int pageSize = 100)
         {
             try
             {
                 var words = _fileRepository.GetWords();
                 if (words.Count == 0 || words == null)
-                    return View();
+                    throw new Exception("No words found");
 
-                int pageSize = 100;
                 return View(PaginatedList<Anagram>.Create(words, pageNumber ?? 1, pageSize));
             }
             catch (Exception ex)
@@ -45,13 +38,13 @@ namespace AnagramSolver.WebApp.Controllers
         {
             try
             {
-                if (id == null)
-                    return NotFound();
+                if (string.IsNullOrEmpty(id))
+                    throw new Exception("Selected word do not exist");
 
                 var anagrams = _fileRepository.GetSelectedWordAnagrams(id);
 
-                if (anagrams == null)
-                    return NotFound();
+                if (anagrams == null || anagrams.Count == 0)
+                    return RedirectToAction(nameof(Index));
 
                 return View(anagrams);
             }
@@ -78,12 +71,8 @@ namespace AnagramSolver.WebApp.Controllers
                 if (string.IsNullOrEmpty(anagram.Word) || string.IsNullOrEmpty(anagram.Case))
                     throw new Exception("You must fill all the fields");
 
-                if (ModelState.IsValid)
-                {
-                    _fileRepository.AddWordToFile(anagram);
-                    return RedirectToAction(nameof(Index));
-                }
-                return View(anagram);
+                _fileRepository.AddWordToFile(anagram);
+                return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
             {

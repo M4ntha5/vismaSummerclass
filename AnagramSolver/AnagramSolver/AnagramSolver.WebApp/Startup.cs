@@ -31,7 +31,7 @@ namespace AnagramSolver.WebApp
              services
                  .AddScoped<IAnagramSolver, BusinessLogic.Services.AnagramSolver>()
                  .AddScoped<IWordRepository, BusinessLogic.Repositories.FileRepository>()
-                 .AddScoped<IWordRepository, BusinessLogic.Repositories.FileRepository>();
+                 .AddScoped<IUserInterface, Console.UI.UserInterface>();
             
         }
 

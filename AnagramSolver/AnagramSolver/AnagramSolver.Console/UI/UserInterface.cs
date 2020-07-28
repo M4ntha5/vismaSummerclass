@@ -1,11 +1,12 @@
-﻿using AnagramSolver.Contracts.Utils;
+﻿using AnagramSolver.Contracts.Interfaces;
+using AnagramSolver.Contracts.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace AnagramSolver.Console.UI
 {
-    public class UserInterface
+    public class UserInterface : IUserInterface
     {
         public string GetInput()
         {

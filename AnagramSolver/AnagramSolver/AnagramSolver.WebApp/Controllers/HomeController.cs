@@ -1,27 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using AnagramSolver.WebApp.Models;
 using AnagramSolver.Contracts.Interfaces;
-using AnagramSolver.BusinessLogic.Repositories;
-using AnagramSolver.Console.UI;
 
 namespace AnagramSolver.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IAnagramSolver _anagramSolver;
-        private readonly UserInterface _userInterface;
+        private readonly IUserInterface _userInterface;
 
-        public HomeController(ILogger<HomeController> logger, IAnagramSolver anagramSolver)
+        public HomeController(IUserInterface userInterface, IAnagramSolver anagramSolver)
         {
-            _logger = logger;
-            _userInterface = new UserInterface();
+            _userInterface = userInterface;
             _anagramSolver = anagramSolver;
         }
 
@@ -30,9 +22,13 @@ namespace AnagramSolver.WebApp.Controllers
             try
             {
                 if (string.IsNullOrEmpty(id))
-                    return View();
+                    throw new Exception("You must enter at least one word");
 
                 var input = _userInterface.ValidateInputData(id);
+
+                if (string.IsNullOrEmpty(input))
+                    throw new Exception("You must enter at least one word");
+
                 var anagrams = _anagramSolver.GetAnagrams(input);
 
                 //removing input element
