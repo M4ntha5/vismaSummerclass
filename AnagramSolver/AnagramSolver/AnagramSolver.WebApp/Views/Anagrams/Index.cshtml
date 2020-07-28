@@ -1,13 +1,28 @@
-﻿@model IDictionary<string, List<AnagramSolver.Contracts.Models.Anagram>>
+﻿@model PaginatedList<AnagramSolver.Contracts.Models.Anagram>
 @{
     ViewData["Title"] = "All Words";
 }
 
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>
 <div>
     <a asp-action="Create" style="float:right;">Add new word</a>
 </div>
 <table class="table">
-        
+
     <thead>
         <tr>
             <th>Word</th>
@@ -18,11 +33,13 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Value[0].Word</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Key">Details</a>
+                    <a asp-action="Details" asp-route-id="@item.Word">@item.Word</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+
+

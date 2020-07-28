@@ -85,7 +85,7 @@ namespace AnagramSolver.Tests
                 { "key2", list2 }
             };
 
-            wordMock.ReadDataFromFile().Returns(data);
+            wordMock.GetData().Returns(data);
 
             solver = new BusinessLogic.Services.AnagramSolver(wordMock);
 
@@ -107,13 +107,13 @@ namespace AnagramSolver.Tests
                 { "key2", list2 }
             };
 
-            wordMock.ReadDataFromFile().Returns(data);
+            wordMock.GetData().Returns(data);
 
             solver = new BusinessLogic.Services.AnagramSolver(wordMock);
 
             var result = solver.GetAnagrams(inputWord);
 
-            wordMock.Received().ReadDataFromFile();
+            wordMock.Received().GetData();
             Assert.LessOrEqual(result.Count, Settings.AnagramsToGenerate);
             Assert.AreEqual(list1.Count, result.Count);
             Assert.AreEqual(list1[0].Word, result[0]);

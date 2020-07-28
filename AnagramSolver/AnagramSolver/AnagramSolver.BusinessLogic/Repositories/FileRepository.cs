@@ -10,15 +10,38 @@ namespace AnagramSolver.BusinessLogic.Repositories
 {
     public class FileRepository : IWordRepository
     {
-        public Dictionary<string, List<Anagram>> ReadDataFromFile()
+        private readonly Dictionary<string, List<Anagram>> AllData;
+        private readonly string FilePath = Path.Combine(
+            Path.GetDirectoryName(Environment.CurrentDirectory), 
+            @"AnagramSolver.Contracts/DataFiles/" + Settings.DataFileName);
+
+        public FileRepository()
         {
-            var path = @"E:\Github\Visma\vismaSummerclass\AnagramSolver\AnagramSolver\AnagramSolver.WebApp\bin\Debug\netcoreapp3.1\" + Settings.DataFileName;
-            if (!File.Exists(path))
-                throw new Exception($"File '{path}' does not exist!");
+            AllData = new Dictionary<string, List<Anagram>>();
+            ReadDataFromFile();
+        }
+        public FileRepository(Dictionary<string, List<Anagram>> data)
+        {
+            AllData = data;
+        }
 
-            string[] lines = File.ReadAllLines(path);
+        public Dictionary<string, List<Anagram>> GetData()
+        {
+            return AllData;
+        }
+        public List<Anagram> GetWords()
+        {
+            var words = AllData.Values.ToList().SelectMany(x => x).ToList();
+            return words;
+        }
 
-            var data = new Dictionary<string, List<Anagram>>();
+        private void ReadDataFromFile()
+        {
+            if (!File.Exists(FilePath))
+                throw new Exception($"File '{FilePath}' does not exist!");
+
+            string[] lines = File.ReadAllLines(FilePath);
+
             string previousWord = string.Empty;
             foreach (string line in lines)
             {
@@ -35,9 +58,9 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 var sortedWord = String.Concat(word.OrderBy(x => x));
                 sortedWord = sortedWord.ToLower();
 
-                if (data.ContainsKey(sortedWord))
+                if (AllData.ContainsKey(sortedWord))
                 {
-                    data[sortedWord].Add(new Anagram
+                    AllData[sortedWord].Add(new Anagram
                     {
                         Word = word,
                         Case = wordCase
@@ -45,7 +68,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 }
                 else
                 {
-                    data.Add(
+                    AllData.Add(
                         sortedWord,
                         new List<Anagram>
                         {
@@ -58,17 +81,34 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 }
                 previousWord = word;
             }
-            return data;
         }
 
         public List<Anagram> GetSelectedWordAnagrams(string key)
         {
-            var allData = ReadDataFromFile();
-
-            if (allData.ContainsKey(key))
-                return allData[key];
+            var sortedWord = String.Concat(key.OrderBy(x => x));
+            if (AllData.ContainsKey(sortedWord))
+                return AllData[sortedWord];
             else
                 return null;
+        }
+
+        public void AddWordToFile(Anagram anagram)
+        {
+            if(!File.Exists(FilePath))
+                throw new Exception($"File '{FilePath}' does not exist!");
+
+            var sortedInputWord = String.Concat(anagram.Word.OrderBy(x => x));
+            if (AllData.ContainsKey(sortedInputWord))
+            {
+                var anagramWords = AllData[sortedInputWord];
+
+                foreach(var item in anagramWords)
+                    if (item.Word == anagram.Word)
+                        throw new Exception($"Word {anagram.Word} already exists");                 
+            }
+
+            string appendText = anagram.Word + '\t' + anagram.Case + '\t' + "" + '\t' + "" + '\n'; 
+            File.AppendAllText(FilePath, appendText);
         }
     }
 }

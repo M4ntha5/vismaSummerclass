@@ -22,26 +22,44 @@ namespace AnagramSolver.WebApp.Controllers
             _fileRepository = fileRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? pageNumber)
         {
-            var allData = _fileRepository.ReadDataFromFile();
-            if (allData.Count == 0 || allData == null)
+            try
+            {
+                var words = _fileRepository.GetWords();
+                if (words.Count == 0 || words == null)
+                    return View();
+
+                int pageSize = 100;
+                return View(PaginatedList<Anagram>.Create(words, pageNumber ?? 1, pageSize));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
                 return View();
-            return View(allData);
+            }
         }
 
         // GET: Anagrams/Details/5
         public IActionResult Details(string id)
         {
-            if (id == null)
-                return NotFound();
+            try
+            {
+                if (id == null)
+                    return NotFound();
 
-            var anagrams = _fileRepository.GetSelectedWordAnagrams(id);
+                var anagrams = _fileRepository.GetSelectedWordAnagrams(id);
 
-            if (anagrams == null)
-                return NotFound();
+                if (anagrams == null)
+                    return NotFound();
 
-            return View(anagrams);
+                return View(anagrams);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(id);
+            }
         }
 
         // GET: Anagrams/Create
@@ -55,12 +73,23 @@ namespace AnagramSolver.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Word,Case")] Anagram anagram)
         {
-            if (ModelState.IsValid)
+            try
             {
-                //_fileRepository.Add(anagram);
-                return RedirectToAction(nameof(Index));
+                if (string.IsNullOrEmpty(anagram.Word) || string.IsNullOrEmpty(anagram.Case))
+                    throw new Exception("You must fill all the fields");
+
+                if (ModelState.IsValid)
+                {
+                    _fileRepository.AddWordToFile(anagram);
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(anagram);
             }
-            return View(anagram);
+            catch(Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(anagram);
+            }
         }
 
 

@@ -20,7 +20,7 @@ namespace AnagramSolver.BusinessLogic.Services
         public IList<string> GetAnagrams(string inputWords)
         {
             //getting all dictionary
-            var allWords = FileRepository.ReadDataFromFile();
+            var allWords = FileRepository.GetData();
             //sorting user phrase
             var sortedInput = String.Concat(inputWords.OrderBy(x => x));
 

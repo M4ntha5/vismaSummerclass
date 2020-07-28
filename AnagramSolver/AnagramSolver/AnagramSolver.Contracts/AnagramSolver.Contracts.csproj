@@ -8,4 +8,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DataFiles\" />
+  </ItemGroup>
+
 </Project>

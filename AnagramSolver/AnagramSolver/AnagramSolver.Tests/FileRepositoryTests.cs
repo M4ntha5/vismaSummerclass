@@ -20,7 +20,7 @@ namespace AnagramSolver.Tests
         public void TestFileDoesNotExistException()
         {
             Settings.DataFileName = "not found.txt";
-            Should.Throw<Exception>(() => wordRepository.ReadDataFromFile());
+            Should.Throw<Exception>(() => wordRepository.GetData());
             //Assert.Throws<Exception>(() => wordRepository.ReadDataFromFile());
         }
 
@@ -28,7 +28,7 @@ namespace AnagramSolver.Tests
         public void TestReadDataFromFile()
         {
             Settings.DataFileName = "zodynas.txt";
-            var result = wordRepository.ReadDataFromFile();
+            var result = wordRepository.GetData();
             result.ShouldNotBeEmpty();
             //Assert.Greater(result.Count, 0);
         }

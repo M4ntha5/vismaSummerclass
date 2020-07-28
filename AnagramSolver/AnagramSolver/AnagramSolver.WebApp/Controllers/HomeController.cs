@@ -27,16 +27,24 @@ namespace AnagramSolver.WebApp.Controllers
 
         public IActionResult Index(string id)
         {
-            if(string.IsNullOrEmpty(id))
-                return View();
+            try
+            {
+                if (string.IsNullOrEmpty(id))
+                    return View();
 
-            var input = _userInterface.ValidateInputData(id);
-            var anagrams = _anagramSolver.GetAnagrams(input);
+                var input = _userInterface.ValidateInputData(id);
+                var anagrams = _anagramSolver.GetAnagrams(input);
 
-            //removing input element
-            anagrams.Remove(id);
+                //removing input element
+                anagrams.Remove(id);
 
-            return View(anagrams);
+                return View(anagrams);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(id);
+            }
         }
 
         public IActionResult Privacy()
