@@ -10,5 +10,6 @@ namespace AnagramSolver.Contracts.Interfaces
         List<Anagram> GetWords();
         List<Anagram> GetSelectedWordAnagrams(string key);
         void AddWordToFile(Anagram anagram);
+        string GetDataFilePath();
     }
 }

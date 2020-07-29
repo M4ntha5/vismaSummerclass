@@ -11,18 +11,14 @@ namespace AnagramSolver.BusinessLogic.Repositories
     public class FileRepository : IWordRepository
     {
         private readonly Dictionary<string, List<Anagram>> AllData;
-        private readonly string FilePath = Path.Combine(
-            Path.GetDirectoryName(Environment.CurrentDirectory), 
-            @"AnagramSolver.Contracts/DataFiles/" + Settings.DataFileName);
+        private readonly string FilePath = Path.GetFullPath(
+            Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\..\\" + Settings.DataFileName));
+
 
         public FileRepository()
-        {
+        {         
             AllData = new Dictionary<string, List<Anagram>>();
-            ReadDataFromFile();
-        }
-        public FileRepository(Dictionary<string, List<Anagram>> data)
-        {
-            AllData = data;
+            ReadDataFromFile();         
         }
 
         public Dictionary<string, List<Anagram>> GetData()
@@ -41,6 +37,9 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 throw new Exception($"File '{FilePath}' does not exist!");
 
             string[] lines = File.ReadAllLines(FilePath);
+
+            //file reading using resources
+            //string[] lines = File.ReadAllLines(Resources.zodynas);
 
             string previousWord = string.Empty;
             foreach (string line in lines)
@@ -109,6 +108,11 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
             string appendText = anagram.Word + '\t' + anagram.Case + '\t' + "" + '\t' + "" + '\n'; 
             File.AppendAllText(FilePath, appendText);
+        }
+
+        public string GetDataFilePath()
+        {
+            return FilePath;
         }
     }
 }

@@ -21,7 +21,7 @@ namespace AnagramSolver.Tests
         [SetUp]
         public void Setup()
         {
-            Settings.DataFileName = "zodynas.txt";
+            Configuration.ReadAppSettingsFile();
             solver = new BusinessLogic.Services.AnagramSolver(new FileRepository());
             Configuration.ReadAppSettingsFile();
 

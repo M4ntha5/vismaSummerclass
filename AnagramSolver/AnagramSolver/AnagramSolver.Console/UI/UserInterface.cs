@@ -1,13 +1,16 @@
 ﻿using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace AnagramSolver.Console.UI
 {
     public class UserInterface : IUserInterface
-    {
+    {    
         public string GetInput()
         {
             System.Console.WriteLine("Enter word or phrase (enter x to exit):");
@@ -40,6 +43,19 @@ namespace AnagramSolver.Console.UI
                         $"{Settings.MinInputLength} characters!");
             }         
             return string.Join("", userWords);
+        }
+
+        public int DisplayOptions()
+        {
+            System.Console.WriteLine("If you want to solve your anagrams using API call press 1");
+            System.Console.WriteLine("If you want to solve your anagrams without using API press 2");
+
+            int.TryParse(System.Console.ReadLine(), out int userInput);
+
+            if(userInput > 2 || userInput < 1)
+                throw new Exception("Wrong input. You must enter 1 or 2");
+
+            return userInput;
         }
     }
 }

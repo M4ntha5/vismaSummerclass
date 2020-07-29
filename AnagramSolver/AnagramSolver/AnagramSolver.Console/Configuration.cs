@@ -10,6 +10,7 @@ namespace AnagramSolver.Console
         public static void ReadAppSettingsFile()
         {
             var path = Path.Combine(Path.GetDirectoryName(Environment.CurrentDirectory), @"AnagramSolver.Console");
+            path = @"E:\Github\Visma\vismaSummerclass\AnagramSolver\AnagramSolver\AnagramSolver.Console";
             var builder = new ConfigurationBuilder()
                 .SetBasePath(path)
                 .AddJsonFile("appsettings.json");
