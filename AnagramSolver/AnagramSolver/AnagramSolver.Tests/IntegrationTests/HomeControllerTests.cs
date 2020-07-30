@@ -29,7 +29,7 @@ namespace AnagramSolver.Tests.IntegrationTests
             };
         }
 
-        [Test]
+      /*  [Test]
         public void TestHomeControllerIndex()
         {
             UserInterfaceMock.ValidateInputData(Arg.Any<string>()).Returns("abc");
@@ -50,6 +50,6 @@ namespace AnagramSolver.Tests.IntegrationTests
             controller.Index("");
 
             Assert.Greater(controller.ModelState.ErrorCount, 0);
-        }
+        }*/
     }
 }

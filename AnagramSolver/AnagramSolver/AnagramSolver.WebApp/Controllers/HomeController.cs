@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using AnagramSolver.WebApp.Models;
 using AnagramSolver.Contracts.Interfaces;
+using System.Linq;
 
 namespace AnagramSolver.WebApp.Controllers
 {
@@ -10,19 +11,27 @@ namespace AnagramSolver.WebApp.Controllers
     {
         private readonly IAnagramSolver _anagramSolver;
         private readonly IUserInterface _userInterface;
+        private readonly ICookiesHandler _cookiesHandler;
 
-        public HomeController(IUserInterface userInterface, IAnagramSolver anagramSolver)
+        public HomeController(IUserInterface userInterface, IAnagramSolver anagramSolver,
+            ICookiesHandler cookiesHandler)
         {
             _userInterface = userInterface;
             _anagramSolver = anagramSolver;
+            _cookiesHandler = cookiesHandler;
         }
 
         public IActionResult Index(string id)
         {
             try
-            {
+            { 
                 if (string.IsNullOrEmpty(id))
                     throw new Exception("You must enter at least one word");
+              
+                var cookieValue = Request.Cookies[id];
+                if (cookieValue != null)
+                    return View(cookieValue.Split(';').ToList());
+
 
                 var input = _userInterface.ValidateInputData(id);
 
@@ -34,6 +43,8 @@ namespace AnagramSolver.WebApp.Controllers
                 //removing input element
                 anagrams.Remove(id);
 
+                _cookiesHandler.AddCookie(id, string.Join(";", anagrams.ToArray()));
+
                 return View(anagrams);
             }
             catch (Exception ex)
@@ -43,9 +54,10 @@ namespace AnagramSolver.WebApp.Controllers
             }
         }
 
-        public IActionResult Privacy()
+        public IActionResult DisplayCookies()
         {
-            return View();
+            var cookies = _cookiesHandler.GetCurrentCookies();
+            return View(cookies);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

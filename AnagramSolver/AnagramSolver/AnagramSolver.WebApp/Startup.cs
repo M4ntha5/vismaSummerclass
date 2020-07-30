@@ -28,10 +28,12 @@ namespace AnagramSolver.WebApp
             services.AddControllersWithViews();
             Console.Configuration.ReadAppSettingsFile();
 
-             services
-                 .AddScoped<IAnagramSolver, BusinessLogic.Services.AnagramSolver>()
-                 .AddScoped<IWordRepository, BusinessLogic.Repositories.FileRepository>()
-                 .AddScoped<IUserInterface, Console.UI.UserInterface>();
+            services
+                .AddScoped<IAnagramSolver, BusinessLogic.Services.AnagramSolver>()
+                .AddScoped<IWordRepository, BusinessLogic.Repositories.FileRepository>()
+                .AddScoped<IUserInterface, Console.UI.UserInterface>()
+                .AddScoped<ICookiesHandler, Models.CookiesHandler>()
+                .AddHttpContextAccessor();
             
         }
 

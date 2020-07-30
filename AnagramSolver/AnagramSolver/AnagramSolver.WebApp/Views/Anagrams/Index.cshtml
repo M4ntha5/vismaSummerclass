@@ -18,10 +18,11 @@
    class="btn btn-primary @nextDisabled">
     Next
 </a>
-<div>
-    <a asp-action="Create" style="float:right;">Add new word</a>
+<div style="float:right;" class="mb-3">
+    <a class="btn btn-info" href="/api/files/dictionary">Download dictionary</a>
+    <a class="btn btn-primary" asp-action="Create">Add new word</a>
 </div>
-<table class="table">
+<table class="table pt-3">
 
     <thead>
         <tr>

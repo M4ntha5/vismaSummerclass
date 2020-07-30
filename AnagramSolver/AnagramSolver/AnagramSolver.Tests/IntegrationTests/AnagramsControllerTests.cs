@@ -27,7 +27,7 @@ namespace AnagramSolver.Tests.IntegrationTests
             };
         }
 
-        [Test]
+     /*   [Test]
         public void TestAnagramsControllerIndex()
         {
             WordRepositoryMock.GetWords().Returns(list);
@@ -105,6 +105,6 @@ namespace AnagramSolver.Tests.IntegrationTests
             controller.Create(new Anagram());
 
             Assert.Greater(controller.ModelState.ErrorCount, 0);
-        }
+        }*/
     }
 }

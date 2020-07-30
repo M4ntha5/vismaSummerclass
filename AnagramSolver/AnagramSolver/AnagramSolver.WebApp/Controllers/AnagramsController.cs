@@ -3,6 +3,7 @@ using System.Diagnostics;
 using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.WebApp.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnagramSolver.WebApp.Controllers
@@ -10,10 +11,13 @@ namespace AnagramSolver.WebApp.Controllers
     public class AnagramsController : Controller
     {
         private readonly IWordRepository _fileRepository;
+        private readonly ICookiesHandler _cookiesHandler;
 
-        public AnagramsController( IWordRepository fileRepository)
+        public AnagramsController(IWordRepository fileRepository, IHttpContextAccessor httpContextAccessor, 
+            ICookiesHandler cookiesHandler)
         {
             _fileRepository = fileRepository;
+            _cookiesHandler = cookiesHandler;
         }
 
         public IActionResult Index(int? pageNumber, int pageSize = 100)
@@ -71,7 +75,9 @@ namespace AnagramSolver.WebApp.Controllers
                 if (string.IsNullOrEmpty(anagram.Word) || string.IsNullOrEmpty(anagram.Case))
                     throw new Exception("You must fill all the fields");
 
-                _fileRepository.AddWordToFile(anagram);
+                _cookiesHandler.ClearAllCookies();
+
+                _fileRepository.AddWordToFile(anagram);              
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
@@ -80,7 +86,6 @@ namespace AnagramSolver.WebApp.Controllers
                 return View(anagram);
             }
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
