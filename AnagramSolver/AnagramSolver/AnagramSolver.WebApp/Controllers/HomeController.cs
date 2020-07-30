@@ -27,9 +27,9 @@ namespace AnagramSolver.WebApp.Controllers
             { 
                 if (string.IsNullOrEmpty(id))
                     throw new Exception("You must enter at least one word");
-              
-                var cookieValue = Request.Cookies[id];
-                if (cookieValue != null)
+
+                var cookieValue = _cookiesHandler.GetCookieByKey(id);
+                if (!string.IsNullOrEmpty(cookieValue))
                     return View(cookieValue.Split(';').ToList());
 
 

@@ -14,14 +14,18 @@ namespace AnagramSolver.Tests.IntegrationTests
     {
         IUserInterface UserInterfaceMock;
         IAnagramSolver AnagramSolverMock;
+        ICookiesHandler CookiesHandlerMock;
         IList<string> list;
-
+        HomeController Controller;
 
         [SetUp]
         public void Setup()
         {
             UserInterfaceMock = Substitute.For<IUserInterface>();
             AnagramSolverMock = Substitute.For<IAnagramSolver>();
+            CookiesHandlerMock = Substitute.For<ICookiesHandler>();
+
+            Controller = new HomeController(UserInterfaceMock, AnagramSolverMock, CookiesHandlerMock);
 
             list = new List<string>()
             {
@@ -29,15 +33,16 @@ namespace AnagramSolver.Tests.IntegrationTests
             };
         }
 
-      /*  [Test]
+        [Test]
         public void TestHomeControllerIndex()
         {
             UserInterfaceMock.ValidateInputData(Arg.Any<string>()).Returns("abc");
             AnagramSolverMock.GetAnagrams(Arg.Any<string>()).Returns(list);
-            var controller = new HomeController(UserInterfaceMock, AnagramSolverMock);
+            CookiesHandlerMock.GetCookieByKey(Arg.Any<string>());
 
-            var result = controller.Index("abc");
+            var result = Controller.Index("abc");
 
+            CookiesHandlerMock.Received().GetCookieByKey(Arg.Any<string>());
             UserInterfaceMock.Received().ValidateInputData(Arg.Any<string>());
             AnagramSolverMock.Received().GetAnagrams(Arg.Any<string>());
             Assert.IsInstanceOf<ViewResult>(result);
@@ -45,11 +50,9 @@ namespace AnagramSolver.Tests.IntegrationTests
         [Test]
         public void TestHomeControllerIndexIdNotDefined()
         {
-            var controller = new HomeController(UserInterfaceMock, AnagramSolverMock);
+            Controller.Index("");
 
-            controller.Index("");
-
-            Assert.Greater(controller.ModelState.ErrorCount, 0);
-        }*/
+            Assert.Greater(Controller.ModelState.ErrorCount, 0);
+        }
     }
 }

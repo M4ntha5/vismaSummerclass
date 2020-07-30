@@ -1,13 +1,6 @@
 ﻿using AnagramSolver.Contracts.Interfaces;
-using AnagramSolver.WebApp.Controllers;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AnagramSolver.WebApp.Models
 {
@@ -36,6 +29,11 @@ namespace AnagramSolver.WebApp.Models
                 cookiesDictionary.Add(cookie.Key, cookie.Value);
 
             return cookiesDictionary;
+        }
+
+        public string GetCookieByKey(string key)
+        {
+            return _httpAccessor.HttpContext.Request.Cookies[key];
         }
 
 

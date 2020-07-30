@@ -9,6 +9,7 @@ namespace AnagramSolver.Contracts.Interfaces
         void AddCookie(string key, string value);
         void ClearAllCookies();
         Dictionary<string, string> GetCurrentCookies();
+        string GetCookieByKey(string key);
 
     }
 }
