@@ -15,7 +15,8 @@ namespace AnagramSolver.WebApp.Models
 
         public void AddCookie(string key, string value)
         {
-            _httpAccessor.HttpContext.Response.Cookies.Append(key, value);
+            if(!string.IsNullOrEmpty(value))
+                _httpAccessor.HttpContext.Response.Cookies.Append(key, value);
         }
         public void ClearAllCookies()
         {
@@ -30,12 +31,9 @@ namespace AnagramSolver.WebApp.Models
 
             return cookiesDictionary;
         }
-
         public string GetCookieByKey(string key)
         {
             return _httpAccessor.HttpContext.Request.Cookies[key];
         }
-
-
     }
 }

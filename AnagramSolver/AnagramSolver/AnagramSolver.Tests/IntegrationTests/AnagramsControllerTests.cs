@@ -1,6 +1,7 @@
 ﻿using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.WebApp.Controllers;
+using AnagramSolver.WebApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
@@ -37,76 +38,81 @@ namespace AnagramSolver.Tests.IntegrationTests
         }
 
         [Test]
-        public void TestAnagramsControllerIndex()
+        public void GetAllAnagrams()
         {
             WordRepositoryMock.GetWords().Returns(list);
 
-            var result = Controller.Index(1);
+            var result = Controller.Index(1) as ViewResult;
+            var data = result.ViewData.Model as PaginatedList<Anagram>;
 
             WordRepositoryMock.Received().GetWords();
-            Assert.IsInstanceOf<ViewResult>(result);
+            Assert.AreEqual(list.Count, data.Count);
+            Assert.AreEqual(list[0].Word, data[0].Word);
+
         }
 
         [Test]
-        public void TestAnagramsControllerIndexWordsCount0()
+        public void NoAnagramsFound()
         {
             WordRepositoryMock.GetWords().Returns(new List<Anagram>());
 
-            Controller.Index(1);
+            var result = Controller.Index(1) as ViewResult;
 
             WordRepositoryMock.Received().GetWords();
-            Assert.Greater(Controller.ModelState.ErrorCount, 0);
+            Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
         }
 
         [Test]
-        public void TestAnagramsControllerDetails()
+        public void GetSelectedWordDetails()
         {
             WordRepositoryMock.GetSelectedWordAnagrams(Arg.Any<string>()).Returns(list);
             
-
-            var result = Controller.Details("abc");
+            var result = Controller.Details("abc") as ViewResult;
+            var data = result.Model as List<Anagram>;
 
             WordRepositoryMock.Received().GetSelectedWordAnagrams(Arg.Any<string>());
-            Assert.IsInstanceOf<ViewResult>(result);
+            Assert.AreEqual(list.Count, data.Count);
+            Assert.AreEqual(list[0].Word, data[0].Word);
         }
 
         [Test]
-        public void TestAnagramsControllerDetailsIdNotDefined()
+        public void SelectedWordDoesNotExistsInDictionary()
         {
-            Controller.Details("");
+            var result = Controller.Details(null) as ViewResult;
 
-            Assert.Greater(Controller.ModelState.ErrorCount, 0);
+            Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
         }
 
         [Test]
-        public void TestAnagramsControllerDetailsNoAnagramWordsFound()
+        public void NoAnagramsFoundForSelectedWordRedirectToIndex()
         {
             WordRepositoryMock.GetSelectedWordAnagrams(Arg.Any<string>()).Returns(new List<Anagram>());
 
-            var result = Controller.Details("pff");
+            var result = Controller.Details("???") as RedirectToActionResult;
 
             WordRepositoryMock.Received().GetSelectedWordAnagrams(Arg.Any<string>());
-            Assert.IsInstanceOf<RedirectToActionResult>(result);
+            Assert.AreEqual("Index", result.ActionName);
         }
 
         [Test]
-        public void TestAnagramsControllerCreate()
+        public void NewWordCreatedSuccessfully()
         {
             WordRepositoryMock.AddWordToFile(Arg.Any<Anagram>());
             CookiesHandlerMock.ClearAllCookies();
-            var result = Controller.Create(anagram);
+
+            var result = Controller.Create(anagram) as RedirectToActionResult;
 
             CookiesHandlerMock.Received().ClearAllCookies();
             WordRepositoryMock.Received().AddWordToFile(Arg.Any<Anagram>());
-            Assert.IsInstanceOf<RedirectToActionResult>(result);
+            Assert.AreEqual("Index", result.ActionName);
         }
 
         [Test]
-        public void TestAnagramsControllerCreateDataNotFilled()
+        public void DataNotPresentWhenCreatingNewWord()
         {
-            Controller.Create(new Anagram());
+            var result = Controller.Create(new Anagram()) as ViewResult;
 
-            Assert.Greater(Controller.ModelState.ErrorCount, 0);
+            Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
         }
     }
 }

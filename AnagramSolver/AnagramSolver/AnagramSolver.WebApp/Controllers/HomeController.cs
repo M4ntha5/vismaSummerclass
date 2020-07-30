@@ -28,16 +28,15 @@ namespace AnagramSolver.WebApp.Controllers
                 if (string.IsNullOrEmpty(id))
                     throw new Exception("You must enter at least one word");
 
-                var cookieValue = _cookiesHandler.GetCookieByKey(id);
-                if (!string.IsNullOrEmpty(cookieValue))
-                    return View(cookieValue.Split(';').ToList());
-
-
                 var input = _userInterface.ValidateInputData(id);
-
                 if (string.IsNullOrEmpty(input))
                     throw new Exception("You must enter at least one word");
 
+                var cookieValue = _cookiesHandler.GetCookieByKey(input);
+                if (!string.IsNullOrEmpty(cookieValue))
+                    return View(cookieValue.Split(';').ToList());        
+
+               
                 var anagrams = _anagramSolver.GetAnagrams(input);
 
                 //removing input element

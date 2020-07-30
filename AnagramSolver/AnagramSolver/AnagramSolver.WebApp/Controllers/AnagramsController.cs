@@ -76,8 +76,8 @@ namespace AnagramSolver.WebApp.Controllers
                     throw new Exception("You must fill all the fields");
 
                 _cookiesHandler.ClearAllCookies();
-
-                _fileRepository.AddWordToFile(anagram);              
+                _fileRepository.AddWordToFile(anagram);
+                
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
