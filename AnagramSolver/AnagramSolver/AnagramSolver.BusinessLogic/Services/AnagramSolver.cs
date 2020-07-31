@@ -81,6 +81,7 @@ namespace AnagramSolver.BusinessLogic.Services
             return singleWordResult.Take(Settings.AnagramsToGenerate).ToList();
         }
 
+
         public List<List<List<Anagram>>> SearchForWords(string phrase, int currLen,
             Dictionary<string, List<Anagram>> sortedData, int orgLen)
         {

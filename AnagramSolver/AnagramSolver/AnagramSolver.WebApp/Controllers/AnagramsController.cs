@@ -13,8 +13,7 @@ namespace AnagramSolver.WebApp.Controllers
         private readonly IWordRepository _fileRepository;
         private readonly ICookiesHandler _cookiesHandler;
 
-        public AnagramsController(IWordRepository fileRepository, IHttpContextAccessor httpContextAccessor, 
-            ICookiesHandler cookiesHandler)
+        public AnagramsController(IWordRepository fileRepository, ICookiesHandler cookiesHandler)
         {
             _fileRepository = fileRepository;
             _cookiesHandler = cookiesHandler;

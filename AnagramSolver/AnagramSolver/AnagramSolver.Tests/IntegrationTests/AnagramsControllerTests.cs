@@ -14,7 +14,6 @@ namespace AnagramSolver.Tests.IntegrationTests
     {
         IWordRepository WordRepositoryMock;
         ICookiesHandler CookiesHandlerMock;
-        IHttpContextAccessor HttpContextAccessorMock;
         List<Anagram> list;
         Anagram anagram;
         AnagramsController Controller;
@@ -24,10 +23,8 @@ namespace AnagramSolver.Tests.IntegrationTests
         {
             WordRepositoryMock = Substitute.For<IWordRepository>();
             CookiesHandlerMock = Substitute.For<ICookiesHandler>();
-            HttpContextAccessorMock = Substitute.For<IHttpContextAccessor>();
 
-            Controller = new AnagramsController(WordRepositoryMock, 
-                HttpContextAccessorMock, CookiesHandlerMock);
+            Controller = new AnagramsController(WordRepositoryMock, CookiesHandlerMock);
 
             anagram = new Anagram { Case = "case2", Word = "word2" };
             list = new List<Anagram>()
