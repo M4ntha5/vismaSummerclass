@@ -32,5 +32,6 @@ namespace AnagramSolver.Console
             var list = JsonConvert.DeserializeObject<List<string>>(resultString);
             return list;
         }
+
     }
 }

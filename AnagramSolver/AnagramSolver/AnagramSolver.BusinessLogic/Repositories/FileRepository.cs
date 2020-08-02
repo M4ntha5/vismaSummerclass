@@ -1,8 +1,11 @@
-﻿using AnagramSolver.Contracts.Interfaces;
+﻿using AnagramSolver.Contracts.DatabaseModels;
+using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 
@@ -18,7 +21,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
         public FileRepository()
         {         
             AllData = new Dictionary<string, List<Anagram>>();
-            ReadDataFromFile();         
+            ReadDataFromFile();
         }
 
         public Dictionary<string, List<Anagram>> GetData()
@@ -55,7 +58,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
                 //sorting string chars alphabetical order
                 var sortedWord = String.Concat(word.OrderBy(x => x));
-                sortedWord = sortedWord.ToLower();
+                sortedWord = sortedWord.ToLower();             
 
                 if (AllData.ContainsKey(sortedWord))
                 {

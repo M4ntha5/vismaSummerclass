@@ -47,12 +47,13 @@ namespace AnagramSolver.Console.UI
 
         public int DisplayOptions()
         {
-            System.Console.WriteLine("If you want to solve your anagrams using API call press 1");
-            System.Console.WriteLine("If you want to solve your anagrams without using API press 2");
+            System.Console.WriteLine("If you want to seed database with file content press: 0");
+            System.Console.WriteLine("If you want to solve your anagrams using API call press: 1");
+            System.Console.WriteLine("If you want to solve your anagrams without using API press: 2");
 
             int.TryParse(System.Console.ReadLine(), out int userInput);
 
-            if(userInput > 2 || userInput < 1)
+            if(userInput > 2 || userInput < 0)
                 throw new Exception("Wrong input. You must enter 1 or 2");
 
             return userInput;
