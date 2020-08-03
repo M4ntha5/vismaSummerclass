@@ -29,8 +29,8 @@ namespace AnagramSolver.WebApp
             Console.Configuration.ReadAppSettingsFile();
 
             services
-                .AddScoped<IAnagramSolver, BusinessLogic.Services.AnagramSolver>()
-                .AddScoped<IWordRepository, BusinessLogic.Repositories.FileRepository>()
+                .AddScoped<IAnagramSolver, BusinessLogicDB.Services.AnagramSolver>()
+                .AddScoped<IWordRepository, BusinessLogicDB.Repositories.WordRepository>()
                 .AddScoped<IUserInterface, Console.UI.UserInterface>()
                 .AddScoped<ICookiesHandler, Models.CookiesHandler>()
                 .AddHttpContextAccessor();

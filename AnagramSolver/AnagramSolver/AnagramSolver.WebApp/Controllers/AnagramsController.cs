@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using AnagramSolver.BusinessLogic;
+using AnagramSolver.BusinessLogicDB.Database;
 using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.WebApp.Models;
@@ -19,15 +22,21 @@ namespace AnagramSolver.WebApp.Controllers
             _cookiesHandler = cookiesHandler;
         }
 
-        public IActionResult Index(int? pageNumber, int pageSize = 100)
+        public IActionResult Index(int? pageNumber, string phrase = null, int pageSize = 100)
         {
             try
             {
-                var words = _fileRepository.GetWords();
-                if (words.Count == 0 || words == null)
-                    throw new Exception("No words found");
+                List<Anagram> result;
+                if (!string.IsNullOrEmpty(phrase))
+                {
+                    var db = new WordQueries();
+                    result = db.SelectWordsBySearch(phrase);
+                    pageSize = result.Count;
+                }
+                else
+                    result = _fileRepository.GetWords();
 
-                return View(PaginatedList<Anagram>.Create(words, pageNumber ?? 1, pageSize));
+                return View(PaginatedList<Anagram>.Create(result, pageNumber ?? 1, pageSize));
             }
             catch (Exception ex)
             {

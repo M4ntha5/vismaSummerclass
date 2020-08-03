@@ -22,6 +22,13 @@
     <a class="btn btn-info" href="/api/files/dictionary">Download dictionary</a>
     <a class="btn btn-primary" asp-action="Create">Add new word</a>
 </div>
+<div class="pt-3 mb-3">
+    <form class="form-inline ml-3" asp-action="Index" style="float:right;">
+        <label>Filter by phrase:</label>
+        <input class="form-control ml-2" type="text" name="phrase" placeholder="Search">
+        <button class="btn btn-primary ml-1" type="submit">Search</button>
+    </form>
+</div>
 <table class="table pt-3">
 
     <thead>

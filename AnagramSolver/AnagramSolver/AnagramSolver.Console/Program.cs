@@ -1,10 +1,12 @@
 ﻿using AnagramSolver.BusinessLogic;
 using AnagramSolver.BusinessLogic.Repositories;
+using AnagramSolver.BusinessLogicDB.Database;
 using AnagramSolver.Console.UI;
-using AnagramSolver.Contracts.DatabaseModels;
+using AnagramSolver.Contracts.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace AnagramSolver.Console
@@ -21,7 +23,6 @@ namespace AnagramSolver.Console
           
             var AnagramSolver = new BusinessLogic.Services.AnagramSolver(new FileRepository());
             var howToSolve = UserInterface.DisplayOptions();
-
 
             while (true)
             {
@@ -49,14 +50,14 @@ namespace AnagramSolver.Console
         {
             System.Console.WriteLine("Seeding database, please wait");
             var fileRepo = new FileRepository();
-            var connection = new DBConection();
+            var connection = new WordQueries();
             var wordsList = fileRepo.GetWords();
 
             foreach(var word in wordsList)
             {
-                var model = new WordModel()
+                var model = new Anagram()
                 {
-                    Category = word.Case,
+                    Case = word.Case,
                     Word = word.Word,
                     SortedWord = String.Concat(word.Word.OrderBy(x => x))
                 };

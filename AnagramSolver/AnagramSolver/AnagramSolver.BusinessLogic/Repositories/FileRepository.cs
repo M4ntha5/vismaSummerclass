@@ -1,11 +1,9 @@
-﻿using AnagramSolver.Contracts.DatabaseModels;
-using AnagramSolver.Contracts.Interfaces;
+﻿using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 
@@ -24,7 +22,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
             ReadDataFromFile();
         }
 
-        public Dictionary<string, List<Anagram>> GetData()
+        public Dictionary<string, List<Anagram>> GetAllData()
         {
             return AllData;
         }

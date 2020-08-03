@@ -22,7 +22,7 @@ namespace AnagramSolver.Tests
         [Test]
         public void TestReadDataFromFile()
         {
-            var result = wordRepository.GetData();
+            var result = wordRepository.GetAllData();
             result.ShouldNotBeEmpty();
             //Assert.Greater(result.Count, 0);
         }

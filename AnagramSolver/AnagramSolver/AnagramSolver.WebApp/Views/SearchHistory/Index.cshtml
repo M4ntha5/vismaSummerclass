@@ -1,0 +1,36 @@
+﻿@model IEnumerable<AnagramSolver.Contracts.Models.SearchHistory>
+@{
+    ViewData["Title"] = "Search History";
+}
+
+
+@if (Model != null)
+{
+    <table class="table pt-3">
+
+        <thead>
+            <tr>
+                <th>User IP</th>
+                <th>Searched phrase</th>
+                <th>Search time (s)</th>
+                <th>Anagrams found</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td> @item.Ip </td>
+                <td> @item.SearchPhrase </td>
+                <td> @item.SearchTime.TotalSeconds </td>
+                @foreach (var anagram in item.Anagrams)
+                {
+                    <td>@anagram</td>
+                }
+
+            </tr>
+            }
+        </tbody>
+    </table>
+}

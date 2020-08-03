@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AnagramSolver.BusinessLogic.Repositories
+namespace AnagramSolver.BusinessLogicDB.Repositories
 {
     public class WordRepository : IWordRepository
     {
@@ -28,10 +28,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
         public List<Anagram> GetSelectedWordAnagrams(string key)
         {
-            var sortedInput = String.Concat(key.OrderBy(x => x));
-
-            var anagrams = _wordQueries.SelectWordAnagrams(sortedInput);
-
+            var anagrams = _wordQueries.SelectWordAnagrams(key);
             return anagrams;
         }
 
@@ -40,7 +37,6 @@ namespace AnagramSolver.BusinessLogic.Repositories
             var allWords = _wordQueries.SelectAllWords();
             return allWords;
         }
-
 
         public string GetDataFilePath()
         {
