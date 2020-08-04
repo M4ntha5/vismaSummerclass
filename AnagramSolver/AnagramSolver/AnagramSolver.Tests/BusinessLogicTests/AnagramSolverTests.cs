@@ -9,6 +9,7 @@ using AnagramSolver.Console;
 using NSubstitute;
 using AnagramSolver.Contracts.Models;
 using System.Linq;
+using AnagramSolver.BusinessLogic.Database;
 
 namespace AnagramSolver.Tests
 {
@@ -22,7 +23,7 @@ namespace AnagramSolver.Tests
         public void Setup()
         {
             Configuration.ReadAppSettingsFile();
-            solver = new BusinessLogic.Services.AnagramSolver(new FileRepository());
+            solver = new BusinessLogic.Services.AnagramSolver(new FileRepository(), new CachedWordQueries());
             Configuration.ReadAppSettingsFile();
 
             wordMock = Substitute.For<IWordRepository>();
@@ -87,8 +88,6 @@ namespace AnagramSolver.Tests
 
             wordMock.GetAllData().Returns(data);
 
-            solver = new BusinessLogic.Services.AnagramSolver(wordMock);
-
             var result = solver.GetAnagrams("labasrytas");
             Assert.AreEqual(Settings.AnagramsToGenerate, result.Count);
         }
@@ -108,8 +107,6 @@ namespace AnagramSolver.Tests
             };
 
             wordMock.GetAllData().Returns(data);
-
-            solver = new BusinessLogic.Services.AnagramSolver(wordMock);
 
             var result = solver.GetAnagrams(inputWord);
 

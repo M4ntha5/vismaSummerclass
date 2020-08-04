@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using AnagramSolver.BusinessLogic;
-using AnagramSolver.BusinessLogicDB.Database;
+using AnagramSolver.BusinessLogic.Database;
 using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.WebApp.Models;
@@ -15,11 +14,14 @@ namespace AnagramSolver.WebApp.Controllers
     {
         private readonly IWordRepository _fileRepository;
         private readonly ICookiesHandler _cookiesHandler;
+        private readonly WordQueries _wordQueries;
 
-        public AnagramsController(IWordRepository fileRepository, ICookiesHandler cookiesHandler)
+        public AnagramsController(IWordRepository fileRepository, ICookiesHandler cookiesHandler,
+            WordQueries wordQueries)
         {
             _fileRepository = fileRepository;
             _cookiesHandler = cookiesHandler;
+            _wordQueries = wordQueries;
         }
 
         public IActionResult Index(int? pageNumber, string phrase = null, int pageSize = 100)
@@ -29,8 +31,7 @@ namespace AnagramSolver.WebApp.Controllers
                 List<Anagram> result;
                 if (!string.IsNullOrEmpty(phrase))
                 {
-                    var db = new WordQueries();
-                    result = db.SelectWordsBySearch(phrase);
+                    result = _wordQueries.SelectWordsBySearch(phrase);
                     pageSize = result.Count;
                 }
                 else
@@ -84,7 +85,7 @@ namespace AnagramSolver.WebApp.Controllers
                     throw new Exception("You must fill all the fields");
 
                 _cookiesHandler.ClearAllCookies();
-                _fileRepository.AddWordToFile(anagram);
+                _fileRepository.AddNewWord(anagram);
                 
                 return RedirectToAction(nameof(Index));
             }

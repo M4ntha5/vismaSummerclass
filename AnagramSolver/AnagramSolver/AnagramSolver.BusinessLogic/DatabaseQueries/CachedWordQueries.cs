@@ -4,69 +4,67 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 
-namespace AnagramSolver.BusinessLogicDB.Database
+namespace AnagramSolver.BusinessLogic.Database
 {
-    public class UserLogQueries
+    public class CachedWordQueries
     {
         private readonly SqlConnection sqlConnection;
 
-        public UserLogQueries()
+        public CachedWordQueries()
         {
             sqlConnection = new SqlConnection()
             {
                 ConnectionString = Settings.ConnectionString
             };
         }
-        public void InsertLog(UserLog log)
+
+        public void InsertCachedWord(CachedWord cachedWord)
         {
             sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
             {
                 Connection = sqlConnection,
                 CommandType = CommandType.Text,
-                CommandText = "insert into UserLog(Ip, Phrase, Search_time) " +
-                                "values (@ip, @phrase, @time)"
+                CommandText = "insert into CachedWord(Phrase, Anagrams_ids) " +
+                                "values (@phrase, @anagrams)"
             };
-            cmd.Parameters.Add(new SqlParameter("@ip", log.Ip));
-            cmd.Parameters.Add(new SqlParameter("@phrase", log.SearchPhrase));
-            cmd.Parameters.Add(new SqlParameter("@time", log.SearchTime));
+            cmd.Parameters.Add(new SqlParameter("@phrase", cachedWord.SearchPhrase));
+            cmd.Parameters.Add(new SqlParameter("@anagrams", cachedWord.AnagramsIds));
 
             cmd.ExecuteNonQuery();
             sqlConnection.Close();
         }
-        public List<UserLog> GetAllLogs()
+
+        public CachedWord GetCachedWord(string searchWord)
         {
             sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
             {
                 Connection = sqlConnection,
                 CommandType = CommandType.Text,
-                CommandText = "select * from UserLog"
+                CommandText = "select top 1 * from CachedWord " +
+                                "where phrase = @searchPhrase"
             };
+            cmd.Parameters.Add(new SqlParameter("@searchPhrase", searchWord));
 
             SqlDataReader reader = cmd.ExecuteReader();
 
-            List<UserLog> logs = new List<UserLog>();
+            CachedWord result = null;
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    logs.Add(
-                        new UserLog(
-                            reader["Ip"].ToString(),                            
-                            reader["Phrase"].ToString(),
-                            TimeSpan.Parse(reader["Search_time"].ToString())
-                        ));
+                    result = new CachedWord(reader["Phrase"].ToString(), reader["Anagrams_ids"].ToString());
+                    break;
                 }
             }
 
             reader.Close();
             sqlConnection.Close();
-            return logs;
+            return result;
         }
-
-
     }
 }

@@ -8,6 +8,7 @@ using AnagramSolver.WebApp.Controllers;
 using AnagramSolver.Contracts.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using AnagramSolver.BusinessLogic.Database;
 
 namespace AnagramSolver.Tests.IntegrationTests
 {
@@ -20,6 +21,8 @@ namespace AnagramSolver.Tests.IntegrationTests
         HomeController Controller;
         Dictionary<string, string> cookiesList;
 
+
+
         [SetUp]
         public void Setup()
         {
@@ -27,7 +30,8 @@ namespace AnagramSolver.Tests.IntegrationTests
             AnagramSolverMock = Substitute.For<IAnagramSolver>();
             CookiesHandlerMock = Substitute.For<ICookiesHandler>();
 
-            Controller = new HomeController(UserInterfaceMock, AnagramSolverMock, CookiesHandlerMock);
+            Controller = new HomeController(UserInterfaceMock, AnagramSolverMock, CookiesHandlerMock,
+                new WordQueries(), new UserLogQueries(), new CachedWordQueries());
 
             list = new List<string>()
             {

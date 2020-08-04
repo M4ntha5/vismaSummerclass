@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using AnagramSolver.Contracts.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using AnagramSolver.BusinessLogic;
+using AnagramSolver.BusinessLogic.Properties;
 
 namespace AnagramSolver.WebApp.Controllers
 {
@@ -27,10 +29,10 @@ namespace AnagramSolver.WebApp.Controllers
         [Route("dictionary")]
         public ActionResult GetDictionaryFile()
         {
-            var path = _wordRepository.GetDataFilePath();
-            var fileName = path.Split("\\")[^1];
-            
-            return File(System.IO.File.OpenRead(path), "application/txt", fileName); ;
+            var path = Path.GetTempPath() + "zodynas.txt";
+
+            System.IO.File.WriteAllText(path, Resources.zodynas);
+            return File(System.IO.File.OpenRead(path), "application/txt", "zodynas.txt");
         }
     }
 }

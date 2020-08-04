@@ -1,4 +1,5 @@
-﻿using AnagramSolver.Contracts.Interfaces;
+﻿using AnagramSolver.BusinessLogic.Database;
+using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
 using System;
@@ -11,10 +12,12 @@ namespace AnagramSolver.BusinessLogic.Services
     public class AnagramSolver : IAnagramSolver
     {
         private readonly IWordRepository FileRepository;
+        private readonly CachedWordQueries _cachedWord;
 
-        public AnagramSolver(IWordRepository fileRepo)
+        public AnagramSolver(IWordRepository fileRepo, CachedWordQueries cachedWordQueries)
         {
             FileRepository = fileRepo;
+            _cachedWord = cachedWordQueries;
         }
 
         public IList<string> GetAnagrams(string inputWords)
@@ -28,7 +31,7 @@ namespace AnagramSolver.BusinessLogic.Services
             sortedList = SortWordsContainingInInput(allWords, sortedInput);
 
             var tmpInput = sortedInput;
-            var multiWordResult = new List<string>();
+            
 
           /*  var res2 = SearchForWords(sortedInput, 0, sortedList, sortedInput.Length);
 
@@ -46,11 +49,16 @@ namespace AnagramSolver.BusinessLogic.Services
             }*/
 
             //look for single word anagrams first
-            var singleWordResult = GetAllSingleWordAnagrams(allWords, sortedInput);
+            var singleWordResultTuple = GetAllSingleWordAnagrams(allWords, sortedInput);
+
+            var singleWordResult = singleWordResultTuple.Item1;
+            var singleWordResultIds = singleWordResultTuple.Item2;
 
             if (singleWordResult == null)
                 singleWordResult = new List<string>();
 
+
+            var multiWordResult = new Tuple<List<string>, List<int>>(new List<string>(), new List<int>());
             //look for multi word anagrams
             foreach (var elem in sortedList)
             {
@@ -76,8 +84,16 @@ namespace AnagramSolver.BusinessLogic.Services
                 //recover primary input
                 tmpInput = sortedInput;
             }
+            //all words ids for this found anagrams
+            singleWordResultIds.AddRange(multiWordResult.Item2);
+            //all anagrams found for search phrase
+            singleWordResult.AddRange(multiWordResult.Item1);
 
-            singleWordResult.AddRange(multiWordResult);
+            var idsString = string.Join(";", singleWordResultIds.Take(Settings.AnagramsToGenerate));
+            //adding search to cached table
+            _cachedWord.InsertCachedWord(new CachedWord(inputWords, idsString));
+
+            
             return singleWordResult.Take(Settings.AnagramsToGenerate).ToList();
         }
 
@@ -157,16 +173,22 @@ namespace AnagramSolver.BusinessLogic.Services
 
         }
 
-        private List<string> GetAllSingleWordAnagrams(
+        private Tuple<List<string>, List<int>> GetAllSingleWordAnagrams(
             Dictionary<string, List<Anagram>> allWords, string sortedInput)
         {
             if (allWords.ContainsKey(sortedInput))
             {
-                var results = new List<string>();
-                allWords[sortedInput].ForEach(x => results.Add(x.Word));
+                Tuple<List<string>, List<int>> results = 
+                    new Tuple<List<string>, List<int>>(new List<string>(), new List<int>());
+
+                allWords[sortedInput].ForEach(
+                    x => { 
+                        results.Item1.Add(x.Word); 
+                        results.Item2.Add(x.Id);
+                    });
 
                 //removes user input from results
-                results.Remove(sortedInput);
+                results.Item1.Remove(sortedInput);
                 return results;
             }
             else
@@ -202,11 +224,17 @@ namespace AnagramSolver.BusinessLogic.Services
             return new string(charList);
         }
 
-        private List<string> AddToResultList(List<Anagram> firstAngarams, List<Anagram> secondAngarams, List<string> results)
+        private Tuple<List<string>, List<int>> AddToResultList(List<Anagram> firstAngarams, List<Anagram> secondAngarams, Tuple<List<string>, List<int>> results)
         {
             foreach (var first in firstAngarams)
+            {
+                results.Item2.Add(first.Id);
                 foreach (var second in secondAngarams)
-                    results.Add($"{first.Word} {second.Word}");
+                {
+                    results.Item1.Add($"{first.Word} {second.Word}");
+                    results.Item2.Add(second.Id);
+                }
+            }
 
             return results;
         }

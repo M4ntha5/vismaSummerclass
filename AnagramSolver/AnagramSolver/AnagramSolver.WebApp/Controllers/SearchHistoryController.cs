@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AnagramSolver.BusinessLogicDB.Database;
+using AnagramSolver.BusinessLogic.Database;
 using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +15,13 @@ namespace AnagramSolver.WebApp.Controllers
         private readonly UserLogQueries _userLog;
         private readonly WordQueries _wordQueries;
 
-        public SearchHistoryController()
+        public SearchHistoryController(WordQueries wordQuerie, UserLogQueries logQueries,
+            CachedWordQueries cachedWordQueries)
         {
-            _cachedWord = new CachedWordQueries();
-            _userLog = new UserLogQueries();
-            _wordQueries = new WordQueries();
+            _cachedWord = cachedWordQueries;
+            _userLog = logQueries;
+            _wordQueries = wordQuerie;
         }
-
 
         public IActionResult Index()
         {
@@ -34,7 +34,7 @@ namespace AnagramSolver.WebApp.Controllers
                 var cached = _cachedWord.GetCachedWord(log.SearchPhrase);
                 if(cached != null)
                 {
-                    var anagramsIds = cached.Anagrams.Split(';').ToList();
+                    var anagramsIds = cached.AnagramsIds.Split(';').ToList();
 
                     foreach (var wordId in anagramsIds)
                         anagrams.Add(_wordQueries.SelectWordById(wordId));

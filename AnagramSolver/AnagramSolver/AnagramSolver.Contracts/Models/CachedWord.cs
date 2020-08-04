@@ -8,12 +8,12 @@ namespace AnagramSolver.Contracts.Models
     {       
         public string Id { get; set; }
         public string SearchPhrase { get; set; }
-        public string Anagrams { get; set; }
+        public string AnagramsIds { get; set; }
 
         public CachedWord(string searchPhrase, string anagrams)
         {
             SearchPhrase = searchPhrase;
-            Anagrams = anagrams;
+            AnagramsIds = anagrams;
         }
     }
 }

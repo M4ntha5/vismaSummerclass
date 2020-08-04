@@ -35,6 +35,8 @@ namespace AnagramSolver.Console.UI
 
         public string ValidateInputData(string userInput)
         {
+            if (string.IsNullOrEmpty(userInput))
+                return null;
             var userWords = userInput.Split(' ').ToList();
             foreach (var word in userWords)
             {

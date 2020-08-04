@@ -1,4 +1,5 @@
-﻿using AnagramSolver.Contracts.Interfaces;
+﻿using AnagramSolver.BusinessLogic.Properties;
+using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
 using System;
@@ -34,13 +35,15 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
         private void ReadDataFromFile()
         {
-            if (!File.Exists(FilePath))
-                throw new Exception($"File '{FilePath}' does not exist!");
+            //file reading using path
 
+            /* if (!File.Exists(FilePath))
+                throw new Exception($"File '{FilePath}' does not exist!");
             string[] lines = File.ReadAllLines(FilePath);
+            */
 
             //file reading using resources
-            //string[] lines = File.ReadAllLines(Resources.zodynas);
+            string[] lines = File.ReadAllLines(Resources.zodynas);
 
             string previousWord = string.Empty;
             foreach (string line in lines)
@@ -92,7 +95,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 return null;
         }
 
-        public void AddWordToFile(Anagram anagram)
+        public void AddNewWord(Anagram anagram)
         {
             if(!File.Exists(FilePath))
                 throw new Exception($"File '{FilePath}' does not exist!");
@@ -104,16 +107,11 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
                 foreach(var item in anagramWords)
                     if (item.Word == anagram.Word)
-                        throw new Exception($"Word {anagram.Word} already exists");                 
+                        throw new Exception($"Word {anagram.Word} already exists");
             }
 
             string appendText = anagram.Word + '\t' + anagram.Case + '\t' + "" + '\t' + "" + '\n'; 
             File.AppendAllText(FilePath, appendText);
-        }
-
-        public string GetDataFilePath()
-        {
-            return FilePath;
         }
     }
 }

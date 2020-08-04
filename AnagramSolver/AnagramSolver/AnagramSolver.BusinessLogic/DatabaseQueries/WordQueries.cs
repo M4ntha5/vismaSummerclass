@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace AnagramSolver.BusinessLogicDB.Database
+namespace AnagramSolver.BusinessLogic.Database
 {
     public class WordQueries
     {
@@ -134,18 +134,22 @@ namespace AnagramSolver.BusinessLogicDB.Database
             return anagram;
         }
 
-        public bool ClearWordTable()
+        public bool ClearSelectedTable(List<string> tables)
         {
-            sqlConnection.Open();
-            SqlCommand cmd = new SqlCommand
+            foreach (var table in tables)
             {
-                Connection = sqlConnection,
-                CommandType = CommandType.StoredProcedure,
-                CommandText = "ClearWordTableContent"
-            };
-            cmd.ExecuteNonQuery();
+                sqlConnection.Open();
+                SqlCommand cmd = new SqlCommand
+                {
+                    Connection = sqlConnection,
+                    CommandType = CommandType.StoredProcedure,
+                    CommandText = "ClearSelectedTableContent"
+                };
+                cmd.Parameters.Add(new SqlParameter("@table", table));
+                cmd.ExecuteNonQuery();
 
-            sqlConnection.Close();
+                sqlConnection.Close();
+            }
             return true;
         }
 

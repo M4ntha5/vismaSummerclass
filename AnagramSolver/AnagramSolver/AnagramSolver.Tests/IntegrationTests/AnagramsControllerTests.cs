@@ -1,4 +1,5 @@
-﻿using AnagramSolver.Contracts.Interfaces;
+﻿using AnagramSolver.BusinessLogic.Database;
+using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.WebApp.Controllers;
 using AnagramSolver.WebApp.Models;
@@ -24,7 +25,7 @@ namespace AnagramSolver.Tests.IntegrationTests
             WordRepositoryMock = Substitute.For<IWordRepository>();
             CookiesHandlerMock = Substitute.For<ICookiesHandler>();
 
-            Controller = new AnagramsController(WordRepositoryMock, CookiesHandlerMock);
+            Controller = new AnagramsController(WordRepositoryMock, CookiesHandlerMock, new WordQueries());
 
             anagram = new Anagram { Case = "case2", Word = "word2" };
             list = new List<Anagram>()
@@ -94,13 +95,13 @@ namespace AnagramSolver.Tests.IntegrationTests
         [Test]
         public void NewWordCreatedSuccessfully()
         {
-            WordRepositoryMock.AddWordToFile(Arg.Any<Anagram>());
+            WordRepositoryMock.AddNewWord(Arg.Any<Anagram>());
             CookiesHandlerMock.ClearAllCookies();
 
             var result = Controller.Create(anagram) as RedirectToActionResult;
 
             CookiesHandlerMock.Received().ClearAllCookies();
-            WordRepositoryMock.Received().AddWordToFile(Arg.Any<Anagram>());
+            WordRepositoryMock.Received().AddNewWord(Arg.Any<Anagram>());
             Assert.AreEqual("Index", result.ActionName);
         }
 

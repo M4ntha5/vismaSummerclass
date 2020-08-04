@@ -5,7 +5,7 @@ using AnagramSolver.WebApp.Models;
 using AnagramSolver.Contracts.Interfaces;
 using System.Linq;
 using AnagramSolver.Contracts.Models;
-using AnagramSolver.BusinessLogicDB.Database;
+using AnagramSolver.BusinessLogic.Database;
 using System.Collections.Generic;
 
 namespace AnagramSolver.WebApp.Controllers
@@ -20,23 +20,21 @@ namespace AnagramSolver.WebApp.Controllers
         private readonly WordQueries _wordQueries;
 
         public HomeController(IUserInterface userInterface, IAnagramSolver anagramSolver,
-            ICookiesHandler cookiesHandler)
+            ICookiesHandler cookiesHandler, WordQueries wordQuerie, UserLogQueries logQueries,
+            CachedWordQueries cachedWordQueries)
         {
             _userInterface = userInterface;
             _anagramSolver = anagramSolver;
             _cookiesHandler = cookiesHandler;
-            _cachedWord = new CachedWordQueries();
-            _userLog = new UserLogQueries();
-            _wordQueries = new WordQueries();
+            _cachedWord = cachedWordQueries;
+            _userLog = logQueries;
+            _wordQueries = wordQuerie;
         }
 
         public IActionResult Index(string id)
         {
             try
             { 
-                if (string.IsNullOrEmpty(id))
-                    throw new Exception("You must enter at least one word");
-
                 var input = _userInterface.ValidateInputData(id);
                 if (string.IsNullOrEmpty(input))
                     throw new Exception("You must enter at least one word");
@@ -50,7 +48,7 @@ namespace AnagramSolver.WebApp.Controllers
                 var cachedWord = _cachedWord.GetCachedWord(input);
                 if (cachedWord != null)
                 {
-                    var anagramsIds = cachedWord.Anagrams.Split(';').ToList();
+                    var anagramsIds = cachedWord.AnagramsIds.Split(';').ToList();
                     
                     foreach (var wordId in anagramsIds)
                         anagrams.Add(_wordQueries.SelectWordById(wordId));
@@ -64,7 +62,6 @@ namespace AnagramSolver.WebApp.Controllers
                 sw.Stop();
 
                 _userLog.InsertLog(new UserLog(GetUserIp(), id, sw.Elapsed));
-                
 
                 //removing input element
                 anagrams.Remove(id);

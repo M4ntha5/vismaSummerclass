@@ -9,7 +9,6 @@ namespace AnagramSolver.Contracts.Interfaces
         Dictionary<string, List<Anagram>> GetAllData();
         List<Anagram> GetWords();
         List<Anagram> GetSelectedWordAnagrams(string key);
-        void AddWordToFile(Anagram anagram);
-        string GetDataFilePath();
+        void AddNewWord(Anagram anagram);
     }
 }
