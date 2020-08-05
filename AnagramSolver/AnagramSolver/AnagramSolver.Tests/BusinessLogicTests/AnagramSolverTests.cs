@@ -10,6 +10,7 @@ using NSubstitute;
 using AnagramSolver.Contracts.Models;
 using System.Linq;
 using AnagramSolver.BusinessLogic.Database;
+using AnagramSolver.Console.UI;
 
 namespace AnagramSolver.Tests
 {
@@ -17,16 +18,18 @@ namespace AnagramSolver.Tests
     {
         IAnagramSolver solver;
         IWordRepository wordMock;
+        IUserInterface InterfaceMock;
         List<Anagram> list1;
         List<Anagram> list2;
         [SetUp]
         public void Setup()
         {
             Configuration.ReadAppSettingsFile();
-            solver = new BusinessLogic.Services.AnagramSolver(new FileRepository(), new CachedWordQueries());
-            Configuration.ReadAppSettingsFile();
 
             wordMock = Substitute.For<IWordRepository>();
+            InterfaceMock = Substitute.For<IUserInterface>();
+
+            solver = new BusinessLogic.Services.AnagramSolver(wordMock, InterfaceMock, new CachedWordQueries());
 
             list1 = new List<Anagram>()
             {
@@ -54,6 +57,8 @@ namespace AnagramSolver.Tests
         [Test]
         public void TestGetAnagramsFromSingleWord()
         {
+            solver = new BusinessLogic.Services.AnagramSolver(
+                new FileRepository(), new UserInterface(), new CachedWordQueries());
             var result = solver.GetAnagrams("naujas");
             result.ShouldContain("jaunas");
 
@@ -64,6 +69,9 @@ namespace AnagramSolver.Tests
         [Test]
         public void TestGetAnagramsFromPhrase()
         {
+            solver = new BusinessLogic.Services.AnagramSolver(
+                new FileRepository(), new UserInterface(), new CachedWordQueries());
+
             var result = solver.GetAnagrams("labasrytas");
             result.ShouldContain("balas tyras");
 

@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Microsoft.EntityFrameworkCore;
+using AnagramSolver.EF.DatabaseFirst.Data;
 
 namespace AnagramSolver.WebApp
 {
@@ -30,14 +31,18 @@ namespace AnagramSolver.WebApp
 
             services
                 .AddScoped<IAnagramSolver, BusinessLogic.Services.AnagramSolver>()
-                .AddScoped<IWordRepository, BusinessLogicDB.Repositories.WordRepository>()
+                .AddScoped<IWordRepository, BusinessLogic.Repositories.WordRepository>()
                 .AddScoped<IUserInterface, Console.UI.UserInterface>()
                 .AddScoped<ICookiesHandler, Models.CookiesHandler>()
                 .AddScoped<BusinessLogic.Database.CachedWordQueries>()
                 .AddScoped<BusinessLogic.Database.UserLogQueries>()
                 .AddScoped<BusinessLogic.Database.WordQueries>()
                 .AddHttpContextAccessor();
-            
+
+            services.AddDbContext<AnagramSolverWebAppContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("AnagramSolverWebAppContext")));
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -37,7 +37,15 @@ namespace AnagramSolver.WebApp.Controllers
                     var anagramsIds = cached.AnagramsIds.Split(';').ToList();
 
                     foreach (var wordId in anagramsIds)
-                        anagrams.Add(_wordQueries.SelectWordById(wordId));
+                    {
+                        var phrase = wordId.Split('/').ToList();
+                        string wordFound = "";
+                        foreach (var word in phrase)
+                        {
+                            wordFound += _wordQueries.SelectWordById(word) + " ";
+                        }
+                        anagrams.Add(wordFound);
+                    }
                 }
                 history.Add(
                     new SearchHistory

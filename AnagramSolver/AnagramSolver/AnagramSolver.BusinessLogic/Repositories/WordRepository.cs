@@ -67,7 +67,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
         }
 
         public Dictionary<string, List<Anagram>> GetAllData()
-        {
+        {            
             return AllData;
         }
     }

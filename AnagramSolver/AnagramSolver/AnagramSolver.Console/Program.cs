@@ -21,7 +21,8 @@ namespace AnagramSolver.Console
             //loading data from settings file
             Configuration.ReadAppSettingsFile();
           
-            var AnagramSolver = new BusinessLogic.Services.AnagramSolver(new FileRepository(), new BusinessLogic.Database.CachedWordQueries());
+            var AnagramSolver = new BusinessLogic.Services.AnagramSolver(
+                new FileRepository(), new UserInterface(), new CachedWordQueries());
             var howToSolve = UserInterface.DisplayOptions();
 
             while (true)
@@ -50,7 +51,7 @@ namespace AnagramSolver.Console
         {
             System.Console.WriteLine("Seeding database, please wait");
             var fileRepo = new FileRepository();
-            var connection = new BusinessLogic.Database.WordQueries();
+            var connection = new WordQueries();
             var wordsList = fileRepo.GetWords();
 
             foreach(var word in wordsList)

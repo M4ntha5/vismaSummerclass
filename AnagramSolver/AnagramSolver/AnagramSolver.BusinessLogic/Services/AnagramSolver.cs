@@ -13,19 +13,26 @@ namespace AnagramSolver.BusinessLogic.Services
     {
         private readonly IWordRepository FileRepository;
         private readonly CachedWordQueries _cachedWord;
+        private readonly IUserInterface _userInterface;
 
-        public AnagramSolver(IWordRepository fileRepo, CachedWordQueries cachedWordQueries)
+        public AnagramSolver(IWordRepository fileRepo, IUserInterface userInterface, 
+            CachedWordQueries cachedWordQueries)
         {
             FileRepository = fileRepo;
             _cachedWord = cachedWordQueries;
+            _userInterface = userInterface;
         }
 
         public IList<string> GetAnagrams(string inputWords)
         {
+            var joinedInput = _userInterface.ValidateInputData(inputWords);
+            if (string.IsNullOrEmpty(joinedInput))
+                throw new Exception("You must enter at least one word");
+
             //getting all dictionary
             var allWords = FileRepository.GetAllData();
             //sorting user phrase
-            var sortedInput = String.Concat(inputWords.OrderBy(x => x));
+            var sortedInput = String.Concat(joinedInput.OrderBy(x => x));
 
             var sortedList = new Dictionary<string, List<Anagram>>();
             sortedList = SortWordsContainingInInput(allWords, sortedInput);
@@ -50,6 +57,8 @@ namespace AnagramSolver.BusinessLogic.Services
 
             //look for single word anagrams first
             var singleWordResultTuple = GetAllSingleWordAnagrams(allWords, sortedInput);
+            if (singleWordResultTuple == null)
+                singleWordResultTuple = new Tuple<List<string>, List<string>>(new List<string>(), new List<string>());
 
             var singleWordResult = singleWordResultTuple.Item1;
             var singleWordResultIds = singleWordResultTuple.Item2;
@@ -58,7 +67,7 @@ namespace AnagramSolver.BusinessLogic.Services
                 singleWordResult = new List<string>();
 
 
-            var multiWordResult = new Tuple<List<string>, List<int>>(new List<string>(), new List<int>());
+            var multiWordResult = new Tuple<List<string>, List<string>>(new List<string>(), new List<string>());
             //look for multi word anagrams
             foreach (var elem in sortedList)
             {
@@ -173,18 +182,17 @@ namespace AnagramSolver.BusinessLogic.Services
 
         }
 
-        private Tuple<List<string>, List<int>> GetAllSingleWordAnagrams(
+        private Tuple<List<string>, List<string>> GetAllSingleWordAnagrams(
             Dictionary<string, List<Anagram>> allWords, string sortedInput)
         {
             if (allWords.ContainsKey(sortedInput))
             {
-                Tuple<List<string>, List<int>> results = 
-                    new Tuple<List<string>, List<int>>(new List<string>(), new List<int>());
+                var results = new Tuple<List<string>, List<string>>(new List<string>(), new List<string>());
 
                 allWords[sortedInput].ForEach(
                     x => { 
                         results.Item1.Add(x.Word); 
-                        results.Item2.Add(x.Id);
+                        results.Item2.Add(x.Id.ToString());
                     });
 
                 //removes user input from results
@@ -224,15 +232,14 @@ namespace AnagramSolver.BusinessLogic.Services
             return new string(charList);
         }
 
-        private Tuple<List<string>, List<int>> AddToResultList(List<Anagram> firstAngarams, List<Anagram> secondAngarams, Tuple<List<string>, List<int>> results)
+        private Tuple<List<string>, List<string>> AddToResultList(List<Anagram> firstAngarams, List<Anagram> secondAngarams, Tuple<List<string>, List<string>> results)
         {
             foreach (var first in firstAngarams)
             {
-                results.Item2.Add(first.Id);
                 foreach (var second in secondAngarams)
                 {
                     results.Item1.Add($"{first.Word} {second.Word}");
-                    results.Item2.Add(second.Id);
+                    results.Item2.Add($"{first.Id}/{second.Id}");
                 }
             }
 

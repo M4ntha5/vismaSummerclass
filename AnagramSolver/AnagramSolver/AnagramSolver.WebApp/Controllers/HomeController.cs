@@ -7,23 +7,23 @@ using System.Linq;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.BusinessLogic.Database;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using AnagramSolver.EF.DatabaseFirst.Data;
 
 namespace AnagramSolver.WebApp.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IAnagramSolver _anagramSolver;
-        private readonly IUserInterface _userInterface;
         private readonly ICookiesHandler _cookiesHandler;
         private readonly CachedWordQueries _cachedWord;
         private readonly UserLogQueries _userLog;
         private readonly WordQueries _wordQueries;
 
-        public HomeController(IUserInterface userInterface, IAnagramSolver anagramSolver,
-            ICookiesHandler cookiesHandler, WordQueries wordQuerie, UserLogQueries logQueries,
-            CachedWordQueries cachedWordQueries)
+        public HomeController(IAnagramSolver anagramSolver, ICookiesHandler cookiesHandler, 
+            WordQueries wordQuerie, UserLogQueries logQueries, CachedWordQueries cachedWordQueries)
         {
-            _userInterface = userInterface;
             _anagramSolver = anagramSolver;
             _cookiesHandler = cookiesHandler;
             _cachedWord = cachedWordQueries;
@@ -34,39 +34,41 @@ namespace AnagramSolver.WebApp.Controllers
         public IActionResult Index(string id)
         {
             try
-            { 
-                var input = _userInterface.ValidateInputData(id);
-                if (string.IsNullOrEmpty(input))
-                    throw new Exception("You must enter at least one word");
-
+            {
                 /*  var cookieValue = _cookiesHandler.GetCookieByKey(input);
                   if (!string.IsNullOrEmpty(cookieValue))
                       return View(cookieValue.Split(';').ToList());*/
 
                 IList<string> anagrams = new List<string>();
 
-                var cachedWord = _cachedWord.GetCachedWord(input);
+                var cachedWord = _cachedWord.GetCachedWord(id);
                 if (cachedWord != null)
                 {
                     var anagramsIds = cachedWord.AnagramsIds.Split(';').ToList();
                     
                     foreach (var wordId in anagramsIds)
-                        anagrams.Add(_wordQueries.SelectWordById(wordId));
+                    {
+                        var phrase = wordId.Split('/').ToList();
+                        string wordFound = "";
+                        foreach(var word in phrase)
+                        {
+                            wordFound += _wordQueries.SelectWordById(word) + " ";
+                        }
+                        anagrams.Add(wordFound);
+                    }
                     return View(anagrams);
                 }
 
 
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
-                anagrams = _anagramSolver.GetAnagrams(input);
+                anagrams = _anagramSolver.GetAnagrams(id);
                 sw.Stop();
 
                 _userLog.InsertLog(new UserLog(GetUserIp(), id, sw.Elapsed));
 
                 //removing input element
                 anagrams.Remove(id);
-
-
 
                 //_cookiesHandler.AddCookie(id, string.Join(";", anagrams.ToArray()));
 

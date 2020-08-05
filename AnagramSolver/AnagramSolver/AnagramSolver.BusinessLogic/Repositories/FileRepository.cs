@@ -37,13 +37,13 @@ namespace AnagramSolver.BusinessLogic.Repositories
         {
             //file reading using path
 
-            /* if (!File.Exists(FilePath))
+             if (!File.Exists(FilePath))
                 throw new Exception($"File '{FilePath}' does not exist!");
             string[] lines = File.ReadAllLines(FilePath);
-            */
+            
 
             //file reading using resources
-            string[] lines = File.ReadAllLines(Resources.zodynas);
+            //string[] lines = File.ReadAllLines(Resources.zodynas);
 
             string previousWord = string.Empty;
             foreach (string line in lines)

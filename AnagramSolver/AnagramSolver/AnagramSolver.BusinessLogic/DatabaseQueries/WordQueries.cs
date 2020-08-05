@@ -29,7 +29,7 @@ namespace AnagramSolver.BusinessLogic.Database
             {
                 Connection = sqlConnection,
                 CommandType = CommandType.Text,
-                CommandText = "insert into Word(Word, Category, Sorted_word) " +
+                CommandText = "insert into Words(Word, Category, Sorted_word) " +
                                 "values (@Word, @Category, @Sorted_word)"
             };
             cmd.Parameters.Add(new SqlParameter("@Word", wordModel.Word));
@@ -81,7 +81,7 @@ namespace AnagramSolver.BusinessLogic.Database
             {
                 Connection = sqlConnection,
                 CommandType = CommandType.Text,
-                CommandText = "select * from Word"
+                CommandText = "select * from Words"
             };
             SqlDataReader reader = cmd.ExecuteReader();
 
