@@ -16,10 +16,10 @@ namespace AnagramSolver.WebApp.Controllers
 {
     public class AnagramsController : Controller
     {
-        private readonly ICookiesHandler _cookiesHandler;
+        private readonly ICookiesHandlerServvice _cookiesHandler;
         private readonly IWordService _wordService;
 
-        public AnagramsController(ICookiesHandler cookiesHandler, IWordService wordService)
+        public AnagramsController(ICookiesHandlerServvice cookiesHandler, IWordService wordService)
         {
             _cookiesHandler = cookiesHandler;
             _wordService = wordService;

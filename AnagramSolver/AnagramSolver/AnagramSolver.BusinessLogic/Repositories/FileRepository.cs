@@ -39,7 +39,6 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
             //file reading using resources
             //string[] lines = File.ReadAllLines(Resources.zodynas);
-            int lineNr = 1;
             string previousWord = string.Empty;
             var result = new List<WordEntity>();
             foreach (string line in lines)
@@ -48,9 +47,6 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
                 string word = lineParts[0].ToLower().Trim();
                 string wordCase = lineParts[1].ToLower().Trim();
-                string test = "";
-                if (word == "labas")
-                    test = "asd";
 
                 //if same line found skip to the next one
                 if (word == previousWord)
@@ -69,7 +65,6 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 result.Add(entity); 
                 
                 previousWord = word;
-                lineNr++;
             }
             return result;
         }
@@ -98,24 +93,6 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
             string appendText = anagram.Word + '\t' + anagram.Case + '\t' + "" + '\t' + "" + '\n';
             File.AppendAllText(FilePath, appendText);
-        }
-
-
-
-
-        public Task<string> SelectWordById(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<WordEntity>> SelectWordsBySearch(string phrase)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task ClearSelectedTable(List<string> tables)
-        {
-            throw new NotImplementedException();
         }
     }
 }

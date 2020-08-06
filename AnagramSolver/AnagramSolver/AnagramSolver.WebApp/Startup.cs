@@ -33,7 +33,7 @@ namespace AnagramSolver.WebApp
             services               
                 
                 .AddScoped<IUserInterface, Console.UI.UserInterface>()
-                .AddScoped<ICookiesHandler, Models.CookiesHandler>()
+                .AddScoped<ICookiesHandlerServvice, BusinessLogic.Services.CookiesHandlerService>()
 
                 .AddScoped<IUserLogRepository, EF.DatabaseFirst.Repositories.UserLogRepositoryEF>()
                 .AddScoped<ICachedWordRepository, EF.DatabaseFirst.Repositories.CachedWordRepositoryEF>()
@@ -50,7 +50,7 @@ namespace AnagramSolver.WebApp
                 .AddHttpContextAccessor();
 
             services.AddDbContext<AnagramSolverContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("AnagramSolverWebAppContext")));
+                    options.UseSqlServer(Contracts.Utils.Settings.ConnectionString));
 
 
         }

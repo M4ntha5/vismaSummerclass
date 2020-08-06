@@ -12,26 +12,6 @@ namespace AnagramSolver.BusinessLogic.Services
 {
     public class AnagramSolver : IAnagramSolver
     {
-
-        /* private readonly IWordRepository _wordRepository;
-         private readonly ICachedWordRepository _cachedWordRepository;
-         private readonly IUserInterface _userInterface;
-
-         public AnagramSolver(IWordRepository wordRepository, IUserInterface userInterface,
-             ICachedWordRepository cachedWordQueries)
-         {
-             _wordRepository = wordRepository;
-             _cachedWordRepository = cachedWordQueries;
-             _userInterface = userInterface;
-         }
-
-         public async Task<IList<string>> GetAnagrams(string inputWords)
-         {
-
-             return null;
-         }
-*/
-
         private readonly IWordRepository _wordRepository;
         private readonly ICachedWordRepository _cachedWordRepository;
         private readonly IUserInterface _userInterface;
@@ -134,7 +114,7 @@ namespace AnagramSolver.BusinessLogic.Services
         }
 
 
-        public List<List<List<Anagram>>> SearchForWords(string phrase, int currLen,
+      /*  public List<List<List<Anagram>>> SearchForWords(string phrase, int currLen,
             Dictionary<string, List<Anagram>> sortedData, int orgLen)
         {
             Dictionary<string, List<Anagram>> sorted2 =
@@ -207,7 +187,7 @@ namespace AnagramSolver.BusinessLogic.Services
             }
             return myString;
 
-        }
+        }*/
 
         private async Task<List<WordEntity>> GetAllSingleWordAnagrams(string word)
         {
@@ -217,29 +197,9 @@ namespace AnagramSolver.BusinessLogic.Services
                 return anagrams;
             else
                 return null;
-
-
-           /* if (allWords.ContainsKey(sortedInput))
-            {
-                var results = new Tuple<List<string>, List<string>>(new List<string>(), new List<string>());
-
-                allWords[sortedInput].ForEach(
-                    x =>
-                    {
-                        results.Item1.Add(x.Word);
-                        results.Item2.Add(x.Id.ToString());
-                    });
-
-                //removes user input from results
-                results.Item1.Remove(sortedInput);
-                return results;
-            }
-            else
-                return null;*/
         }
 
-        private List<WordEntity> SortWordsContainingInInput(
-          List<WordEntity> allWords, string sortedInput)
+        private List<WordEntity> SortWordsContainingInInput(List<WordEntity> allWords, string sortedInput)
         {
             var sortedList = new List<WordEntity>();
             foreach (var word in allWords)
@@ -278,21 +238,6 @@ namespace AnagramSolver.BusinessLogic.Services
             }
             return new string(charList);
         }
-
-        private Tuple<List<string>, List<string>> AddToResultList(List<Anagram> firstAngarams, List<Anagram> secondAngarams, Tuple<List<string>, List<string>> results)
-        {
-            foreach (var first in firstAngarams)
-            {
-                foreach (var second in secondAngarams)
-                {
-                    results.Item1.Add($"{first.Word} {second.Word}");
-                    results.Item2.Add($"{first.Id}/{second.Id}");
-                }
-            }
-
-            return results;
-        }
-
 
     }
 }

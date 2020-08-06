@@ -19,7 +19,7 @@ namespace AnagramSolver.Console
             int.TryParse(configuration.GetSection("AnagramsToGenerate").Value, out int anagramsCount);
             int.TryParse(configuration.GetSection("MinInputLength").Value, out int minLength);
             var dataFile = configuration.GetSection("DataFileName").Value;
-            var connString = configuration.GetSection("ConnectionString").Value;
+            var connString = configuration.GetConnectionString("Development");
 
             if (anagramsCount > 10 || anagramsCount < 1)
                 throw new Exception("Generated anagrams count must be between 1 and 10");

@@ -38,11 +38,6 @@ namespace AnagramSolver.EF.DatabaseFirst.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task ClearSelectedTable(List<string> tables)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<List<WordEntity>> GetAllWords()
         {
             return await _context.Words.ToListAsync();
@@ -70,59 +65,9 @@ namespace AnagramSolver.EF.DatabaseFirst.Repositories
             return wordsFound;
         }
 
-
-
-
-        /*
-        private void ReadData()
+        public Task ClearSelectedTable(List<string> tables)
         {
-            var data = _context.Words.ToList();
-            foreach (var word in data)
-            {
-                var anagramModel = MatchWordEntityToModel(word);
-
-                if (AllData.ContainsKey(word.SortedWord))
-                    AllData[word.SortedWord].Add(anagramModel);
-                else
-                    AllData.Add(word.SortedWord, new List<Anagram> { anagramModel });
-            }
+            throw new NotImplementedException();
         }
-
-
-
-        public Dictionary<string, List<Anagram>> GetAllData()
-        {
-            return AllData;
-        }
-
-        public List<Anagram> GetSelectedWordAnagrams(string key)
-        {
-            var anagrams = _context.Words.Where(x=> x.SortedWord == key);
-            var anagramsModel = new List<Anagram>();
-            foreach (var anagram in anagrams)
-                anagramsModel.Add(MatchWordEntityToModel(anagram));
-
-            return anagramsModel;
-        }
-
-        public async Task<IEnumerable<Anagram>> GetWords()
-        {
-            var allWords = _context.Words;
-            var words = new List<Anagram>();
-            foreach (var word in allWords)
-                words.Add(MatchWordEntityToModel(word));
-
-            return words;
-        }
-
-        private Anagram MatchWordEntityToModel(WordEntity entity)
-        {
-            var model = new Anagram
-            {
-                Case = entity.Category,
-                Word = entity.Word
-            };
-            return model;
-        }*/
     }
 }

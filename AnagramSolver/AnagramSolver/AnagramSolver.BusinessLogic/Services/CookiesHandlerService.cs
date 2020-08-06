@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
-namespace AnagramSolver.WebApp.Models
+namespace AnagramSolver.BusinessLogic.Services
 {
-    public class CookiesHandler : ICookiesHandler
+    public class CookiesHandlerService : ICookiesHandlerServvice
     {
         private readonly IHttpContextAccessor _httpAccessor;
 
-        public CookiesHandler(IHttpContextAccessor httpContextAccessor)
+        public CookiesHandlerService(IHttpContextAccessor httpContextAccessor)
         {
             _httpAccessor = httpContextAccessor;
         }

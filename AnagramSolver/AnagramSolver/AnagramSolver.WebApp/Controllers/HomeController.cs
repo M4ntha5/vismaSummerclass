@@ -18,12 +18,12 @@ namespace AnagramSolver.WebApp.Controllers
     public class HomeController : Controller
     {
         private readonly IAnagramSolver _anagramSolver;
-        private readonly ICookiesHandler _cookiesHandler;
+        private readonly ICookiesHandlerServvice _cookiesHandler;
         private readonly ICachedWordRepository _cachedWordRepository;
         private readonly IUserLogRepository _userLogRepository;
         private readonly IWordService _wordService;
 
-        public HomeController(IAnagramSolver anagramSolver, ICookiesHandler cookiesHandler,
+        public HomeController(IAnagramSolver anagramSolver, ICookiesHandlerServvice cookiesHandler,
             IUserLogRepository logRepository, ICachedWordRepository cachedWordRepository,
             IWordService wordService)
         {
@@ -76,7 +76,7 @@ namespace AnagramSolver.WebApp.Controllers
                 //removing input element
                 anagrams.Remove(id);
 
-                //_cookiesHandler.AddCookie(id, string.Join(";", anagrams.ToArray()));
+                _cookiesHandler.AddCookie(id, string.Join(";", anagrams.ToArray()));
 
                 return View(anagrams);
 
