@@ -1,4 +1,6 @@
-﻿using AnagramSolver.Contracts.Models;
+﻿using AnagramSolver.Contracts.Entities;
+using AnagramSolver.Contracts.Interfaces;
+using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
 using System;
 using System.Collections.Generic;
@@ -6,14 +8,15 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace AnagramSolver.BusinessLogic.Database
+namespace AnagramSolver.BusinessLogic.Repositories
 {
-    public class CachedWordQueries
+    public class CachedWordRepositoryDB : ICachedWordRepository
     {
         private readonly SqlConnection sqlConnection;
 
-        public CachedWordQueries()
+        public CachedWordRepositoryDB()
         {
             sqlConnection = new SqlConnection()
             {
@@ -21,43 +24,48 @@ namespace AnagramSolver.BusinessLogic.Database
             };
         }
 
-        public void InsertCachedWord(CachedWord cachedWord)
+        public async Task InsertCachedWord(CachedWord cachedWord)
         {
             sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
             {
                 Connection = sqlConnection,
                 CommandType = CommandType.Text,
-                CommandText = "insert into CachedWord(Phrase, Anagrams_ids) " +
+                CommandText = "insert into CachedWords(Phrase, AnagramsIds) " +
                                 "values (@phrase, @anagrams)"
             };
             cmd.Parameters.Add(new SqlParameter("@phrase", cachedWord.SearchPhrase));
             cmd.Parameters.Add(new SqlParameter("@anagrams", cachedWord.AnagramsIds));
 
-            cmd.ExecuteNonQuery();
+            await cmd.ExecuteNonQueryAsync();
             sqlConnection.Close();
         }
 
-        public CachedWord GetCachedWord(string searchWord)
+        public async Task<CachedWordEntity> GetCachedWord(string phrase)
         {
             sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
             {
                 Connection = sqlConnection,
                 CommandType = CommandType.Text,
-                CommandText = "select top 1 * from CachedWord " +
+                CommandText = "select top 1 * from CachedWords " +
                                 "where phrase = @searchPhrase"
             };
-            cmd.Parameters.Add(new SqlParameter("@searchPhrase", searchWord));
+            cmd.Parameters.Add(new SqlParameter("@searchPhrase", phrase));
 
-            SqlDataReader reader = cmd.ExecuteReader();
+            SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
-            CachedWord result = null;
+            CachedWordEntity result = null;
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    result = new CachedWord(reader["Phrase"].ToString(), reader["Anagrams_ids"].ToString());
+                    result = new CachedWordEntity()
+                    {
+                        ID = int.Parse(reader["Phrase"].ToString()),
+                        Phrase = reader["Phrase"].ToString(),
+                        AnagramsIds = reader["AnagramsIds"].ToString()
+                    };                    
                     break;
                 }
             }

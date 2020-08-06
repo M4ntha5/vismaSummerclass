@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using AnagramSolver.EF.DatabaseFirst.Entities;
 using AnagramSolver.Contracts.Utils;
+using AnagramSolver.Contracts.Entities;
 
 namespace AnagramSolver.EF.DatabaseFirst.Data
 {
-    public class AnagramSolverWebAppContext : DbContext
+    public class AnagramSolverContext : DbContext
     {
-        public AnagramSolverWebAppContext (DbContextOptions<AnagramSolverWebAppContext> options)
+        public AnagramSolverContext (DbContextOptions<AnagramSolverContext> options)
             : base(options)
         {
         }

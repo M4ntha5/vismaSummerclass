@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using AnagramSolver.EF.DatabaseFirst.Data;
+using AnagramSolver.Contracts.Interfaces.Services;
 
 namespace AnagramSolver.WebApp
 {
@@ -29,17 +30,26 @@ namespace AnagramSolver.WebApp
             services.AddControllersWithViews();
             Console.Configuration.ReadAppSettingsFile();
 
-            services
-                .AddScoped<IAnagramSolver, BusinessLogic.Services.AnagramSolver>()
-                .AddScoped<IWordRepository, BusinessLogic.Repositories.WordRepository>()
+            services               
+                
                 .AddScoped<IUserInterface, Console.UI.UserInterface>()
                 .AddScoped<ICookiesHandler, Models.CookiesHandler>()
-                .AddScoped<BusinessLogic.Database.CachedWordQueries>()
-                .AddScoped<BusinessLogic.Database.UserLogQueries>()
-                .AddScoped<BusinessLogic.Database.WordQueries>()
+
+                .AddScoped<IUserLogRepository, EF.DatabaseFirst.Repositories.UserLogRepositoryEF>()
+                .AddScoped<ICachedWordRepository, EF.DatabaseFirst.Repositories.CachedWordRepositoryEF>()
+                .AddScoped<IWordRepository, EF.DatabaseFirst.Repositories.WordRepositoryEF>()
+                .AddScoped<IAdditionalWordRepository, EF.DatabaseFirst.Repositories.WordRepositoryEF>()
+
+                //.AddScoped<IUserLogRepository, BusinessLogic.Repositories.UserLogRepositoryDB>()
+                //.AddScoped<ICachedWordRepository, BusinessLogic.Repositories.CachedWordRepositoryDB>()
+                //.AddScoped<IWordRepository, BusinessLogic.Repositories.WordRepositoryDB>()
+                //.AddScoped<IAdditionalWordRepository, BusinessLogic.Repositories.WordRepositoryDB>()
+
+                .AddScoped<IAnagramSolver, BusinessLogic.Services.AnagramSolver>()
+                .AddScoped<IWordService, BusinessLogic.Services.WordService>()
                 .AddHttpContextAccessor();
 
-            services.AddDbContext<AnagramSolverWebAppContext>(options =>
+            services.AddDbContext<AnagramSolverContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("AnagramSolverWebAppContext")));
 
 

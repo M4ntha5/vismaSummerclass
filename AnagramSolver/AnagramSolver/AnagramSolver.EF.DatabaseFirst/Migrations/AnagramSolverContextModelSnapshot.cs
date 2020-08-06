@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnagramSolver.EF.DatabaseFirst.Migrations
 {
-    [DbContext(typeof(AnagramSolverWebAppContext))]
-    partial class AnagramSolverWebAppContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(AnagramSolverContext))]
+    partial class AnagramSolverContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

@@ -1,6 +1,5 @@
 ﻿using AnagramSolver.BusinessLogic;
 using AnagramSolver.BusinessLogic.Repositories;
-using AnagramSolver.BusinessLogic.Database;
 using AnagramSolver.Console.UI;
 using AnagramSolver.Contracts.Models;
 using System;
@@ -22,13 +21,13 @@ namespace AnagramSolver.Console
             Configuration.ReadAppSettingsFile();
           
             var AnagramSolver = new BusinessLogic.Services.AnagramSolver(
-                new FileRepository(), new UserInterface(), new CachedWordQueries());
+                new FileRepository(), new UserInterface(), new CachedWordRepositoryDB());
             var howToSolve = UserInterface.DisplayOptions();
 
             while (true)
             {
                 if (howToSolve == 0)
-                    SeedDBWithFileData();
+                    await SeedDBWithFileData();
 
                 //getting initial user input
                 var userInput = UserInterface.GetInput();
@@ -38,7 +37,7 @@ namespace AnagramSolver.Console
 
                 List<string> result;
                 if (howToSolve == 2)
-                    result = (List<string>)AnagramSolver.GetAnagrams(userInput);             
+                    result = (List<string>) await AnagramSolver.GetAnagrams(userInput);             
                 else
                     result = await apiActions.CallAnagramSolverApi(userInput);
 
@@ -47,23 +46,22 @@ namespace AnagramSolver.Console
             }
         }
 
-        private static void SeedDBWithFileData()
+        private static async Task SeedDBWithFileData()
         {
             System.Console.WriteLine("Seeding database, please wait");
             var fileRepo = new FileRepository();
-            var connection = new WordQueries();
-            var wordsList = fileRepo.GetWords();
+            var connection = new WordRepositoryDB();
+            var wordsList = await fileRepo.GetAllWords();
 
             foreach(var word in wordsList)
             {
                 var model = new Anagram()
                 {
-                    Case = word.Case,
-                    Word = word.Word,
-                    SortedWord = String.Concat(word.Word.OrderBy(x => x))
+                    Case = word.Category,
+                    Word = word.Word,                  
                 };
 
-                connection.InsertWord(model);
+                await connection.AddNewWord(model);
             }
         }
 

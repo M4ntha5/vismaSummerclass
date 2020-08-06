@@ -18,13 +18,6 @@ namespace AnagramSolver.WebApp.Controllers
     [ApiController]
     public class FilesApiController : ControllerBase
     {
-        private readonly IWordRepository _wordRepository;
-
-        public FilesApiController(IWordRepository wordRepository)
-        {
-            _wordRepository = wordRepository;
-        }
-
         [HttpGet]
         [Route("dictionary")]
         public ActionResult GetDictionaryFile()

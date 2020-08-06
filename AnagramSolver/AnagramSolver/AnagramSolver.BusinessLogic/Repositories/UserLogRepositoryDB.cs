@@ -1,64 +1,70 @@
-﻿using AnagramSolver.Contracts.Models;
+﻿using AnagramSolver.Contracts.Entities;
+using AnagramSolver.Contracts.Interfaces;
+using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace AnagramSolver.BusinessLogic.Database
+namespace AnagramSolver.BusinessLogic.Repositories
 {
-    public class UserLogQueries
+    public class UserLogRepositoryDB : IUserLogRepository
     {
         private readonly SqlConnection sqlConnection;
 
-        public UserLogQueries()
+        public UserLogRepositoryDB()
         {
             sqlConnection = new SqlConnection()
             {
                 ConnectionString = Settings.ConnectionString
             };
         }
-        public void InsertLog(UserLog log)
+
+        public async Task InsertLog(UserLog log)
         {
             sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
             {
                 Connection = sqlConnection,
                 CommandType = CommandType.Text,
-                CommandText = "insert into UserLog(Ip, Phrase, Search_time) " +
+                CommandText = "insert into UserLogs(Ip, Phrase, SearchTime) " +
                                 "values (@ip, @phrase, @time)"
             };
             cmd.Parameters.Add(new SqlParameter("@ip", log.Ip));
             cmd.Parameters.Add(new SqlParameter("@phrase", log.SearchPhrase));
             cmd.Parameters.Add(new SqlParameter("@time", log.SearchTime));
 
-            cmd.ExecuteNonQuery();
+            await cmd.ExecuteNonQueryAsync();
             sqlConnection.Close();
         }
-        public List<UserLog> GetAllLogs()
+        public async Task<List<UserLogEntity>> GetAllLogs()
         {
             sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
             {
                 Connection = sqlConnection,
                 CommandType = CommandType.Text,
-                CommandText = "select * from UserLog"
+                CommandText = "select * from UserLogs"
             };
 
-            SqlDataReader reader = cmd.ExecuteReader();
+            SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
-            List<UserLog> logs = new List<UserLog>();
+            List<UserLogEntity> logs = new List<UserLogEntity>();
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
                     logs.Add(
-                        new UserLog(
-                            reader["Ip"].ToString(),                            
-                            reader["Phrase"].ToString(),
-                            TimeSpan.Parse(reader["Search_time"].ToString())
-                        ));
+                        new UserLogEntity()
+                        {
+                            ID = int.Parse(reader["Ip"].ToString()),
+                            Ip = reader["Ip"].ToString(),
+                            Phrase = reader["Phrase"].ToString(),
+                            SearchTime = TimeSpan.Parse(reader["SearchTime"].ToString())
+                        });
                 }
             }
 
@@ -66,7 +72,6 @@ namespace AnagramSolver.BusinessLogic.Database
             sqlConnection.Close();
             return logs;
         }
-
 
     }
 }

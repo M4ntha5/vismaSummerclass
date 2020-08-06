@@ -10,7 +10,7 @@ namespace AnagramSolver.Tests
 {
     class FileRepositoryTests
     {
-        IWordRepository wordRepository;
+       /* IWordRepository wordRepository;
         [SetUp]
         public void Setup()
         {
@@ -25,6 +25,6 @@ namespace AnagramSolver.Tests
             var result = wordRepository.GetAllData();
             result.ShouldNotBeEmpty();
             //Assert.Greater(result.Count, 0);
-        }
+        }*/
     }
 }

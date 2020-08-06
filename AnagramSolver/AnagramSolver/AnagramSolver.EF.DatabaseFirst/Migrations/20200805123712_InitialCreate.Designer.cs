@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnagramSolver.EF.DatabaseFirst.Migrations
 {
-    [DbContext(typeof(AnagramSolverWebAppContext))]
+    [DbContext(typeof(AnagramSolverContext))]
     [Migration("20200805123712_InitialCreate")]
     partial class InitialCreate
     {

@@ -8,13 +8,12 @@ using AnagramSolver.WebApp.Controllers;
 using AnagramSolver.Contracts.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using AnagramSolver.BusinessLogic.Database;
 
 namespace AnagramSolver.Tests.IntegrationTests
 {
     class HomeControllerTests
     {
-        IAnagramSolver AnagramSolverMock;
+       /* IAnagramSolver AnagramSolverMock;
         ICookiesHandler CookiesHandlerMock;
         IList<string> list;
         HomeController Controller;
@@ -83,12 +82,12 @@ namespace AnagramSolver.Tests.IntegrationTests
         [Test]
         public void SolveAnagramsDoNotPassValidations()
         {
-           /* UserInterfaceMock.ValidateInputData(Arg.Any<string>()).Returns("");
+            UserInterfaceMock.ValidateInputData(Arg.Any<string>()).Returns("");
 
             var result = Controller.Index("input") as ViewResult;
 
             UserInterfaceMock.Received().ValidateInputData(Arg.Any<string>());
-            Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);*/
+            Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
         }
 
         [Test]
@@ -102,6 +101,6 @@ namespace AnagramSolver.Tests.IntegrationTests
             Assert.AreEqual(cookiesList.Count, data.Count);
             Assert.AreEqual(cookiesList.Keys.First(), data.Keys.First());
             Assert.AreEqual(cookiesList.Values.First(), data.Values.First());
-        }
+        }*/
     }
 }

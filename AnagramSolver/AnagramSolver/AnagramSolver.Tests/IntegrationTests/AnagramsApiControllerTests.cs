@@ -12,7 +12,7 @@ namespace AnagramSolver.Tests.IntegrationTests
 {
     class AnagramsApiControllerTests
     {
-
+/*
         IUserInterface UserInterfaceMock;
         IAnagramSolver AnagramSolverMock;
 
@@ -65,6 +65,6 @@ namespace AnagramSolver.Tests.IntegrationTests
 
             UserInterfaceMock.Received().ValidateInputData(Arg.Any<string>());
             Assert.AreEqual(400, result.StatusCode);
-        }
+        }*/
     }
 }

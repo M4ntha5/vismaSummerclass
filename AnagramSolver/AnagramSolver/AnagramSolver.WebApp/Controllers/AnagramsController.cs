@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using AnagramSolver.BusinessLogic.Database;
+using System.Threading.Tasks;
+using AnagramSolver.BusinessLogic.Repositories;
+using AnagramSolver.BusinessLogic.Services;
+using AnagramSolver.Contracts.Entities;
 using AnagramSolver.Contracts.Interfaces;
+using AnagramSolver.Contracts.Interfaces.Services;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.WebApp.Models;
 using Microsoft.AspNetCore.Http;
@@ -12,30 +16,27 @@ namespace AnagramSolver.WebApp.Controllers
 {
     public class AnagramsController : Controller
     {
-        private readonly IWordRepository _fileRepository;
         private readonly ICookiesHandler _cookiesHandler;
-        private readonly WordQueries _wordQueries;
+        private readonly IWordService _wordService;
 
-        public AnagramsController(IWordRepository fileRepository, ICookiesHandler cookiesHandler,
-            WordQueries wordQueries)
+        public AnagramsController(ICookiesHandler cookiesHandler, IWordService wordService)
         {
-            _fileRepository = fileRepository;
             _cookiesHandler = cookiesHandler;
-            _wordQueries = wordQueries;
+            _wordService = wordService;
         }
 
-        public IActionResult Index(int? pageNumber, string phrase = null, int pageSize = 100)
+        public async Task<IActionResult> Index(int? pageNumber, string phrase = null, int pageSize = 100)
         {
             try
             {
                 List<Anagram> result;
                 if (!string.IsNullOrEmpty(phrase))
                 {
-                    result = _wordQueries.SelectWordsBySearch(phrase);
+                    result = await _wordService.GetWordsBySearch(phrase);
                     pageSize = result.Count;
                 }
                 else
-                    result = _fileRepository.GetWords();
+                    result = await _wordService.GetAllWords();
 
                 return View(PaginatedList<Anagram>.Create(result, pageNumber ?? 1, pageSize));
             }
@@ -47,14 +48,14 @@ namespace AnagramSolver.WebApp.Controllers
         }
 
         // GET: Anagrams/Details/5
-        public IActionResult Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
             try
             {
                 if (string.IsNullOrEmpty(id))
                     throw new Exception("Selected word do not exist");
 
-                var anagrams = _fileRepository.GetSelectedWordAnagrams(id);
+                var anagrams = await _wordService.GetWordAnagrams(id);
 
                 if (anagrams == null || anagrams.Count == 0)
                     return RedirectToAction(nameof(Index));
@@ -77,7 +78,7 @@ namespace AnagramSolver.WebApp.Controllers
         // POST: Anagrams/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Word,Case")] Anagram anagram)
+        public async Task<IActionResult> Create([Bind("Word,Case")] Anagram anagram)
         {
             try
             {
@@ -85,7 +86,7 @@ namespace AnagramSolver.WebApp.Controllers
                     throw new Exception("You must fill all the fields");
 
                 _cookiesHandler.ClearAllCookies();
-                _fileRepository.AddNewWord(anagram);
+                await _wordService.InsertWord(anagram);
                 
                 return RedirectToAction(nameof(Index));
             }

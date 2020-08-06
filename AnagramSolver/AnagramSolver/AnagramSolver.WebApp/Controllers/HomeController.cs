@@ -5,11 +5,13 @@ using AnagramSolver.WebApp.Models;
 using AnagramSolver.Contracts.Interfaces;
 using System.Linq;
 using AnagramSolver.Contracts.Models;
-using AnagramSolver.BusinessLogic.Database;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using AnagramSolver.EF.DatabaseFirst.Data;
+using AnagramSolver.BusinessLogic.Repositories;
+using AnagramSolver.BusinessLogic.Services;
+using AnagramSolver.Contracts.Interfaces.Services;
 
 namespace AnagramSolver.WebApp.Controllers
 {
@@ -17,21 +19,22 @@ namespace AnagramSolver.WebApp.Controllers
     {
         private readonly IAnagramSolver _anagramSolver;
         private readonly ICookiesHandler _cookiesHandler;
-        private readonly CachedWordQueries _cachedWord;
-        private readonly UserLogQueries _userLog;
-        private readonly WordQueries _wordQueries;
+        private readonly ICachedWordRepository _cachedWordRepository;
+        private readonly IUserLogRepository _userLogRepository;
+        private readonly IWordService _wordService;
 
-        public HomeController(IAnagramSolver anagramSolver, ICookiesHandler cookiesHandler, 
-            WordQueries wordQuerie, UserLogQueries logQueries, CachedWordQueries cachedWordQueries)
+        public HomeController(IAnagramSolver anagramSolver, ICookiesHandler cookiesHandler,
+            IUserLogRepository logRepository, ICachedWordRepository cachedWordRepository,
+            IWordService wordService)
         {
             _anagramSolver = anagramSolver;
             _cookiesHandler = cookiesHandler;
-            _cachedWord = cachedWordQueries;
-            _userLog = logQueries;
-            _wordQueries = wordQuerie;
+            _cachedWordRepository = cachedWordRepository;
+            _userLogRepository = logRepository;
+            _wordService = wordService;
         }
 
-        public IActionResult Index(string id)
+        public async Task<IActionResult> Index(string id)
         {
             try
             {
@@ -39,20 +42,23 @@ namespace AnagramSolver.WebApp.Controllers
                   if (!string.IsNullOrEmpty(cookieValue))
                       return View(cookieValue.Split(';').ToList());*/
 
+                if (string.IsNullOrEmpty(id))
+                    return View();
+                
                 IList<string> anagrams = new List<string>();
 
-                var cachedWord = _cachedWord.GetCachedWord(id);
-                if (cachedWord != null)
+                var cachedWord = await _cachedWordRepository.GetCachedWord(id);
+                if (cachedWord != null)// || cachedWord != DBNull.Value)
                 {
                     var anagramsIds = cachedWord.AnagramsIds.Split(';').ToList();
-                    
+
                     foreach (var wordId in anagramsIds)
                     {
                         var phrase = wordId.Split('/').ToList();
                         string wordFound = "";
-                        foreach(var word in phrase)
+                        foreach (var word in phrase)
                         {
-                            wordFound += _wordQueries.SelectWordById(word) + " ";
+                            wordFound += await _wordService.GetWordById(word) + " ";
                         }
                         anagrams.Add(wordFound);
                     }
@@ -62,10 +68,10 @@ namespace AnagramSolver.WebApp.Controllers
 
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
-                anagrams = _anagramSolver.GetAnagrams(id);
+                anagrams = await _anagramSolver.GetAnagrams(id);
                 sw.Stop();
 
-                _userLog.InsertLog(new UserLog(GetUserIp(), id, sw.Elapsed));
+                await _userLogRepository.InsertLog(new UserLog(GetUserIp(), id, sw.Elapsed));
 
                 //removing input element
                 anagrams.Remove(id);
@@ -73,6 +79,8 @@ namespace AnagramSolver.WebApp.Controllers
                 //_cookiesHandler.AddCookie(id, string.Join(";", anagrams.ToArray()));
 
                 return View(anagrams);
+
+                    
             }
             catch (Exception ex)
             {

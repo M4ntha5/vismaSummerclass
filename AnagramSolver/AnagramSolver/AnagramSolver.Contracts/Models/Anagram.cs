@@ -12,7 +12,6 @@ namespace AnagramSolver.Contracts.Models
         public string Case { get; set; }
         [Required]
         public string Word { get; set; }
-        public string SortedWord { get; set; }
 
     }
 }
