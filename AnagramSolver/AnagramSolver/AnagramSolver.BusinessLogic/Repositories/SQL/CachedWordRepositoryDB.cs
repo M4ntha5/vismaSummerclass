@@ -1,7 +1,7 @@
-﻿using AnagramSolver.Contracts.Entities;
-using AnagramSolver.Contracts.Interfaces;
+﻿using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
+using AnagramSolver.Contracts.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data;

@@ -1,6 +1,7 @@
 ﻿using AnagramSolver.Contracts.Entities;
 using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
+using AnagramSolver.EF.CodeFirst;
 using AnagramSolver.EF.DatabaseFirst.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,13 +9,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AnagramSolver.EF.DatabaseFirst.Repositories
+namespace AnagramSolver.BusinessLogic.Repositories
 {
     public class WordRepositoryEF : IWordRepository, IAdditionalWordRepository
     {
-        private readonly AnagramSolverContext _context;
+        ////context for DB First approach
+        //private readonly AnagramSolverDBFirstContext _context;
+        //public WordRepositoryEF(AnagramSolverDBFirstContext context)
+        //{
+        //    _context = context;
+        //}
 
-        public WordRepositoryEF(AnagramSolverContext context)
+        //context for Code First approach
+        private readonly AnagramSolverCodeFirstContext _context;
+        public WordRepositoryEF(AnagramSolverCodeFirstContext context)
         {
             _context = context;
         }

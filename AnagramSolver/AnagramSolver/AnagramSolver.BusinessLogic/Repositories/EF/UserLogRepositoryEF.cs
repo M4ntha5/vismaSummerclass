@@ -1,6 +1,7 @@
 ﻿using AnagramSolver.Contracts.Entities;
 using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
+using AnagramSolver.EF.CodeFirst;
 using AnagramSolver.EF.DatabaseFirst.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,13 +11,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnagramSolver.EF.DatabaseFirst.Repositories
+namespace AnagramSolver.BusinessLogic.Repositories
 {
     public class UserLogRepositoryEF : IUserLogRepository
     {
-        private readonly AnagramSolverContext _context;
+        ////context for DB First approach
+        //private readonly AnagramSolverDBFirstContext _context;
+        //public UserLogRepositoryEF(AnagramSolverDBFirstContext context)
+        //{
+        //    _context = context;
+        //}
 
-        public UserLogRepositoryEF(AnagramSolverContext context)
+        //context for Code First approach
+        private readonly AnagramSolverCodeFirstContext _context;
+        public UserLogRepositoryEF(AnagramSolverCodeFirstContext context)
         {
             _context = context;
         }

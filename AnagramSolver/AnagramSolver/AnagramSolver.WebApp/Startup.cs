@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using AnagramSolver.EF.DatabaseFirst.Data;
 using AnagramSolver.Contracts.Interfaces.Services;
+using AnagramSolver.EF.CodeFirst;
 
 namespace AnagramSolver.WebApp
 {
@@ -35,10 +36,10 @@ namespace AnagramSolver.WebApp
                 .AddScoped<IUserInterface, Console.UI.UserInterface>()
                 .AddScoped<ICookiesHandlerServvice, BusinessLogic.Services.CookiesHandlerService>()
 
-                .AddScoped<IUserLogRepository, EF.DatabaseFirst.Repositories.UserLogRepositoryEF>()
-                .AddScoped<ICachedWordRepository, EF.DatabaseFirst.Repositories.CachedWordRepositoryEF>()
-                .AddScoped<IWordRepository, EF.DatabaseFirst.Repositories.WordRepositoryEF>()
-                .AddScoped<IAdditionalWordRepository, EF.DatabaseFirst.Repositories.WordRepositoryEF>()
+                .AddScoped<IUserLogRepository, BusinessLogic.Repositories.UserLogRepositoryEF>()
+                .AddScoped<ICachedWordRepository, BusinessLogic.Repositories.CachedWordRepositoryEF>()
+                .AddScoped<IWordRepository, BusinessLogic.Repositories.WordRepositoryEF>()
+                .AddScoped<IAdditionalWordRepository, BusinessLogic.Repositories.WordRepositoryEF>()
 
                 //.AddScoped<IUserLogRepository, BusinessLogic.Repositories.UserLogRepositoryDB>()
                 //.AddScoped<ICachedWordRepository, BusinessLogic.Repositories.CachedWordRepositoryDB>()
@@ -49,10 +50,11 @@ namespace AnagramSolver.WebApp
                 .AddScoped<IWordService, BusinessLogic.Services.WordService>()
                 .AddHttpContextAccessor();
 
-            services.AddDbContext<AnagramSolverContext>(options =>
+            services.AddDbContext<AnagramSolverDBFirstContext>(options =>
                     options.UseSqlServer(Contracts.Utils.Settings.ConnectionString));
 
-
+            services.AddDbContext<AnagramSolverCodeFirstContext>(options =>
+                    options.UseSqlServer(Contracts.Utils.Settings.ConnectionStringCodeFirst));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

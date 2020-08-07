@@ -1,17 +1,18 @@
 ﻿using System;
 using AnagramSolver.Contracts.Entities;
+using AnagramSolver.Contracts.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace AnagramSolver.EF.DatabaseFirst.Data
 {
-    public partial class AnagramSolverContext : DbContext
+    public partial class AnagramSolverDBFirstContext : DbContext
     {
-        public AnagramSolverContext()
+        public AnagramSolverDBFirstContext()
         {
         }
 
-        public AnagramSolverContext(DbContextOptions<AnagramSolverContext> options)
+        public AnagramSolverDBFirstContext(DbContextOptions<AnagramSolverDBFirstContext> options)
             : base(options)
         {
         }
@@ -24,7 +25,7 @@ namespace AnagramSolver.EF.DatabaseFirst.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=AnagramSolver3;Integrated Security=True");
+                optionsBuilder.UseSqlServer(Settings.ConnectionString);
             }
         }
 

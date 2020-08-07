@@ -20,6 +20,7 @@ namespace AnagramSolver.Console
             int.TryParse(configuration.GetSection("MinInputLength").Value, out int minLength);
             var dataFile = configuration.GetSection("DataFileName").Value;
             var connString = configuration.GetConnectionString("Development");
+            var connStringCodeFirst = configuration.GetConnectionString("CodeFirst");
 
             if (anagramsCount > 10 || anagramsCount < 1)
                 throw new Exception("Generated anagrams count must be between 1 and 10");
@@ -28,6 +29,7 @@ namespace AnagramSolver.Console
             Settings.MinInputLength = minLength;
             Settings.DataFileName = dataFile;
             Settings.ConnectionString = connString;
+            Settings.ConnectionStringCodeFirst = connStringCodeFirst;
 
         }
     }

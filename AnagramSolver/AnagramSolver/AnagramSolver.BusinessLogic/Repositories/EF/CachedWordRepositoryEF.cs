@@ -1,20 +1,28 @@
-﻿using AnagramSolver.Contracts.Entities;
-using AnagramSolver.Contracts.Interfaces;
+﻿using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.EF.DatabaseFirst.Data;
+using AnagramSolver.Contracts.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AnagramSolver.EF.CodeFirst;
 
-namespace AnagramSolver.EF.DatabaseFirst.Repositories
+namespace AnagramSolver.BusinessLogic.Repositories
 {
     public class CachedWordRepositoryEF : ICachedWordRepository
     {
-        private readonly AnagramSolverContext _context;
+        ////context for DB First approach
+        //private readonly AnagramSolverDBFirstContext _context;
+        //public CachedWordRepositoryEF(AnagramSolverDBFirstContext context)
+        //{
+        //    _context = context;
+        //}
 
-        public CachedWordRepositoryEF(AnagramSolverContext context)
+        //context for Code First approach
+        private readonly AnagramSolverCodeFirstContext _context;
+        public CachedWordRepositoryEF(AnagramSolverCodeFirstContext context)
         {
             _context = context;
         }

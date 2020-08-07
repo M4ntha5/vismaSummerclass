@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace AnagramSolver.EF.DatabaseFirst.Migrations
+namespace AnagramSolver.EF.CodeFirst.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitalMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,7 @@ namespace AnagramSolver.EF.DatabaseFirst.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Phrase = table.Column<string>(nullable: true),
-                    Anagrams_ids = table.Column<string>(nullable: true)
+                    AnagramsIds = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,7 +29,7 @@ namespace AnagramSolver.EF.DatabaseFirst.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ip = table.Column<string>(nullable: true),
                     Phrase = table.Column<string>(nullable: true),
-                    Search_time = table.Column<TimeSpan>(nullable: false)
+                    SearchTime = table.Column<TimeSpan>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,7 +44,7 @@ namespace AnagramSolver.EF.DatabaseFirst.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Word = table.Column<string>(nullable: true),
                     Category = table.Column<string>(nullable: true),
-                    Sorted_word = table.Column<string>(nullable: true)
+                    SortedWord = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
