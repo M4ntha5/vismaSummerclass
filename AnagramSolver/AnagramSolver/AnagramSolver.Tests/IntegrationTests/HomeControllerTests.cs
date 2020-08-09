@@ -1,106 +1,95 @@
-﻿using AnagramSolver.Contracts.Interfaces;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using NSubstitute;
-using AnagramSolver.WebApp.Controllers;
-using AnagramSolver.Contracts.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-
-namespace AnagramSolver.Tests.IntegrationTests
+﻿namespace AnagramSolver.Tests.IntegrationTests
 {
     class HomeControllerTests
     {
-       /* IAnagramSolver AnagramSolverMock;
-        ICookiesHandler CookiesHandlerMock;
-        IList<string> list;
-        HomeController Controller;
-        Dictionary<string, string> cookiesList;
+        /* IAnagramSolver AnagramSolverMock;
+         ICookiesHandler CookiesHandlerMock;
+         IList<string> list;
+         HomeController Controller;
+         Dictionary<string, string> cookiesList;
 
 
 
-        [SetUp]
-        public void Setup()
-        {
-            AnagramSolverMock = Substitute.For<IAnagramSolver>();
-            CookiesHandlerMock = Substitute.For<ICookiesHandler>();
+         [SetUp]
+         public void Setup()
+         {
+             AnagramSolverMock = Substitute.For<IAnagramSolver>();
+             CookiesHandlerMock = Substitute.For<ICookiesHandler>();
 
-            Controller = new HomeController(AnagramSolverMock, CookiesHandlerMock,
-                new WordQueries(), new UserLogQueries(), new CachedWordQueries());
+             Controller = new HomeController(AnagramSolverMock, CookiesHandlerMock,
+                 new WordQueries(), new UserLogQueries(), new CachedWordQueries());
 
-            list = new List<string>()
-            {
-                "bca", "cba", "acb", "bac", "cab", "abc"
-            };
-            cookiesList = new Dictionary<string, string>()
-            {
-                {"key1", "val1" },
-                {"key2", "val2" }
-            };
-        }
+             list = new List<string>()
+             {
+                 "bca", "cba", "acb", "bac", "cab", "abc"
+             };
+             cookiesList = new Dictionary<string, string>()
+             {
+                 {"key1", "val1" },
+                 {"key2", "val2" }
+             };
+         }
 
-        [Test]
-        public void SolveAnagrams()
-        {
-            AnagramSolverMock.GetAnagrams(Arg.Any<string>()).Returns(list);
-            CookiesHandlerMock.GetCookieByKey(Arg.Any<string>());
-            CookiesHandlerMock.AddCookie(Arg.Any<string>(), Arg.Any<string>());
+         [Test]
+         public void SolveAnagrams()
+         {
+             AnagramSolverMock.GetAnagrams(Arg.Any<string>()).Returns(list);
+             CookiesHandlerMock.GetCookieByKey(Arg.Any<string>());
+             CookiesHandlerMock.AddCookie(Arg.Any<string>(), Arg.Any<string>());
 
-            var result = Controller.Index("abc") as ViewResult;
-            var data = result.ViewData.Model as List<string>;
+             var result = Controller.Index("abc") as ViewResult;
+             var data = result.ViewData.Model as List<string>;
 
-            CookiesHandlerMock.Received().GetCookieByKey(Arg.Any<string>());
-            AnagramSolverMock.Received().GetAnagrams(Arg.Any<string>());
-            Assert.AreEqual(list.Count, data.Count);
-            Assert.AreEqual(list[0], data[0]);
-        }
+             CookiesHandlerMock.Received().GetCookieByKey(Arg.Any<string>());
+             AnagramSolverMock.Received().GetAnagrams(Arg.Any<string>());
+             Assert.AreEqual(list.Count, data.Count);
+             Assert.AreEqual(list[0], data[0]);
+         }
 
-        [Test]
-        public void SolveAnagramsGetDataFromCookies()
-        {
-            CookiesHandlerMock.GetCookieByKey(Arg.Any<string>()).Returns(string.Join(";", list.ToArray()));
+         [Test]
+         public void SolveAnagramsGetDataFromCookies()
+         {
+             CookiesHandlerMock.GetCookieByKey(Arg.Any<string>()).Returns(string.Join(";", list.ToArray()));
 
-            var result = Controller.Index("abc") as ViewResult;
-            var data = result.ViewData.Model as List<string>;
+             var result = Controller.Index("abc") as ViewResult;
+             var data = result.ViewData.Model as List<string>;
 
-            CookiesHandlerMock.Received().GetCookieByKey(Arg.Any<string>());
+             CookiesHandlerMock.Received().GetCookieByKey(Arg.Any<string>());
 
-            Assert.AreEqual(list.Count, data.Count);
-            Assert.AreEqual(list[0], data[0]);
-        }
+             Assert.AreEqual(list.Count, data.Count);
+             Assert.AreEqual(list[0], data[0]);
+         }
 
-        [Test]
-        public void SolveAnagramsWithBadInput()
-        {
-            var result = Controller.Index(null) as ViewResult;
+         [Test]
+         public void SolveAnagramsWithBadInput()
+         {
+             var result = Controller.Index(null) as ViewResult;
 
-            Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
-        }
+             Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
+         }
 
-        [Test]
-        public void SolveAnagramsDoNotPassValidations()
-        {
-            UserInterfaceMock.ValidateInputData(Arg.Any<string>()).Returns("");
+         [Test]
+         public void SolveAnagramsDoNotPassValidations()
+         {
+             UserInterfaceMock.ValidateInputData(Arg.Any<string>()).Returns("");
 
-            var result = Controller.Index("input") as ViewResult;
+             var result = Controller.Index("input") as ViewResult;
 
-            UserInterfaceMock.Received().ValidateInputData(Arg.Any<string>());
-            Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
-        }
+             UserInterfaceMock.Received().ValidateInputData(Arg.Any<string>());
+             Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
+         }
 
-        [Test]
-        public void GetCurrentCookies()
-        {
-            CookiesHandlerMock.GetCurrentCookies().Returns(cookiesList);
+         [Test]
+         public void GetCurrentCookies()
+         {
+             CookiesHandlerMock.GetCurrentCookies().Returns(cookiesList);
 
-            var result = Controller.DisplayCookies() as ViewResult;
-            var data = result.ViewData.Model as Dictionary<string, string>;
+             var result = Controller.DisplayCookies() as ViewResult;
+             var data = result.ViewData.Model as Dictionary<string, string>;
 
-            Assert.AreEqual(cookiesList.Count, data.Count);
-            Assert.AreEqual(cookiesList.Keys.First(), data.Keys.First());
-            Assert.AreEqual(cookiesList.Values.First(), data.Values.First());
-        }*/
+             Assert.AreEqual(cookiesList.Count, data.Count);
+             Assert.AreEqual(cookiesList.Keys.First(), data.Keys.First());
+             Assert.AreEqual(cookiesList.Values.First(), data.Values.First());
+         }*/
     }
 }

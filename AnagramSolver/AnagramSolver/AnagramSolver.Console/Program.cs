@@ -1,11 +1,7 @@
-﻿using AnagramSolver.BusinessLogic;
-using AnagramSolver.BusinessLogic.Repositories;
+﻿using AnagramSolver.BusinessLogic.Repositories;
 using AnagramSolver.Console.UI;
 using AnagramSolver.Contracts.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace AnagramSolver.Console
@@ -19,7 +15,7 @@ namespace AnagramSolver.Console
         {
             //loading data from settings file
             Configuration.ReadAppSettingsFile();
-          
+
             var AnagramSolver = new BusinessLogic.Services.AnagramSolver(
                 new FileRepository(), new UserInterface(), new CachedWordRepositoryDB());
             var howToSolve = UserInterface.DisplayOptions();
@@ -37,7 +33,7 @@ namespace AnagramSolver.Console
 
                 List<string> result;
                 if (howToSolve == 2)
-                    result = (List<string>) await AnagramSolver.GetAnagrams(userInput);             
+                    result = (List<string>)await AnagramSolver.GetAnagrams(userInput);
                 else
                     result = await apiActions.CallAnagramSolverApi(userInput);
 
@@ -53,12 +49,12 @@ namespace AnagramSolver.Console
             var connection = new WordRepositoryDB();
             var wordsList = await fileRepo.GetAllWords();
 
-            foreach(var word in wordsList)
+            foreach (var word in wordsList)
             {
                 var model = new Anagram()
                 {
                     Case = word.Category,
-                    Word = word.Word,                  
+                    Word = word.Word,
                 };
 
                 await connection.AddNewWord(model);

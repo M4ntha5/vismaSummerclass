@@ -1,8 +1,6 @@
-﻿using System;
-using AnagramSolver.Contracts.Entities;
+﻿using AnagramSolver.Contracts.Entities;
 using AnagramSolver.Contracts.Utils;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace AnagramSolver.EF.DatabaseFirst.Data
 {

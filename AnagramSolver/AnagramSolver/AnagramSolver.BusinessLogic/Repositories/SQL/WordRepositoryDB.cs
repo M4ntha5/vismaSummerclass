@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -57,9 +56,9 @@ namespace AnagramSolver.BusinessLogic.Repositories
             SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
             List<WordEntity> anagrams = new List<WordEntity>();
-            if(reader.HasRows)
+            if (reader.HasRows)
             {
-                while(reader.Read())
+                while (reader.Read())
                 {
                     anagrams.Add(
                         new WordEntity()
@@ -165,7 +164,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 CommandType = CommandType.Text,
                 CommandText = "select * from Words where Word like @phrase"
             };
-            cmd.Parameters.Add(new SqlParameter("@phrase", "%"+ fixedPhrase + "%"));
+            cmd.Parameters.Add(new SqlParameter("@phrase", "%" + fixedPhrase + "%"));
             SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
             List<WordEntity> anagrams = new List<WordEntity>();

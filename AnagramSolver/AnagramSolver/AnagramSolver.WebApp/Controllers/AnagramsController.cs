@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using AnagramSolver.BusinessLogic.Repositories;
-using AnagramSolver.BusinessLogic.Services;
-using AnagramSolver.Contracts.Entities;
-using AnagramSolver.Contracts.Interfaces;
+﻿using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Interfaces.Services;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.WebApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace AnagramSolver.WebApp.Controllers
 {
@@ -87,10 +84,10 @@ namespace AnagramSolver.WebApp.Controllers
 
                 _cookiesHandler.ClearAllCookies();
                 await _wordService.InsertWord(anagram);
-                
+
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
                 return View(anagram);

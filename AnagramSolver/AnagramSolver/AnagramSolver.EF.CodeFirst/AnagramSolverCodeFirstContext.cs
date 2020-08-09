@@ -1,9 +1,6 @@
 ﻿using AnagramSolver.Contracts.Entities;
 using AnagramSolver.Contracts.Utils;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AnagramSolver.EF.CodeFirst
 {

@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using AnagramSolver.Contracts.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using AnagramSolver.BusinessLogic.Properties;
 using Microsoft.AspNetCore.Mvc;
-using AnagramSolver.BusinessLogic;
-using AnagramSolver.BusinessLogic.Properties;
+using System.IO;
 
 namespace AnagramSolver.WebApp.Controllers
 {

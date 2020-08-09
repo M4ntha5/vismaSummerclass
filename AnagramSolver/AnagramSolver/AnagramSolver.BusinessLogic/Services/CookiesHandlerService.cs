@@ -15,7 +15,7 @@ namespace AnagramSolver.BusinessLogic.Services
 
         public void AddCookie(string key, string value)
         {
-            if(!string.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
                 _httpAccessor.HttpContext.Response.Cookies.Append(key, value);
         }
         public void ClearAllCookies()

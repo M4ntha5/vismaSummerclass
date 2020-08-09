@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AnagramSolver.BusinessLogic.Repositories;
-using AnagramSolver.Contracts.Interfaces;
+﻿using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Interfaces.Services;
 using AnagramSolver.Contracts.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AnagramSolver.WebApp.Controllers
 {
@@ -29,11 +27,11 @@ namespace AnagramSolver.WebApp.Controllers
             var logs = await _userLogRepository.GetAllLogs();
 
             List<SearchHistory> history = new List<SearchHistory>();
-            foreach(var log in logs)
+            foreach (var log in logs)
             {
                 List<string> anagrams = new List<string>();
                 var cached = await _cachedWordRepository.GetCachedWord(log.Phrase);
-                if(cached != null)
+                if (cached != null)
                 {
                     var anagramsIds = cached.AnagramsIds.Split(';').ToList();
 

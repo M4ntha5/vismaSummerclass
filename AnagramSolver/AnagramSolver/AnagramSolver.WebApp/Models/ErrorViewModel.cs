@@ -1,5 +1,3 @@
-using System;
-
 namespace AnagramSolver.WebApp.Models
 {
     public class ErrorViewModel

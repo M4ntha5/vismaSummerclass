@@ -1,8 +1,5 @@
-﻿using AnagramSolver.Contracts.Models;
-using AnagramSolver.Contracts.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using AnagramSolver.Contracts.Entities;
+using AnagramSolver.Contracts.Models;
 using System.Threading.Tasks;
 
 namespace AnagramSolver.Contracts.Interfaces

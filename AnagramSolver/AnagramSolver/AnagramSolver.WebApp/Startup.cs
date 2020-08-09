@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AnagramSolver.Contracts.Interfaces;
+using AnagramSolver.Contracts.Interfaces.Services;
+using AnagramSolver.EF.CodeFirst;
+using AnagramSolver.EF.DatabaseFirst.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using AnagramSolver.EF.DatabaseFirst.Data;
-using AnagramSolver.Contracts.Interfaces.Services;
-using AnagramSolver.EF.CodeFirst;
 
 namespace AnagramSolver.WebApp
 {
@@ -31,8 +26,8 @@ namespace AnagramSolver.WebApp
             services.AddControllersWithViews();
             Console.Configuration.ReadAppSettingsFile();
 
-            services               
-                
+            services
+
                 .AddScoped<IUserInterface, Console.UI.UserInterface>()
                 .AddScoped<ICookiesHandlerServvice, BusinessLogic.Services.CookiesHandlerService>()
 

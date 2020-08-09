@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AnagramSolver.Contracts.Models
+﻿namespace AnagramSolver.Contracts.Models
 {
     public class CachedWord
     {

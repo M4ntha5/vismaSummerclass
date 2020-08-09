@@ -1,30 +1,22 @@
-﻿using System;
-using AnagramSolver.BusinessLogic.Repositories;
-using AnagramSolver.Console;
-using AnagramSolver.Contracts.Interfaces;
-using AnagramSolver.Contracts.Utils;
-using NUnit.Framework;
-using Shouldly;
-
-namespace AnagramSolver.Tests
+﻿namespace AnagramSolver.Tests
 {
     class FileRepositoryTests
     {
-       /* IWordRepository wordRepository;
-        [SetUp]
-        public void Setup()
-        {
-            Configuration.ReadAppSettingsFile();
-            wordRepository = new FileRepository();
-        }
+        /* IWordRepository wordRepository;
+         [SetUp]
+         public void Setup()
+         {
+             Configuration.ReadAppSettingsFile();
+             wordRepository = new FileRepository();
+         }
 
 
-        [Test]
-        public void TestReadDataFromFile()
-        {
-            var result = wordRepository.GetAllData();
-            result.ShouldNotBeEmpty();
-            //Assert.Greater(result.Count, 0);
-        }*/
+         [Test]
+         public void TestReadDataFromFile()
+         {
+             var result = wordRepository.GetAllData();
+             result.ShouldNotBeEmpty();
+             //Assert.Greater(result.Count, 0);
+         }*/
     }
 }

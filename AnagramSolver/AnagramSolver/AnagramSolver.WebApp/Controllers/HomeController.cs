@@ -1,17 +1,13 @@
-﻿using System;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using AnagramSolver.WebApp.Models;
-using AnagramSolver.Contracts.Interfaces;
-using System.Linq;
-using AnagramSolver.Contracts.Models;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using AnagramSolver.EF.DatabaseFirst.Data;
-using AnagramSolver.BusinessLogic.Repositories;
-using AnagramSolver.BusinessLogic.Services;
+﻿using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Interfaces.Services;
+using AnagramSolver.Contracts.Models;
+using AnagramSolver.WebApp.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AnagramSolver.WebApp.Controllers
 {
@@ -44,7 +40,7 @@ namespace AnagramSolver.WebApp.Controllers
 
                 if (string.IsNullOrEmpty(id))
                     return View();
-                
+
                 IList<string> anagrams = new List<string>();
 
                 var cachedWord = await _cachedWordRepository.GetCachedWord(id);
@@ -80,7 +76,7 @@ namespace AnagramSolver.WebApp.Controllers
 
                 return View(anagrams);
 
-                    
+
             }
             catch (Exception ex)
             {

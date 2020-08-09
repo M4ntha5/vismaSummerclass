@@ -65,7 +65,7 @@ namespace AnagramSolver.BusinessLogic.Services
                         throw new Exception($"Word {newAnagram.Word} already exists");
         }
 
-       
+
         private List<Anagram> MatchWordEntityToModel(List<WordEntity> entities)
         {
             List<Anagram> model = new List<Anagram>();
@@ -85,7 +85,7 @@ namespace AnagramSolver.BusinessLogic.Services
 
             var word = await _additionalWordRepository.SelectWordById(id);
 
-            if(string.IsNullOrEmpty(word))
+            if (string.IsNullOrEmpty(word))
                 throw new Exception("No word with sepcified Id");
 
             return word;

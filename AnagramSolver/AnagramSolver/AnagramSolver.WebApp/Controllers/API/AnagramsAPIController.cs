@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AnagramSolver.Contracts.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using AnagramSolver.Contracts.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace AnagramSolver.WebApp.Controllers
 {

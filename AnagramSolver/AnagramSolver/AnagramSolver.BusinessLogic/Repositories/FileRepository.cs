@@ -32,9 +32,9 @@ namespace AnagramSolver.BusinessLogic.Repositories
         {
             //file reading using path
 
-             if (!File.Exists(FilePath))
+            if (!File.Exists(FilePath))
                 throw new Exception($"File '{FilePath}' does not exist!");
-            string[] lines = File.ReadAllLines(FilePath);
+            string[] lines = await File.ReadAllLinesAsync(FilePath);
 
             //file reading using resources
             //string[] lines = File.ReadAllLines(Resources.zodynas);
@@ -61,8 +61,8 @@ namespace AnagramSolver.BusinessLogic.Repositories
                     SortedWord = sortedWord,
                     Word = word
                 };
-                result.Add(entity); 
-                
+                result.Add(entity);
+
                 previousWord = word;
             }
             return result;
@@ -71,7 +71,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
         public async Task<List<WordEntity>> GetSelectedWordAnagrams(string word)
         {
             var sortedWord = String.Concat(word.OrderBy(x => x));
-            var anagrams = AllData.Where(x => x.SortedWord == word).ToList();
+            var anagrams = AllData.Where(x => x.SortedWord == sortedWord).ToList();
 
             if (anagrams.Count == 0)
                 return null;
@@ -81,17 +81,17 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
         public async Task AddNewWord(Anagram anagram)
         {
-            if(!File.Exists(FilePath))
+            if (!File.Exists(FilePath))
                 throw new Exception($"File '{FilePath}' does not exist!");
-            if(string.IsNullOrEmpty(anagram.Case) || string.IsNullOrEmpty(anagram.Word))
+            if (string.IsNullOrEmpty(anagram.Case) || string.IsNullOrEmpty(anagram.Word))
                 throw new Exception("Cannot add Word, because Word is empty");
 
             var isPresent = AllData.Where(x => x.Word == anagram.Word).ToList();
-            if(isPresent.Count > 0)
+            if (isPresent.Count > 0)
                 throw new Exception($"Word {anagram.Word} already exists");
 
             string appendText = anagram.Word + '\t' + anagram.Case + '\t' + "" + '\t' + "" + '\n';
-            File.AppendAllText(FilePath, appendText);
+            await File.AppendAllTextAsync(FilePath, appendText);
         }
     }
 }

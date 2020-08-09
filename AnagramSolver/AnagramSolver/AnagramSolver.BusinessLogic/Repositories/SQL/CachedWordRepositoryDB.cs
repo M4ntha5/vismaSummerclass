@@ -1,13 +1,9 @@
-﻿using AnagramSolver.Contracts.Interfaces;
+﻿using AnagramSolver.Contracts.Entities;
+using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
-using AnagramSolver.Contracts.Entities;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AnagramSolver.BusinessLogic.Repositories
@@ -65,7 +61,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
                         ID = int.Parse(reader["Phrase"].ToString()),
                         Phrase = reader["Phrase"].ToString(),
                         AnagramsIds = reader["AnagramsIds"].ToString()
-                    };                    
+                    };
                     break;
                 }
             }

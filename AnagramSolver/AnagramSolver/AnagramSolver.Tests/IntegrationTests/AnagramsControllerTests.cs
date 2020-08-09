@@ -1,115 +1,105 @@
-﻿using AnagramSolver.Contracts.Interfaces;
-using AnagramSolver.Contracts.Models;
-using AnagramSolver.WebApp.Controllers;
-using AnagramSolver.WebApp.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using NSubstitute;
-using NUnit.Framework;
-using System.Collections.Generic;
-
-namespace AnagramSolver.Tests.IntegrationTests
+﻿namespace AnagramSolver.Tests.IntegrationTests
 {
     class AnagramsControllerTests
     {
-       /* IWordRepository WordRepositoryMock;
-        ICookiesHandler CookiesHandlerMock;
-        List<Anagram> list;
-        Anagram anagram;
-        AnagramsController Controller;
+        /* IWordRepository WordRepositoryMock;
+         ICookiesHandler CookiesHandlerMock;
+         List<Anagram> list;
+         Anagram anagram;
+         AnagramsController Controller;
 
-        [SetUp]
-        public void Setup()
-        {
-            WordRepositoryMock = Substitute.For<IWordRepository>();
-            CookiesHandlerMock = Substitute.For<ICookiesHandler>();
+         [SetUp]
+         public void Setup()
+         {
+             WordRepositoryMock = Substitute.For<IWordRepository>();
+             CookiesHandlerMock = Substitute.For<ICookiesHandler>();
 
-            Controller = new AnagramsController(WordRepositoryMock, CookiesHandlerMock, new WordQueries());
+             Controller = new AnagramsController(WordRepositoryMock, CookiesHandlerMock, new WordQueries());
 
-            anagram = new Anagram { Case = "case2", Word = "word2" };
-            list = new List<Anagram>()
-            {
-                new Anagram { Case = "case1", Word = "word1" },
-                anagram
-            };
-        }
+             anagram = new Anagram { Case = "case2", Word = "word2" };
+             list = new List<Anagram>()
+             {
+                 new Anagram { Case = "case1", Word = "word1" },
+                 anagram
+             };
+         }
 
-        [Test]
-        public void GetAllAnagrams()
-        {
-            WordRepositoryMock.GetWords().Returns(list);
+         [Test]
+         public void GetAllAnagrams()
+         {
+             WordRepositoryMock.GetWords().Returns(list);
 
-            var result = Controller.Index(1) as ViewResult;
-            var data = result.ViewData.Model as PaginatedList<Anagram>;
+             var result = Controller.Index(1) as ViewResult;
+             var data = result.ViewData.Model as PaginatedList<Anagram>;
 
-            WordRepositoryMock.Received().GetWords();
-            Assert.AreEqual(list.Count, data.Count);
-            Assert.AreEqual(list[0].Word, data[0].Word);
+             WordRepositoryMock.Received().GetWords();
+             Assert.AreEqual(list.Count, data.Count);
+             Assert.AreEqual(list[0].Word, data[0].Word);
 
-        }
+         }
 
-        [Test]
-        public void NoAnagramsFound()
-        {
-            WordRepositoryMock.GetWords().Returns(new List<Anagram>());
+         [Test]
+         public void NoAnagramsFound()
+         {
+             WordRepositoryMock.GetWords().Returns(new List<Anagram>());
 
-            var result = Controller.Index(1) as ViewResult;
+             var result = Controller.Index(1) as ViewResult;
 
-            WordRepositoryMock.Received().GetWords();
-            Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
-        }
+             WordRepositoryMock.Received().GetWords();
+             Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
+         }
 
-        [Test]
-        public void GetSelectedWordDetails()
-        {
-            WordRepositoryMock.GetSelectedWordAnagrams(Arg.Any<string>()).Returns(list);
-            
-            var result = Controller.Details("abc") as ViewResult;
-            var data = result.Model as List<Anagram>;
+         [Test]
+         public void GetSelectedWordDetails()
+         {
+             WordRepositoryMock.GetSelectedWordAnagrams(Arg.Any<string>()).Returns(list);
 
-            WordRepositoryMock.Received().GetSelectedWordAnagrams(Arg.Any<string>());
-            Assert.AreEqual(list.Count, data.Count);
-            Assert.AreEqual(list[0].Word, data[0].Word);
-        }
+             var result = Controller.Details("abc") as ViewResult;
+             var data = result.Model as List<Anagram>;
 
-        [Test]
-        public void SelectedWordDoesNotExistsInDictionary()
-        {
-            var result = Controller.Details(null) as ViewResult;
+             WordRepositoryMock.Received().GetSelectedWordAnagrams(Arg.Any<string>());
+             Assert.AreEqual(list.Count, data.Count);
+             Assert.AreEqual(list[0].Word, data[0].Word);
+         }
 
-            Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
-        }
+         [Test]
+         public void SelectedWordDoesNotExistsInDictionary()
+         {
+             var result = Controller.Details(null) as ViewResult;
 
-        [Test]
-        public void NoAnagramsFoundForSelectedWordRedirectToIndex()
-        {
-            WordRepositoryMock.GetSelectedWordAnagrams(Arg.Any<string>()).Returns(new List<Anagram>());
+             Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
+         }
 
-            var result = Controller.Details("???") as RedirectToActionResult;
+         [Test]
+         public void NoAnagramsFoundForSelectedWordRedirectToIndex()
+         {
+             WordRepositoryMock.GetSelectedWordAnagrams(Arg.Any<string>()).Returns(new List<Anagram>());
 
-            WordRepositoryMock.Received().GetSelectedWordAnagrams(Arg.Any<string>());
-            Assert.AreEqual("Index", result.ActionName);
-        }
+             var result = Controller.Details("???") as RedirectToActionResult;
 
-        [Test]
-        public void NewWordCreatedSuccessfully()
-        {
-            WordRepositoryMock.AddNewWord(Arg.Any<Anagram>());
-            CookiesHandlerMock.ClearAllCookies();
+             WordRepositoryMock.Received().GetSelectedWordAnagrams(Arg.Any<string>());
+             Assert.AreEqual("Index", result.ActionName);
+         }
 
-            var result = Controller.Create(anagram) as RedirectToActionResult;
+         [Test]
+         public void NewWordCreatedSuccessfully()
+         {
+             WordRepositoryMock.AddNewWord(Arg.Any<Anagram>());
+             CookiesHandlerMock.ClearAllCookies();
 
-            CookiesHandlerMock.Received().ClearAllCookies();
-            WordRepositoryMock.Received().AddNewWord(Arg.Any<Anagram>());
-            Assert.AreEqual("Index", result.ActionName);
-        }
+             var result = Controller.Create(anagram) as RedirectToActionResult;
 
-        [Test]
-        public void DataNotPresentWhenCreatingNewWord()
-        {
-            var result = Controller.Create(new Anagram()) as ViewResult;
+             CookiesHandlerMock.Received().ClearAllCookies();
+             WordRepositoryMock.Received().AddNewWord(Arg.Any<Anagram>());
+             Assert.AreEqual("Index", result.ActionName);
+         }
 
-            Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
-        }*/
+         [Test]
+         public void DataNotPresentWhenCreatingNewWord()
+         {
+             var result = Controller.Create(new Anagram()) as ViewResult;
+
+             Assert.AreEqual(1, result.ViewData.ModelState.ErrorCount);
+         }*/
     }
 }
