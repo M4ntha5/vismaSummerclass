@@ -2,6 +2,7 @@
 using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.EF.CodeFirst;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -56,14 +57,13 @@ namespace AnagramSolver.BusinessLogic.Repositories
             return await _context.Words.Where(x => x.SortedWord == sortedword).ToListAsync();
         }
 
-        public async Task<string> SelectWordById(string id)
+        public async Task<WordEntity> SelectWordById(int id)
         {
-            var parsedId = int.Parse(id);
-            var wordEntity = await _context.Words.FindAsync(parsedId);
-            var word = wordEntity.Word;
-            if (string.IsNullOrEmpty(word))
+            var wordEntity = await _context.Words.FindAsync(id);
+            if (wordEntity == null)
                 throw new Exception("Word with provided Id not found");
-            return word;
+
+            return wordEntity;
         }
 
         public async Task<List<WordEntity>> SelectWordsBySearch(string phrase)
@@ -72,9 +72,31 @@ namespace AnagramSolver.BusinessLogic.Repositories
             return wordsFound;
         }
 
-        public Task ClearSelectedTable(List<string> tables)
+        public async Task UpdateSelectedWord(int id, Anagram updatedWord)
         {
-            throw new NotImplementedException();
+            var entity = await _context.Words.FindAsync(id);
+            if (entity == null)
+                throw new Exception("Word you are trying to update does not exist");
+
+            var newEntity = new WordEntity
+            {
+                Category = updatedWord.Case,
+                SortedWord = String.Concat(updatedWord.Word.OrderBy(x => x)),
+                Word = updatedWord.Word,
+                ID = entity.ID
+            };
+
+            _context.Entry(entity).CurrentValues.SetValues(newEntity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteSelectedWord(int id)
+        {
+            var entity = new WordEntity() { ID = id };
+
+            _context.Words.Attach(entity);
+            _context.Words.Remove(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

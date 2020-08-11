@@ -9,5 +9,6 @@ namespace AnagramSolver.Contracts.Interfaces
     {
         Task InsertLog(UserLog userLog);
         Task<List<UserLogEntity>> GetAllLogs();
+        Task<int> GetAnagramsLeftForIpToSearch(string ip);
     }
 }

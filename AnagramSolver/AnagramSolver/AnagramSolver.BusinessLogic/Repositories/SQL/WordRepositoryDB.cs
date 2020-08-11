@@ -108,9 +108,8 @@ namespace AnagramSolver.BusinessLogic.Repositories
             return anagrams;
         }
 
-        public async Task<string> SelectWordById(string id)
+        public async Task<WordEntity> SelectWordById(int id)
         {
-            var idToSearch = int.Parse(id);
             sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
             {
@@ -118,15 +117,21 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 CommandType = CommandType.Text,
                 CommandText = "select Word from Words where Id = @wordIdToGet"
             };
-            cmd.Parameters.Add(new SqlParameter("@wordIdToGet", idToSearch));
+            cmd.Parameters.Add(new SqlParameter("@wordIdToGet", id));
             SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
-            string anagram = null;
+            WordEntity anagram =new WordEntity();
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    anagram = reader["Word"].ToString();
+                    anagram = new WordEntity
+                    {
+                        Category = reader["Category"].ToString(),
+                        Word = reader["Word"].ToString(),
+                        SortedWord = reader["SortedWord"].ToString(),
+                        ID = int.Parse(reader["ID"].ToString()),
+                    };
                     break;
                 }
             }
@@ -134,24 +139,6 @@ namespace AnagramSolver.BusinessLogic.Repositories
             reader.Close();
             sqlConnection.Close();
             return anagram;
-        }
-
-        public async Task ClearSelectedTable(List<string> tables)
-        {
-            foreach (var table in tables)
-            {
-                sqlConnection.Open();
-                SqlCommand cmd = new SqlCommand
-                {
-                    Connection = sqlConnection,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "ClearSelectedTableContent"
-                };
-                cmd.Parameters.Add(new SqlParameter("@table", table));
-                await cmd.ExecuteNonQueryAsync();
-
-                sqlConnection.Close();
-            }
         }
 
         public async Task<List<WordEntity>> SelectWordsBySearch(string phrase)
@@ -186,6 +173,40 @@ namespace AnagramSolver.BusinessLogic.Repositories
             reader.Close();
             sqlConnection.Close();
             return anagrams;
+        }
+
+        public async Task UpdateSelectedWord(int id, Anagram updatedWord)
+        {
+            var sortedWord = String.Concat(updatedWord.Word.OrderBy(x => x));
+            sqlConnection.Open();
+            SqlCommand cmd = new SqlCommand
+            {
+                Connection = sqlConnection,
+                CommandType = CommandType.Text,
+                CommandText = "update Words set Category=@case, Word=@word, SortedWord=@sorted where ID=@id"
+            };
+            cmd.Parameters.Add(new SqlParameter("@case", updatedWord.Case));
+            cmd.Parameters.Add(new SqlParameter("@word", updatedWord.Word));
+            cmd.Parameters.Add(new SqlParameter("@sorted", sortedWord));
+            cmd.Parameters.Add(new SqlParameter("@id", id));
+            await cmd.ExecuteNonQueryAsync();
+
+            sqlConnection.Close();
+        }
+
+        public async Task DeleteSelectedWord(int id)
+        {
+            sqlConnection.Open();
+            SqlCommand cmd = new SqlCommand
+            {
+                Connection = sqlConnection,
+                CommandType = CommandType.Text,
+                CommandText = "delete from Word where id=@id"
+            };
+            cmd.Parameters.Add(new SqlParameter("@id", id));
+            await cmd.ExecuteNonQueryAsync();
+
+            sqlConnection.Close();
         }
     }
 }

@@ -4,14 +4,16 @@ using AnagramSolver.EF.CodeFirst;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnagramSolver.EF.CodeFirst.Migrations
 {
     [DbContext(typeof(AnagramSolverCodeFirstContext))]
-    partial class AnagramSolverCodeFirstContextModelSnapshot : ModelSnapshot
+    [Migration("20200810130156_ActionColumnAddedToUserLog")]
+    partial class ActionColumnAddedToUserLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +49,7 @@ namespace AnagramSolver.EF.CodeFirst.Migrations
                     b.Property<string>("Ip")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MethodCalled")
+                    b.Property<string>("Action")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phrase")

@@ -8,6 +8,8 @@
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
+    <p class="text-danger">@ViewData["Error"]</p>
+
 <a asp-action="Index"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    class="btn btn-primary @prevDisabled">
@@ -40,11 +42,17 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Word">@item.Word</a>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @item.Word
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Word">Details</a> |
+                <a asp-action="Update" asp-route-id="@item.ID">Update</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+            
+        </tr>
         }
     </tbody>
 </table>

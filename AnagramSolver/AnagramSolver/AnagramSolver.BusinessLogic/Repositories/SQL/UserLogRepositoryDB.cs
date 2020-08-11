@@ -72,5 +72,42 @@ namespace AnagramSolver.BusinessLogic.Repositories
             return logs;
         }
 
+        public async Task<int> GetAnagramsLeftForIpToSearch(string ip)
+        {
+            sqlConnection.Open();
+            SqlCommand cmd = new SqlCommand
+            {
+                Connection = sqlConnection,
+                CommandType = CommandType.Text,
+                CommandText = "select " +
+                "(select count(*) from AnagramSolver1.dbo.UserLogs where ip = @ip and Action = @searchAction)-" +
+                "(select count(*) from AnagramSolver1.dbo.UserLogs where ip = @ip and Action = @deleteAction)+" +
+                "(select count(*) from AnagramSolver1.dbo.UserLogs where ip = @ip and Action = @insertAction)+" +
+                "(select count(*) from AnagramSolver1.dbo.UserLogs where ip = @ip and Action = @updateAction)" +
+                "as totalCount"
+            };
+            cmd.Parameters.Add(new SqlParameter("@ip", ip));
+            cmd.Parameters.Add(new SqlParameter("@searchAction", UserActionTypes.GetAnagrams.ToString()));
+            cmd.Parameters.Add(new SqlParameter("@deleteAction", UserActionTypes.DeleteWord.ToString()));
+            cmd.Parameters.Add(new SqlParameter("@insertAction", UserActionTypes.InsertWord.ToString()));
+            cmd.Parameters.Add(new SqlParameter("@updateAction", UserActionTypes.UpdateWord.ToString()));
+
+            SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            int result = -1;
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    result = int.Parse(reader["totalCount"].ToString());
+                    break;
+                }
+            }
+
+            reader.Close();
+            sqlConnection.Close();
+
+            return result;
+        }
     }
 }

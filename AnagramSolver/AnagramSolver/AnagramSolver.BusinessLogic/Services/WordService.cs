@@ -2,6 +2,7 @@
 using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Interfaces.Services;
 using AnagramSolver.Contracts.Models;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +14,19 @@ namespace AnagramSolver.BusinessLogic.Services
     {
         private readonly IWordRepository _wordRepository;
         private readonly IAdditionalWordRepository _additionalWordRepository;
+        private readonly IMapper _mapper;
 
-        public WordService(IWordRepository wordRepository, IAdditionalWordRepository additionalWordRepo)
+        public WordService(IWordRepository wordRepository, IAdditionalWordRepository additionalWordRepo, IMapper mapper)
         {
             _wordRepository = wordRepository;
             _additionalWordRepository = additionalWordRepo;
+            _mapper = mapper;
         }
 
         public async Task<List<Anagram>> GetAllWords()
         {
             var resultEntity = await _wordRepository.GetAllWords();
-            var words = MatchWordEntityToModel(resultEntity);
+            var words = _mapper.Map<List<Anagram>>(resultEntity);
 
             return words;
         }
@@ -31,7 +34,7 @@ namespace AnagramSolver.BusinessLogic.Services
         public async Task<List<Anagram>> GetWordsBySearch(string phrase)
         {
             var resultEntity = await _additionalWordRepository.SelectWordsBySearch(phrase);
-            var words = MatchWordEntityToModel(resultEntity);
+            var words = _mapper.Map<List<Anagram>>(resultEntity);
             return words;
         }
 
@@ -52,7 +55,7 @@ namespace AnagramSolver.BusinessLogic.Services
         public async Task<List<Anagram>> GetWordAnagrams(string word)
         {
             var results = await _wordRepository.GetSelectedWordAnagrams(word);
-            var anagrams = MatchWordEntityToModel(results);
+            var anagrams = _mapper.Map<List<Anagram>>(results);
 
             return anagrams;
         }
@@ -64,32 +67,31 @@ namespace AnagramSolver.BusinessLogic.Services
                     if (item.Word == newAnagram.Word)
                         throw new Exception($"Word {newAnagram.Word} already exists");
         }
-
-
-        private List<Anagram> MatchWordEntityToModel(List<WordEntity> entities)
+        public async Task<Anagram> GetWordById(int? id)
         {
-            List<Anagram> model = new List<Anagram>();
-            foreach (var entity in entities)
-                model.Add(new Anagram()
-                {
-                    Case = entity.Category,
-                    Word = entity.Word
-                });
+            if (id == null)
+                throw new Exception("Id not defined");
+
+            var wordEntity = await _additionalWordRepository.SelectWordById((int)id);
+            if (wordEntity == null)
+                throw new Exception("No word with sepcified Id");
+
+            var model = _mapper.Map<Anagram>(wordEntity);
+
             return model;
         }
 
-        public async Task<string> GetWordById(string id)
+        public async Task DeleteWordById(int id)
         {
-            if (string.IsNullOrEmpty(id))
-                throw new Exception("Id not defined");
+            await _additionalWordRepository.DeleteSelectedWord(id);
+        }
 
-            var word = await _additionalWordRepository.SelectWordById(id);
+        public async Task UpdateWord(int id, Anagram newWord)
+        {
+            if (newWord == null || string.IsNullOrEmpty(newWord.Word) || string.IsNullOrEmpty(newWord.Case))
+                throw new Exception("Cannot update Word, because Word is empty");
 
-            if (string.IsNullOrEmpty(word))
-                throw new Exception("No word with sepcified Id");
-
-            return word;
+            await _additionalWordRepository.UpdateSelectedWord(id, newWord);
         }
     }
-
 }

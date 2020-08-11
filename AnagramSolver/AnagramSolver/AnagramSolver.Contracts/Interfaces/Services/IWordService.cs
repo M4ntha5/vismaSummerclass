@@ -10,7 +10,10 @@ namespace AnagramSolver.Contracts.Interfaces.Services
         Task<List<Anagram>> GetWordsBySearch(string phrase);
         Task InsertWord(Anagram anagram);
         Task<List<Anagram>> GetWordAnagrams(string word);
-        Task<string> GetWordById(string id);
+        Task<Anagram> GetWordById(int? id);
+
+        Task DeleteWordById(int id);
+        Task UpdateWord(int id, Anagram newWord);
     }
 
 }

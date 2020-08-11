@@ -5,6 +5,7 @@ using AnagramSolver.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,18 +31,18 @@ namespace AnagramSolver.WebApp.Controllers
             _wordService = wordService;
         }
 
-        public async Task<IActionResult> Index(string id)
+        public async Task<IActionResult> Index([Required] string id)
         {
             try
             {
-                /*  var cookieValue = _cookiesHandler.GetCookieByKey(input);
-                  if (!string.IsNullOrEmpty(cookieValue))
-                      return View(cookieValue.Split(';').ToList());*/
-
                 if (string.IsNullOrEmpty(id))
                     return View();
 
                 IList<string> anagrams = new List<string>();
+
+                var solvesLeft = await _userLogRepository.GetAnagramsLeftForIpToSearch(GetUserIp());
+                if (solvesLeft <= 0)
+                    throw new Exception("You reached your solve limit. Add new word to increase your limit");
 
                 var cachedWord = await _cachedWordRepository.GetCachedWord(id);
                 if (cachedWord != null)// || cachedWord != DBNull.Value)
@@ -54,7 +55,9 @@ namespace AnagramSolver.WebApp.Controllers
                         string wordFound = "";
                         foreach (var word in phrase)
                         {
-                            wordFound += await _wordService.GetWordById(word) + " ";
+                            var idToGet = int.Parse(word);
+                            var anagram = await _wordService.GetWordById(idToGet);
+                            wordFound += anagram.Word + " ";
                         }
                         anagrams.Add(wordFound);
                     }
@@ -67,7 +70,8 @@ namespace AnagramSolver.WebApp.Controllers
                 anagrams = await _anagramSolver.GetAnagrams(id);
                 sw.Stop();
 
-                await _userLogRepository.InsertLog(new UserLog(GetUserIp(), id, sw.Elapsed));
+                await _userLogRepository.InsertLog(
+                    new UserLog(GetUserIp(), id, sw.Elapsed, UserActionTypes.GetAnagrams.ToString()));
 
                 //removing input element
                 anagrams.Remove(id);
@@ -76,19 +80,26 @@ namespace AnagramSolver.WebApp.Controllers
 
                 return View(anagrams);
 
-
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", ex.Message);
-                return View(id);
+                @ViewData["Error"] = ex.Message;
+                return View();
             }
         }
 
         public IActionResult DisplayCookies()
         {
-            var cookies = _cookiesHandler.GetCurrentCookies();
-            return View(cookies);
+            try
+            {
+                var cookies = _cookiesHandler.GetCurrentCookies();
+                return View(cookies);
+            }
+            catch(Exception ex)
+            {
+                @ViewData["Error"] = ex.Message;
+                return View();
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

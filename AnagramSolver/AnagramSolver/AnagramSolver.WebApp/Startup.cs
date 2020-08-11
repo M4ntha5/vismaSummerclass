@@ -1,7 +1,9 @@
 using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Interfaces.Services;
+using AnagramSolver.Contracts.Profiles;
 using AnagramSolver.EF.CodeFirst;
 using AnagramSolver.EF.DatabaseFirst.Data;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +46,13 @@ namespace AnagramSolver.WebApp
                 .AddScoped<IAnagramSolver, BusinessLogic.Services.AnagramSolver>()
                 .AddScoped<IWordService, BusinessLogic.Services.WordService>()
                 .AddHttpContextAccessor();
+
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.AddDbContext<AnagramSolverDBFirstContext>(options =>
                     options.UseSqlServer(Contracts.Utils.Settings.ConnectionString));

@@ -8,5 +8,6 @@ namespace AnagramSolver.Contracts.Entities
         public string Ip { get; set; }
         public string Phrase { get; set; }
         public TimeSpan SearchTime { get; set; }
+        public string Action { get; set; }
     }
 }
