@@ -1,6 +1,7 @@
 ﻿using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Interfaces.Services;
 using AnagramSolver.Contracts.Models;
+using AnagramSolver.EF.CodeFirst;
 using AnagramSolver.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,16 +20,18 @@ namespace AnagramSolver.WebApp.Controllers
         private readonly ICachedWordRepository _cachedWordRepository;
         private readonly IUserLogRepository _userLogRepository;
         private readonly IWordService _wordService;
+        private readonly AnagramSolverCodeFirstContext _context;
 
         public HomeController(IAnagramSolver anagramSolver, ICookiesHandlerServvice cookiesHandler,
             IUserLogRepository logRepository, ICachedWordRepository cachedWordRepository,
-            IWordService wordService)
+            IWordService wordService, AnagramSolverCodeFirstContext context)
         {
             _anagramSolver = anagramSolver;
             _cookiesHandler = cookiesHandler;
             _cachedWordRepository = cachedWordRepository;
             _userLogRepository = logRepository;
             _wordService = wordService;
+            _context = context;
         }
 
         public async Task<IActionResult> Index([Required] string id)
@@ -78,6 +81,7 @@ namespace AnagramSolver.WebApp.Controllers
 
                 _cookiesHandler.AddCookie(id, string.Join(";", anagrams.ToArray()));
 
+                await _context.SaveChangesAsync();
                 return View(anagrams);
 
             }

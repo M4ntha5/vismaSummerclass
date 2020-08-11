@@ -7,6 +7,6 @@ namespace AnagramSolver.Contracts.Interfaces
 {
     public interface ITableHandler
     {
-        Task ClearSelectedTable(List<string> tables);
+        Task ClearSelectedTables(List<string> tables);
     }
 }

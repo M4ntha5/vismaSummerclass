@@ -17,7 +17,7 @@ namespace AnagramSolver.Console
             Configuration.ReadAppSettingsFile();
 
             var AnagramSolver = new BusinessLogic.Services.AnagramSolver(
-                new FileRepository(), new UserInterface(), new CachedWordRepositoryDB());
+                new FileRepository(), new UserInterface(), new CachedWordRepositoryDB(), new WordRepositoryDB());
             var howToSolve = UserInterface.DisplayOptions();
 
             while (true)
@@ -47,7 +47,7 @@ namespace AnagramSolver.Console
             System.Console.WriteLine("Seeding database, please wait");
             var fileRepo = new FileRepository();
             var connection = new WordRepositoryDB();
-            var wordsList = await fileRepo.GetAllWords();
+            var wordsList = fileRepo.GetAllWords();
 
             foreach (var word in wordsList)
             {
@@ -57,7 +57,7 @@ namespace AnagramSolver.Console
                     Word = word.Word,
                 };
 
-                await connection.AddNewWord(model);
+                connection.AddNewWord(model);
             }
         }
 

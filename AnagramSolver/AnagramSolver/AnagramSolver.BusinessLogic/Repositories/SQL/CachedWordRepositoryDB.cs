@@ -33,7 +33,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
             cmd.Parameters.Add(new SqlParameter("@phrase", cachedWord.SearchPhrase));
             cmd.Parameters.Add(new SqlParameter("@anagrams", cachedWord.AnagramsIds));
 
-            await cmd.ExecuteNonQueryAsync();
+            cmd.ExecuteNonQueryAsync();
             sqlConnection.Close();
         }
 
@@ -45,11 +45,11 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 Connection = sqlConnection,
                 CommandType = CommandType.Text,
                 CommandText = "select top 1 * from CachedWords " +
-                                "where phrase = @searchPhrase"
+                                "where Phrase = @searchPhrase"
             };
             cmd.Parameters.Add(new SqlParameter("@searchPhrase", phrase));
 
-            SqlDataReader reader = await cmd.ExecuteReaderAsync();
+            SqlDataReader reader = cmd.ExecuteReader();
 
             CachedWordEntity result = null;
             if (reader.HasRows)

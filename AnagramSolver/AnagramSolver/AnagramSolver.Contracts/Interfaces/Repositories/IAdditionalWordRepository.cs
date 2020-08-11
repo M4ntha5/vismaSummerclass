@@ -7,11 +7,11 @@ namespace AnagramSolver.Contracts.Interfaces
 {
     public interface IAdditionalWordRepository
     {
-        Task<WordEntity> SelectWordById(int id);
-        Task<List<WordEntity>> SelectWordsBySearch(string phrase);
+        WordEntity SelectWordById(int id);
+        List<WordEntity> SelectWordsBySearch(string phrase);
 
 
-        Task UpdateSelectedWord(int id, Anagram updatedWord);
-        Task DeleteSelectedWord(int id);
+        void UpdateSelectedWord(int id, Anagram updatedWord);
+        void DeleteSelectedWord(int id);
     }
 }

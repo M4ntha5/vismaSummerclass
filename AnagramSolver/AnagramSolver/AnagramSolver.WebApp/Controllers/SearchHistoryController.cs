@@ -28,7 +28,7 @@ namespace AnagramSolver.WebApp.Controllers
         {
             try
             {
-                var logs = await _userLogRepository.GetAllLogs();
+                var logs = await _userLogRepository.GetAllAnagramSolveLogs();
 
                 List<SearchHistory> history = new List<SearchHistory>();
                 foreach (var log in logs)

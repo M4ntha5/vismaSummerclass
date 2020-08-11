@@ -39,15 +39,16 @@ namespace AnagramSolver.BusinessLogic.Repositories
             await cmd.ExecuteNonQueryAsync();
             sqlConnection.Close();
         }
-        public async Task<List<UserLogEntity>> GetAllLogs()
+        public async Task<List<UserLogEntity>> GetAllAnagramSolveLogs()
         {
             sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
             {
                 Connection = sqlConnection,
                 CommandType = CommandType.Text,
-                CommandText = "select * from UserLogs"
+                CommandText = "select * from UserLogs where Action = @action"
             };
+            cmd.Parameters.Add(new SqlParameter("@action", UserActionTypes.GetAnagrams.ToString()));
 
             SqlDataReader reader = await cmd.ExecuteReaderAsync();
 

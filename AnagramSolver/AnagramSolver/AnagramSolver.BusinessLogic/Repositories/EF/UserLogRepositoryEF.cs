@@ -45,26 +45,26 @@ namespace AnagramSolver.BusinessLogic.Repositories
             };
 
             _context.UserLogs.Add(entity);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task<List<UserLogEntity>> GetAllLogs()
+        public async Task<List<UserLogEntity>> GetAllAnagramSolveLogs()
         {
-            return await _context.UserLogs.ToListAsync();
+            return _context.UserLogs.Where(
+                x => x.Action == UserActionTypes.GetAnagrams.ToString()).ToList();
         }
 
         public async Task<int> GetAnagramsLeftForIpToSearch(string ip)
         {
-            var timesSearched = await _context.UserLogs.CountAsync(
+            var timesSearched = _context.UserLogs.Count(
                 x => x.Ip == ip && x.Action == UserActionTypes.GetAnagrams.ToString());
 
-            var timesNewWordAdded = await _context.UserLogs.CountAsync(
+            var timesNewWordAdded = _context.UserLogs.Count(
                 x => x.Ip == ip && x.Action == UserActionTypes.InsertWord.ToString());
 
-            var timesWordDeleted = await _context.UserLogs.CountAsync(
+            var timesWordDeleted = _context.UserLogs.Count(
                 x => x.Ip == ip && x.Action == UserActionTypes.DeleteWord.ToString());
 
-            var timesWordUpdated = await _context.UserLogs.CountAsync(
+            var timesWordUpdated = _context.UserLogs.Count(
                 x => x.Ip == ip && x.Action == UserActionTypes.UpdateWord.ToString());
 
             var timesLeftToSearch = Settings.MaxAnagramsForIp - timesSearched

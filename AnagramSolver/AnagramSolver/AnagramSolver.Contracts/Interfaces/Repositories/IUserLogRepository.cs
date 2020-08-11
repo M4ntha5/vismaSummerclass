@@ -8,7 +8,7 @@ namespace AnagramSolver.Contracts.Interfaces
     public interface IUserLogRepository
     {
         Task InsertLog(UserLog userLog);
-        Task<List<UserLogEntity>> GetAllLogs();
+        Task<List<UserLogEntity>> GetAllAnagramSolveLogs();
         Task<int> GetAnagramsLeftForIpToSearch(string ip);
     }
 }

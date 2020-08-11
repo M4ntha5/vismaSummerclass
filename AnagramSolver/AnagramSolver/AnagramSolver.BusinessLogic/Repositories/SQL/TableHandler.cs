@@ -20,7 +20,7 @@ namespace AnagramSolver.BusinessLogic.Repositories.SQL
                 ConnectionString = Settings.ConnectionString
             };
         }
-        public async Task ClearSelectedTable(List<string> tables)
+        public async Task ClearSelectedTables(List<string> tables)
         {
             foreach (var table in tables)
             {

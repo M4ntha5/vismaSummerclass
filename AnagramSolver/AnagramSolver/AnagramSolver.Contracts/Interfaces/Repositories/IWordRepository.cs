@@ -7,9 +7,9 @@ namespace AnagramSolver.Contracts.Interfaces
 {
     public interface IWordRepository
     {
-        Task<List<WordEntity>> GetAllWords();
-        Task<List<WordEntity>> GetSelectedWordAnagrams(string word);
-        Task AddNewWord(Anagram anagram);
+        List<WordEntity> GetAllWords();
+        List<WordEntity> GetSelectedWordAnagrams(string word);
+        void AddNewWord(Anagram anagram);
 
     }
 }

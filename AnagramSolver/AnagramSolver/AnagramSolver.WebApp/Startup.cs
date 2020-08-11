@@ -2,7 +2,6 @@ using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Interfaces.Services;
 using AnagramSolver.Contracts.Profiles;
 using AnagramSolver.EF.CodeFirst;
-using AnagramSolver.EF.DatabaseFirst.Data;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,13 +37,11 @@ namespace AnagramSolver.WebApp
                 .AddScoped<IWordRepository, BusinessLogic.Repositories.WordRepositoryEF>()
                 .AddScoped<IAdditionalWordRepository, BusinessLogic.Repositories.WordRepositoryEF>()
 
-                //.AddScoped<IUserLogRepository, BusinessLogic.Repositories.UserLogRepositoryDB>()
-                //.AddScoped<ICachedWordRepository, BusinessLogic.Repositories.CachedWordRepositoryDB>()
-                //.AddScoped<IWordRepository, BusinessLogic.Repositories.WordRepositoryDB>()
-                //.AddScoped<IAdditionalWordRepository, BusinessLogic.Repositories.WordRepositoryDB>()
-
                 .AddScoped<IAnagramSolver, BusinessLogic.Services.AnagramSolver>()
                 .AddScoped<IWordService, BusinessLogic.Services.WordService>()
+
+                .AddScoped<AnagramSolverCodeFirstContext>()
+
                 .AddHttpContextAccessor();
 
             var mapperConfig = new MapperConfiguration(mc =>
@@ -53,9 +50,6 @@ namespace AnagramSolver.WebApp
             });
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
-
-            services.AddDbContext<AnagramSolverDBFirstContext>(options =>
-                    options.UseSqlServer(Contracts.Utils.Settings.ConnectionString));
 
             services.AddDbContext<AnagramSolverCodeFirstContext>(options =>
                     options.UseSqlServer(Contracts.Utils.Settings.ConnectionStringCodeFirst));

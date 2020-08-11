@@ -4,6 +4,7 @@ using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,15 +13,17 @@ namespace AnagramSolver.BusinessLogic.Services
     public class AnagramSolver : IAnagramSolver
     {
         private readonly IWordRepository _wordRepository;
+        private readonly IAdditionalWordRepository _wordRepository2;
         private readonly ICachedWordRepository _cachedWordRepository;
         private readonly IUserInterface _userInterface;
 
         public AnagramSolver(IWordRepository wordRepository, IUserInterface userInterface,
-            ICachedWordRepository cachedWordRepository)
+            ICachedWordRepository cachedWordRepository, IAdditionalWordRepository additionalWordRepository)
         {
             _wordRepository = wordRepository;
             _cachedWordRepository = cachedWordRepository;
             _userInterface = userInterface;
+            _wordRepository2 = additionalWordRepository;
         }
 
         public async Task<IList<string>> GetAnagrams(string inputWords)
@@ -30,7 +33,7 @@ namespace AnagramSolver.BusinessLogic.Services
                 throw new Exception("You must enter at least one word");
 
             //getting all dictionary
-            var allWords = await _wordRepository.GetAllWords();
+            var allWords = _wordRepository.GetAllWords();
             //sorting user phrase
             var sortedInput = String.Concat(joinedInput.OrderBy(x => x));
 
@@ -40,7 +43,7 @@ namespace AnagramSolver.BusinessLogic.Services
             var tmpInput = sortedInput;
 
             //look for single word anagrams first
-            var singleWord = await GetAllSingleWordAnagrams(sortedInput);
+            var singleWord = GetAllSingleWordAnagrams(sortedInput);
             if (singleWord == null)
                 singleWord = new List<WordEntity>();
 
@@ -67,7 +70,7 @@ namespace AnagramSolver.BusinessLogic.Services
                     if (contais != null && foundWordsLength == sortedInput.Length)
                     {
                         // adding found words to reult list
-                        resultAnagrams.Add($"{elem.Word} {contais.Word}");// = AddToResultList(elem.Value, sortedList[tmpInput], multiWordResult);
+                        resultAnagrams.Add($"{elem.Word} {contais.Word}");
                         //adding found words to ids collection
                         idsList.Add($"{elem.ID}/{contais.ID}");
                         break;
@@ -96,9 +99,9 @@ namespace AnagramSolver.BusinessLogic.Services
                 return null;
         }     
 
-        private async Task<List<WordEntity>> GetAllSingleWordAnagrams(string word)
+        private List<WordEntity> GetAllSingleWordAnagrams(string word)
         {
-            var anagrams = await _wordRepository.GetSelectedWordAnagrams(word);
+            var anagrams = _wordRepository.GetSelectedWordAnagrams(word);
 
             if (anagrams != null && anagrams.Count > 0)
                 return anagrams;
@@ -114,6 +117,7 @@ namespace AnagramSolver.BusinessLogic.Services
                 if (ContainsAll(sortedInput, word.Word))
                     sortedList.Add(word);
             }
+
             return sortedList;
         }
 
