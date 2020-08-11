@@ -13,7 +13,6 @@ namespace AnagramSolver.BusinessLogic.Services
     public class AnagramSolver : IAnagramSolver
     {
         private readonly IWordRepository _wordRepository;
-        private readonly IAdditionalWordRepository _wordRepository2;
         private readonly ICachedWordRepository _cachedWordRepository;
         private readonly IUserInterface _userInterface;
 
@@ -23,7 +22,6 @@ namespace AnagramSolver.BusinessLogic.Services
             _wordRepository = wordRepository;
             _cachedWordRepository = cachedWordRepository;
             _userInterface = userInterface;
-            _wordRepository2 = additionalWordRepository;
         }
 
         public async Task<IList<string>> GetAnagrams(string inputWords)
