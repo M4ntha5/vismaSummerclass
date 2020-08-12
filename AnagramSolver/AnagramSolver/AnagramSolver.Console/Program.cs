@@ -1,12 +1,14 @@
 ﻿using AnagramSolver.BusinessLogic.Properties;
 using AnagramSolver.BusinessLogic.Repositories;
-using AnagramSolver.Console.Delegates;
+using AnagramSolver.BusinessLogic.Services;
 using AnagramSolver.Console.UI;
+using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.IO;
 using System.Resources;
 using System.Threading.Tasks;
 
@@ -14,25 +16,18 @@ namespace AnagramSolver.Console
 {
     class Program
     {
-        static readonly UserInterface UserInterface = new UserInterface();
-        static readonly ApiActions apiActions = new ApiActions();
+        static readonly UserInterface _userInterface = new UserInterface(print => WriteToFile(print));
 
+        static readonly ApiActions _apiActions = new ApiActions();
+        static readonly IAnagramSolver _anagramSolver = new BusinessLogic.Services.AnagramSolver(
+            new FileRepository(), new CachedWordRepositoryDB());
 
         static async Task Main(string[] args)
         {
-            var del = new Print(WriteToConsole);
-            var display = new Display(del);
-
-            del("test");
-
-
-
             //loading data from settings file
             Configuration.ReadAppSettingsFile();
 
-            var AnagramSolver = new BusinessLogic.Services.AnagramSolver(
-                new FileRepository(), new UserInterface(), new CachedWordRepositoryDB(), new WordRepositoryDB());
-            var howToSolve = UserInterface.DisplayOptions();
+            var howToSolve = _userInterface.DisplayOptions();
 
             while (true)
             {
@@ -40,29 +35,23 @@ namespace AnagramSolver.Console
                     await SeedDBWithFileData();
 
                 //getting initial user input
-                var userInput = UserInterface.GetInput();
+                var userInput = _userInterface.GetInput();
 
                 if (userInput == null)
                     break;
 
                 List<string> result;
                 if (howToSolve == 2)
-                    result = (List<string>)await AnagramSolver.GetAnagrams(userInput);
+                    result = (List<string>)await _anagramSolver.GetAnagrams(userInput);
                 else
-                    result = await apiActions.CallAnagramSolverApi(userInput);
+                    result = await _apiActions.CallAnagramSolverApi(userInput);
 
-                //displays results
-                del("Anagrams found:");
-                foreach (var anagram in result)
-                    display.FormattedPrint(del, anagram);
-
-               // UserInterface.DisplayResults(result);
+                _userInterface.DisplayResults(result);
             }
         }
 
         private static async Task SeedDBWithFileData()
         {
-            System.Console.WriteLine("Seeding database, please wait");
             var fileRepo = new FileRepository();
             var connection = new WordRepositoryDB();
             var wordsList = fileRepo.GetAllWords();
@@ -91,10 +80,7 @@ namespace AnagramSolver.Console
 
         public static void WriteToFile(string message)
         {
-            IResourceWriter writer = new ResourceWriter(Resources.zodynas);
-
-            writer.AddResource("", message);
-            writer.Close();
+            File.AppendAllText(@"ConsoleLog.txt", message + '\n');
         }
 
         public static string CapitalizeFirstLetter(string input)

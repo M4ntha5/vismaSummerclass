@@ -6,16 +6,24 @@ using System.Linq;
 
 namespace AnagramSolver.Console.UI
 {
+    public delegate void Print(string message);
+
     public class UserInterface : IUserInterface
     {
+        private readonly Print _print;
+
+        public UserInterface(Print print)
+        {
+            _print = print;
+        }
+
         public string GetInput()
         {
-            System.Console.WriteLine("Enter word or phrase (enter x to exit):");
+            _print("Enter word or phrase (enter x to exit):");
             var userInput = System.Console.ReadLine().ToLower();
             if (userInput == "x")
                 return null;
-            //validating user input
-            userInput = ValidateInputData(userInput);
+
             return userInput;
         }
 
@@ -23,32 +31,18 @@ namespace AnagramSolver.Console.UI
         {
             if (angarams != null)
             {
-                System.Console.WriteLine("Anagrams found:");
-                angarams.ForEach(x => System.Console.WriteLine(x));
+                _print("Anagrams found:");
+                angarams.ForEach(x => _print(x));
             }
             else
-                System.Console.WriteLine("No anagrams found for yuor input!");
-        }
-
-        public string ValidateInputData(string userInput)
-        {
-            if (string.IsNullOrEmpty(userInput))
-                return null;
-            var userWords = userInput.Split(' ').ToList();
-            foreach (var word in userWords)
-            {
-                if (word.Length < Settings.MinInputLength)
-                    throw new Exception($"Minimum one word length must be at least " +
-                        $"{Settings.MinInputLength} characters!");
-            }
-            return string.Join("", userWords);
+                _print("No anagrams found for yuor input!");
         }
 
         public int DisplayOptions()
         {
-            System.Console.WriteLine("If you want to seed database with file content press: 0");
-            System.Console.WriteLine("If you want to solve your anagrams using API call press: 1");
-            System.Console.WriteLine("If you want to solve your anagrams without using API press: 2");
+            _print("If you want to seed database with file content press: 0");
+            _print("If you want to solve your anagrams using API call press: 1");
+            _print("If you want to solve your anagrams without using API press: 2");
 
             int.TryParse(System.Console.ReadLine(), out int userInput);
 

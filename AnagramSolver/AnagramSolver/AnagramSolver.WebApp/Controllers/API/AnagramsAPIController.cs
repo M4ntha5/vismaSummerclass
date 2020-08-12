@@ -10,11 +10,9 @@ namespace AnagramSolver.WebApp.Controllers
     public class AnagramsAPIController : ControllerBase
     {
         private readonly IAnagramSolver _anagramSolver;
-        private readonly IUserInterface _userInterface;
 
-        public AnagramsAPIController(IUserInterface userInterface, IAnagramSolver anagramSolver)
+        public AnagramsAPIController(IAnagramSolver anagramSolver)
         {
-            _userInterface = userInterface;
             _anagramSolver = anagramSolver;
         }
 
@@ -26,12 +24,7 @@ namespace AnagramSolver.WebApp.Controllers
                 if (string.IsNullOrEmpty(word))
                     throw new Exception("You must enter at least one word");
 
-                var input = _userInterface.ValidateInputData(word);
-
-                if (string.IsNullOrEmpty(input))
-                    throw new Exception("You must enter at least one word");
-
-                var anagrams = await _anagramSolver.GetAnagrams(input);
+                var anagrams = await _anagramSolver.GetAnagrams(word);
 
                 //removing input element
                 anagrams.Remove(word);

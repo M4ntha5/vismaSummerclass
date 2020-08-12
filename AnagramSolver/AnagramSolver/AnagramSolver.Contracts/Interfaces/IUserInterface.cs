@@ -6,7 +6,6 @@ namespace AnagramSolver.Contracts.Interfaces
     {
         string GetInput();
         void DisplayResults(List<string> angarams);
-        string ValidateInputData(string userInput);
         int DisplayOptions();
     }
 }

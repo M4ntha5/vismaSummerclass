@@ -29,7 +29,6 @@ namespace AnagramSolver.WebApp
 
             services
 
-                .AddScoped<IUserInterface, Console.UI.UserInterface>()
                 .AddScoped<ICookiesHandlerServvice, BusinessLogic.Services.CookiesHandlerService>()
 
                 .AddScoped<IUserLogRepository, BusinessLogic.Repositories.UserLogRepositoryEF>()

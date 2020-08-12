@@ -14,19 +14,16 @@ namespace AnagramSolver.BusinessLogic.Services
     {
         private readonly IWordRepository _wordRepository;
         private readonly ICachedWordRepository _cachedWordRepository;
-        private readonly IUserInterface _userInterface;
 
-        public AnagramSolver(IWordRepository wordRepository, IUserInterface userInterface,
-            ICachedWordRepository cachedWordRepository, IAdditionalWordRepository additionalWordRepository)
+        public AnagramSolver(IWordRepository wordRepository, ICachedWordRepository cachedWordRepository)
         {
             _wordRepository = wordRepository;
             _cachedWordRepository = cachedWordRepository;
-            _userInterface = userInterface;
         }
 
         public async Task<IList<string>> GetAnagrams(string inputWords)
         {
-            var joinedInput = _userInterface.ValidateInputData(inputWords);
+            var joinedInput = ValidateInputData(inputWords);
             if (string.IsNullOrEmpty(joinedInput))
                 throw new Exception("You must enter at least one word");
 
@@ -86,6 +83,20 @@ namespace AnagramSolver.BusinessLogic.Services
             await _cachedWordRepository.InsertCachedWord(new CachedWord(inputWords, idsString));
 
             return resultAnagrams.Take(Settings.AnagramsToGenerate).ToList();
+        }
+
+        private string ValidateInputData(string userInput)
+        {
+            if (string.IsNullOrEmpty(userInput))
+                return null;
+            var userWords = userInput.Split(' ').ToList();
+            foreach (var word in userWords)
+            {
+                if (word.Length < Settings.MinInputLength)
+                    throw new Exception($"Minimum one word length must be at least " +
+                        $"{Settings.MinInputLength} characters!");
+            }
+            return string.Join("", userWords);
         }
 
         private WordEntity ContainsKey(List<WordEntity> list, string word)
