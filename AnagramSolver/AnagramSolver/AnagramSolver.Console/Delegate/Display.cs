@@ -4,15 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AnagramSolver.Console.UI
+namespace AnagramSolver.Console.Delegate
 {
     public delegate void Print(string message);
 
-    public class UserInterface : IUserInterface
+    public class Display : IDisplay
     {
         private readonly Print _print;
 
-        public UserInterface(Print print)
+        public Display(Print print)
         {
             _print = print;
         }

@@ -1,7 +1,7 @@
 ﻿using AnagramSolver.BusinessLogic.Properties;
 using AnagramSolver.BusinessLogic.Repositories;
 using AnagramSolver.BusinessLogic.Services;
-using AnagramSolver.Console.UI;
+using AnagramSolver.Console.Delegate;
 using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -16,7 +16,7 @@ namespace AnagramSolver.Console
 {
     class Program
     {
-        static readonly UserInterface _userInterface = new UserInterface(print => WriteToFile(print));
+        static readonly Display _userInterface = new Display(print => WriteToConsole(print));
 
         static readonly ApiActions _apiActions = new ApiActions();
         static readonly IAnagramSolver _anagramSolver = new BusinessLogic.Services.AnagramSolver(
