@@ -1,7 +1,13 @@
-﻿using AnagramSolver.BusinessLogic.Repositories;
+﻿using AnagramSolver.BusinessLogic.Properties;
+using AnagramSolver.BusinessLogic.Repositories;
+using AnagramSolver.Console.Delegates;
 using AnagramSolver.Console.UI;
 using AnagramSolver.Contracts.Models;
+using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+using System.Resources;
 using System.Threading.Tasks;
 
 namespace AnagramSolver.Console
@@ -11,8 +17,16 @@ namespace AnagramSolver.Console
         static readonly UserInterface UserInterface = new UserInterface();
         static readonly ApiActions apiActions = new ApiActions();
 
+
         static async Task Main(string[] args)
         {
+            var del = new Print(WriteToConsole);
+            var display = new Display(del);
+
+            del("test");
+
+
+
             //loading data from settings file
             Configuration.ReadAppSettingsFile();
 
@@ -37,8 +51,12 @@ namespace AnagramSolver.Console
                 else
                     result = await apiActions.CallAnagramSolverApi(userInput);
 
+                //displays results
+                del("Anagrams found:");
+                foreach (var anagram in result)
+                    display.FormattedPrint(del, anagram);
 
-                UserInterface.DisplayResults(result);
+               // UserInterface.DisplayResults(result);
             }
         }
 
@@ -59,6 +77,35 @@ namespace AnagramSolver.Console
 
                 connection.AddNewWord(model);
             }
+        }
+
+        public static void WriteToConsole(string message)
+        {
+            System.Console.WriteLine(message);
+        }
+
+        public static void WriteToDebug(string message)
+        {
+            Debug.Print(message);
+        }
+
+        public static void WriteToFile(string message)
+        {
+            IResourceWriter writer = new ResourceWriter(Resources.zodynas);
+
+            writer.AddResource("", message);
+            writer.Close();
+        }
+
+        public static string CapitalizeFirstLetter(string input)
+        {
+            if (input == null)
+                return null;
+
+            if (input.Length > 1)
+                return char.ToUpper(input[0]) + input.Substring(1);
+
+            return input.ToUpper();
         }
 
 
