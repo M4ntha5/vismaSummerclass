@@ -33,7 +33,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
             cmd.Parameters.Add(new SqlParameter("@phrase", cachedWord.SearchPhrase));
             cmd.Parameters.Add(new SqlParameter("@anagrams", cachedWord.AnagramsIds));
 
-            cmd.ExecuteNonQueryAsync();
+            await cmd.ExecuteNonQueryAsync();
             sqlConnection.Close();
         }
 
@@ -49,7 +49,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
             };
             cmd.Parameters.Add(new SqlParameter("@searchPhrase", phrase));
 
-            SqlDataReader reader = cmd.ExecuteReader();
+            SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
             CachedWordEntity result = null;
             if (reader.HasRows)

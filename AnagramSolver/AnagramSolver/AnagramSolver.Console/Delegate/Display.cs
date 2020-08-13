@@ -7,14 +7,26 @@ using System.Linq;
 namespace AnagramSolver.Console.Delegate
 {
     public delegate void Print(string message);
+    public delegate string FormattedPrint(string message);
 
     public class Display : IDisplay
     {
         private readonly Print _print;
+        private readonly FormattedPrint _formattedPrint;
+
+        //private readonly Action<string> _print;
+        //private readonly Func<string, string> _formattedPrint;
 
         public Display(Print print)
+                        //Action<string> print)
         {
-            _print = print;
+            _print = print;  
+
+            //action, func
+            //_formattedPrint = CapitalizeFirstLetter;
+
+            //delegate
+            _formattedPrint = new FormattedPrint(CapitalizeFirstLetter);
         }
 
         public string GetInput()
@@ -32,7 +44,7 @@ namespace AnagramSolver.Console.Delegate
             if (angarams != null)
             {
                 _print("Anagrams found:");
-                angarams.ForEach(x => _print(x));
+                angarams.ForEach(x => FormattedPrint(_formattedPrint, x));
             }
             else
                 _print("No anagrams found for yuor input!");
@@ -51,5 +63,28 @@ namespace AnagramSolver.Console.Delegate
 
             return userInput;
         }
+
+        //delegate
+        public void FormattedPrint(FormattedPrint del, string input)
+        {
+            _print(del(input));
+        }
+        //action, func
+        //public void FormattedPrint(Func<string, string> del, string input)
+        //{
+        //    _print(del(input));          
+        //}
+
+        public string CapitalizeFirstLetter(string input)
+        {
+            if (input == null)
+                return null;
+
+            if (input.Length > 1)
+                return char.ToUpper(input[0]) + input.Substring(1);
+
+            return input.ToUpper();
+        }
+
     }
 }

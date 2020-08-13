@@ -28,7 +28,7 @@ namespace AnagramSolver.BusinessLogic.Services
                 throw new Exception("You must enter at least one word");
 
             //getting all dictionary
-            var allWords = _wordRepository.GetAllWords();
+            var allWords = await _wordRepository.GetAllWords();
             //sorting user phrase
             var sortedInput = String.Concat(joinedInput.OrderBy(x => x));
 
@@ -38,7 +38,7 @@ namespace AnagramSolver.BusinessLogic.Services
             var tmpInput = sortedInput;
 
             //look for single word anagrams first
-            var singleWord = GetAllSingleWordAnagrams(sortedInput);
+            var singleWord = await GetAllSingleWordAnagrams(sortedInput);
             if (singleWord == null)
                 singleWord = new List<WordEntity>();
 
@@ -108,9 +108,9 @@ namespace AnagramSolver.BusinessLogic.Services
                 return null;
         }     
 
-        private List<WordEntity> GetAllSingleWordAnagrams(string word)
+        private async Task<List<WordEntity>> GetAllSingleWordAnagrams(string word)
         {
-            var anagrams = _wordRepository.GetSelectedWordAnagrams(word);
+            var anagrams = await _wordRepository.GetSelectedWordAnagrams(word);
 
             if (anagrams != null && anagrams.Count > 0)
                 return anagrams;

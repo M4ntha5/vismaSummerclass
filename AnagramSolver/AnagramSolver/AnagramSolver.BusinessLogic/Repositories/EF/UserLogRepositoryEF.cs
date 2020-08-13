@@ -1,4 +1,5 @@
 ﻿using AnagramSolver.Contracts.Entities;
+using AnagramSolver.Contracts.Enums;
 using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
@@ -44,27 +45,27 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 Action = userLog.Action
             };
 
-            _context.UserLogs.Add(entity);
+            await _context.UserLogs.AddAsync(entity);
         }
 
-        public async Task<List<UserLogEntity>> GetAllAnagramSolveLogs()
+        public Task<List<UserLogEntity>> GetAllAnagramSolveLogs()
         {
             return _context.UserLogs.Where(
-                x => x.Action == UserActionTypes.GetAnagrams.ToString()).ToList();
+                x => x.Action == UserActionTypes.GetAnagrams.ToString()).ToListAsync();
         }
 
         public async Task<int> GetAnagramsLeftForIpToSearch(string ip)
         {
-            var timesSearched = _context.UserLogs.Count(
+            var timesSearched = await _context.UserLogs.CountAsync(
                 x => x.Ip == ip && x.Action == UserActionTypes.GetAnagrams.ToString());
 
-            var timesNewWordAdded = _context.UserLogs.Count(
+            var timesNewWordAdded = await _context.UserLogs.CountAsync(
                 x => x.Ip == ip && x.Action == UserActionTypes.InsertWord.ToString());
 
-            var timesWordDeleted = _context.UserLogs.Count(
+            var timesWordDeleted = await _context.UserLogs.CountAsync(
                 x => x.Ip == ip && x.Action == UserActionTypes.DeleteWord.ToString());
 
-            var timesWordUpdated = _context.UserLogs.Count(
+            var timesWordUpdated = await _context.UserLogs.CountAsync(
                 x => x.Ip == ip && x.Action == UserActionTypes.UpdateWord.ToString());
 
             var timesLeftToSearch = Settings.MaxAnagramsForIp - timesSearched

@@ -36,14 +36,12 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 Phrase = cachedWord.SearchPhrase
             };
 
-            _context.CachedWords.Add(entity);
-           // await _context.SaveChangesAsync();
+            await _context.CachedWords.AddAsync(entity);
         }
 
-        public async Task<CachedWordEntity> GetCachedWord(string phrase)
+        public Task<CachedWordEntity> GetCachedWord(string phrase)
         {
-            var res = _context.CachedWords.Where(x => x.Phrase == phrase).SingleOrDefault();
-
+            var res = _context.CachedWords.Where(x => x.Phrase == phrase).SingleOrDefaultAsync();
             return res;
         }
     }

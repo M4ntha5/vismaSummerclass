@@ -25,7 +25,7 @@ namespace AnagramSolver.BusinessLogic.Services
 
         public async Task<List<Anagram>> GetAllWords()
         {
-            var resultEntity = _wordRepository.GetAllWords();
+            var resultEntity = await _wordRepository.GetAllWords();
             var words = _mapper.Map<List<Anagram>>(resultEntity);
 
             return words;
@@ -33,7 +33,7 @@ namespace AnagramSolver.BusinessLogic.Services
 
         public async Task<List<Anagram>> GetWordsBySearch(string phrase)
         {
-            var resultEntity = _additionalWordRepository.SelectWordsBySearch(phrase);
+            var resultEntity = await _additionalWordRepository.SelectWordsBySearch(phrase);
             var words = _mapper.Map<List<Anagram>>(resultEntity);
             return words;
         }
@@ -45,16 +45,16 @@ namespace AnagramSolver.BusinessLogic.Services
                 throw new Exception("Canno add Word, because Word is empty");
 
             var sortedWord = String.Concat(anagram.Word.OrderBy(x => x));
-            var existingAnagrams = _wordRepository.GetSelectedWordAnagrams(sortedWord);
+            var existingAnagrams = await _wordRepository.GetSelectedWordAnagrams(sortedWord);
 
             ChechForDuplicates(existingAnagrams, anagram);
 
-            _wordRepository.AddNewWord(anagram);
+            await _wordRepository.AddNewWord(anagram);
         }
 
         public async Task<List<Anagram>> GetWordAnagrams(string word)
         {
-            var results = _wordRepository.GetSelectedWordAnagrams(word);
+            var results = await _wordRepository.GetSelectedWordAnagrams(word);
             var anagrams = _mapper.Map<List<Anagram>>(results);
 
             return anagrams;
@@ -67,12 +67,13 @@ namespace AnagramSolver.BusinessLogic.Services
                     if (item.Word == newAnagram.Word)
                         throw new Exception($"Word {newAnagram.Word} already exists");
         }
+
         public async Task<Anagram> GetWordById(int? id)
         {
             if (id == null)
                 throw new Exception("Id not defined");
 
-            var wordEntity = _additionalWordRepository.SelectWordById((int)id);
+            var wordEntity = await _additionalWordRepository.SelectWordById((int)id);
             if (wordEntity == null)
                 throw new Exception("No word with sepcified Id");
 
@@ -81,17 +82,17 @@ namespace AnagramSolver.BusinessLogic.Services
             return model;
         }
 
-        public async Task DeleteWordById(int id)
+        public Task DeleteWordById(int id)
         {
-            _additionalWordRepository.DeleteSelectedWord(id);
+            return _additionalWordRepository.DeleteSelectedWord(id);
         }
 
-        public async Task UpdateWord(int id, Anagram newWord)
+        public Task UpdateWord(int id, Anagram newWord)
         {
             if (newWord == null || string.IsNullOrEmpty(newWord.Word) || string.IsNullOrEmpty(newWord.Case))
                 throw new Exception("Cannot update Word, because Word is empty");
 
-            _additionalWordRepository.UpdateSelectedWord(id, newWord);
+            return _additionalWordRepository.UpdateSelectedWord(id, newWord);
             
         }
     }

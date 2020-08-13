@@ -24,7 +24,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
             };
         }
 
-        public void AddNewWord(Anagram wordModel)
+        public async Task AddNewWord(Anagram wordModel)
         {
             sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
@@ -38,11 +38,11 @@ namespace AnagramSolver.BusinessLogic.Repositories
             cmd.Parameters.Add(new SqlParameter("@Category", wordModel.Case));
             cmd.Parameters.Add(new SqlParameter("@SortedWord", String.Concat(wordModel.Word.OrderBy(x => x))));
 
-            cmd.ExecuteNonQuery();
+            await cmd.ExecuteNonQueryAsync();
             sqlConnection.Close();
         }
 
-        public List<WordEntity> GetSelectedWordAnagrams(string word)
+        public async Task<List<WordEntity>> GetSelectedWordAnagrams(string word)
         {
             var sortedWord = String.Concat(word.OrderBy(x => x));
             sqlConnection.Open();
@@ -53,7 +53,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 CommandText = "select * from Words where SortedWord = @sortedWord"
             };
             cmd.Parameters.Add(new SqlParameter("@sortedWord", sortedWord));
-            SqlDataReader reader = cmd.ExecuteReader();
+            SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
             List<WordEntity> anagrams = new List<WordEntity>();
             if (reader.HasRows)
@@ -76,7 +76,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
             return anagrams;
         }
 
-        public List<WordEntity> GetAllWords()
+        public async Task<List<WordEntity>> GetAllWords()
         {
             sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
@@ -85,7 +85,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 CommandType = CommandType.Text,
                 CommandText = "select * from Words"
             };
-            SqlDataReader reader = cmd.ExecuteReader();
+            SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
             List<WordEntity> anagrams = new List<WordEntity>();
             if (reader.HasRows)
@@ -108,7 +108,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
             return anagrams;
         }
 
-        public WordEntity SelectWordById(int id)
+        public async ValueTask<WordEntity> SelectWordById(int id)
         {
             sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
@@ -118,7 +118,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 CommandText = "select Word from Words where Id = @wordIdToGet"
             };
             cmd.Parameters.Add(new SqlParameter("@wordIdToGet", id));
-            SqlDataReader reader = cmd.ExecuteReader();
+            SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
             WordEntity anagram =new WordEntity();
             if (reader.HasRows)
@@ -141,7 +141,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
             return anagram;
         }
 
-        public List<WordEntity> SelectWordsBySearch(string phrase)
+        public async Task<List<WordEntity>> SelectWordsBySearch(string phrase)
         {
             sqlConnection.Open();
             var fixedPhrase = Regex.Replace(phrase, @"([%_\[])", @"[$1]");
@@ -152,7 +152,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 CommandText = "select * from Words where Word like @phrase"
             };
             cmd.Parameters.Add(new SqlParameter("@phrase", "%" + fixedPhrase + "%"));
-            SqlDataReader reader = cmd.ExecuteReader();
+            SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
             List<WordEntity> anagrams = new List<WordEntity>();
             if (reader.HasRows)
@@ -175,7 +175,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
             return anagrams;
         }
 
-        public void UpdateSelectedWord(int id, Anagram updatedWord)
+        public async Task UpdateSelectedWord(int id, Anagram updatedWord)
         {
             var sortedWord = String.Concat(updatedWord.Word.OrderBy(x => x));
             sqlConnection.Open();
@@ -189,12 +189,12 @@ namespace AnagramSolver.BusinessLogic.Repositories
             cmd.Parameters.Add(new SqlParameter("@word", updatedWord.Word));
             cmd.Parameters.Add(new SqlParameter("@sorted", sortedWord));
             cmd.Parameters.Add(new SqlParameter("@id", id));
-            cmd.ExecuteNonQuery();
 
+            await cmd.ExecuteNonQueryAsync();
             sqlConnection.Close();
         }
 
-        public void DeleteSelectedWord(int id)
+        public async Task DeleteSelectedWord(int id)
         {
             sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
@@ -204,7 +204,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 CommandText = "delete from Word where id=@id"
             };
             cmd.Parameters.Add(new SqlParameter("@id", id));
-            cmd.ExecuteNonQuery();
+            await cmd.ExecuteNonQueryAsync();
 
             sqlConnection.Close();
         }

@@ -16,14 +16,23 @@ namespace AnagramSolver.Console
 {
     class Program
     {
-        static readonly Display _userInterface = new Display(print => WriteToConsole(print));
-
+        //delegate
+        //static readonly Display _userInterface = new Display(print => WriteToConsole(print));
+        
         static readonly ApiActions _apiActions = new ApiActions();
         static readonly IAnagramSolver _anagramSolver = new BusinessLogic.Services.AnagramSolver(
             new FileRepository(), new CachedWordRepositoryDB());
 
         static async Task Main(string[] args)
         {
+            if (File.Exists(@"ConsoleLog.txt"))
+                File.Delete(@"ConsoleLog.txt");
+
+            //events
+            DisplayWithEvents _userInterface = new DisplayWithEvents();
+            _userInterface.PrintEvent += WriteToConsole;
+            _userInterface.PrintEvent += WriteToFile;
+
             //loading data from settings file
             Configuration.ReadAppSettingsFile();
 
@@ -54,7 +63,7 @@ namespace AnagramSolver.Console
         {
             var fileRepo = new FileRepository();
             var connection = new WordRepositoryDB();
-            var wordsList = fileRepo.GetAllWords();
+            var wordsList = await fileRepo.GetAllWords();
 
             foreach (var word in wordsList)
             {
@@ -64,7 +73,7 @@ namespace AnagramSolver.Console
                     Word = word.Word,
                 };
 
-                connection.AddNewWord(model);
+                await connection.AddNewWord(model);
             }
         }
 
@@ -82,18 +91,6 @@ namespace AnagramSolver.Console
         {
             File.AppendAllText(@"ConsoleLog.txt", message + '\n');
         }
-
-        public static string CapitalizeFirstLetter(string input)
-        {
-            if (input == null)
-                return null;
-
-            if (input.Length > 1)
-                return char.ToUpper(input[0]) + input.Substring(1);
-
-            return input.ToUpper();
-        }
-
-
     }
+       
 }

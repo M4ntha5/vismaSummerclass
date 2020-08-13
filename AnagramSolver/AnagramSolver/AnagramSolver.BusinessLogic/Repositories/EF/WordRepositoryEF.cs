@@ -4,6 +4,7 @@ using AnagramSolver.Contracts.Models;
 using AnagramSolver.EF.CodeFirst;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
             _context = context;
         }
 
-        public void AddNewWord(Anagram anagram)
+        public async Task AddNewWord(Anagram anagram)
         {
             if (anagram == null || string.IsNullOrEmpty(anagram.Case) ||
                 string.IsNullOrEmpty(anagram.Word))
@@ -42,57 +43,49 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 Word = anagram.Word
             };
 
-            _context.Words.Add(entity);
+            await _context.Words.AddAsync(entity);
         }
 
-        public List<WordEntity> GetAllWords()
+        public Task<List<WordEntity>> GetAllWords()
         {
-            return _context.Words.ToList();
+            return _context.Words.ToListAsync();
         }
 
-        public List<WordEntity> GetSelectedWordAnagrams(string word)
+        public Task<List<WordEntity>> GetSelectedWordAnagrams(string word)
         {
             var sortedword = String.Concat(word.OrderBy(x => x));
-            return _context.Words.Where(x => x.SortedWord == sortedword).ToList();
+            return _context.Words.Where(x => x.SortedWord == sortedword).ToListAsync();
         }
 
-        public WordEntity SelectWordById(int id)
+        public ValueTask<WordEntity> SelectWordById(int id)
         {
-            var wordEntity = _context.Words.Find(id);
+            var wordEntity = _context.Words.FindAsync(id);
             if (wordEntity == null)
                 throw new Exception("Word with provided Id not found");
 
             return wordEntity;
         }
 
-        public List<WordEntity> SelectWordsBySearch(string phrase)
+        public Task<List<WordEntity>> SelectWordsBySearch(string phrase)
         {
-            var wordsFound = _context.Words.Where(x => x.Word.Contains(phrase.ToLower())).ToList();
+            var wordsFound = _context.Words.Where(x => x.Word.Contains(phrase.ToLower())).ToListAsync();
             return wordsFound;
         }
 
-        public void UpdateSelectedWord(int id, Anagram updatedWord)
+        public async Task UpdateSelectedWord(int id, Anagram updatedWord)
         {
-            var entity = _context.Words.Find(id);
+            var entity = await _context.Words.FindAsync(id);
             if (entity == null)
                 throw new Exception("Word you are trying to update does not exist");
 
-            var newEntity = new WordEntity
-            {
-                Category = updatedWord.Case,
-                SortedWord = String.Concat(updatedWord.Word.OrderBy(x => x)),
-                Word = updatedWord.Word,
-                ID = entity.ID
-            };
-
-            _context.Entry(entity).CurrentValues.SetValues(newEntity);
+            entity.Category = updatedWord.Case;
+            entity.Word = updatedWord.Word;
+            entity.SortedWord = String.Concat(updatedWord.Word.OrderBy(x => x));               
         }
 
-        public void DeleteSelectedWord(int id)
+        public async Task DeleteSelectedWord(int id)
         {
-            var entity = new WordEntity() { ID = id };
-
-            _context.Words.Attach(entity);
+            var entity = await _context.Words.FindAsync(id);
             _context.Words.Remove(entity);
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace AnagramSolver.Contracts.Models
+﻿namespace AnagramSolver.Contracts.Enums
 {
     public enum UserActionTypes
     {

@@ -1,4 +1,5 @@
 ﻿using AnagramSolver.Contracts.Entities;
+using AnagramSolver.Contracts.Enums;
 using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
