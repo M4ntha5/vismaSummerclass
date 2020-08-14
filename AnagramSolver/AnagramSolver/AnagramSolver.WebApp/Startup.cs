@@ -29,7 +29,7 @@ namespace AnagramSolver.WebApp
 
             services
 
-                .AddScoped<ICookiesHandlerServvice, BusinessLogic.Services.CookiesHandlerService>()
+                .AddScoped<ICookiesHandlerService, BusinessLogic.Services.CookiesHandlerService>()
 
                 .AddScoped<IUserLogRepository, BusinessLogic.Repositories.UserLogRepositoryEF>()
                 .AddScoped<ICachedWordRepository, BusinessLogic.Repositories.CachedWordRepositoryEF>()
@@ -38,6 +38,8 @@ namespace AnagramSolver.WebApp
 
                 .AddScoped<IAnagramSolver, BusinessLogic.Services.AnagramSolver>()
                 .AddScoped<IWordService, BusinessLogic.Services.WordService>()
+                .AddScoped<IUserLogService, BusinessLogic.Services.UserLogService>()
+                .AddScoped<ICachedWordService, BusinessLogic.Services.CachedWordService>()
 
                 .AddScoped<AnagramSolverCodeFirstContext>()
 

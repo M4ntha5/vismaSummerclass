@@ -19,17 +19,17 @@ namespace AnagramSolver.WebApp.Controllers
 {
     public class AnagramsController : Controller
     {
-        private readonly ICookiesHandlerServvice _cookiesHandler;
+        private readonly ICookiesHandlerService _cookiesHandler;
         private readonly IWordService _wordService;
-        private readonly IUserLogRepository _userLogRepository;
+        private readonly IUserLogService _userLogService;
         private readonly AnagramSolverCodeFirstContext _context;
 
-        public AnagramsController(ICookiesHandlerServvice cookiesHandler, IWordService wordService,
-            IUserLogRepository userLogRepository, AnagramSolverCodeFirstContext context)
+        public AnagramsController(ICookiesHandlerService cookiesHandler, IWordService wordService,
+            IUserLogService userLogService, AnagramSolverCodeFirstContext context)
         {
             _cookiesHandler = cookiesHandler;
             _wordService = wordService;
-            _userLogRepository = userLogRepository;
+            _userLogService = userLogService;
             _context = context;
         }
 
@@ -99,8 +99,8 @@ namespace AnagramSolver.WebApp.Controllers
                 await _wordService.InsertWord(anagram);
                 sw.Stop();
 
-                await _userLogRepository.InsertLog(
-                    new UserLog(GetUserIp(), null, sw.Elapsed, UserActionTypes.InsertWord.ToString()));
+                await _userLogService.AddLog(sw.Elapsed, UserActionTypes.InsertWord);
+
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -149,8 +149,7 @@ namespace AnagramSolver.WebApp.Controllers
                 await _wordService.UpdateWord(id, anagram);
                 sw.Stop();
 
-                await _userLogRepository.InsertLog(
-                        new UserLog(GetUserIp(), null, sw.Elapsed, UserActionTypes.UpdateWord.ToString()));
+                await _userLogService.AddLog(sw.Elapsed, UserActionTypes.UpdateWord);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -175,8 +174,7 @@ namespace AnagramSolver.WebApp.Controllers
                 await _wordService.DeleteWordById((int)id);
                 sw.Stop();
 
-                await _userLogRepository.InsertLog(
-                        new UserLog(GetUserIp(), null, sw.Elapsed, UserActionTypes.DeleteWord.ToString()));
+                await _userLogService.AddLog(sw.Elapsed, UserActionTypes.DeleteWord);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));

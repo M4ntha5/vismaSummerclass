@@ -1,4 +1,5 @@
 ﻿using AnagramSolver.Contracts.Interfaces;
+using AnagramSolver.EF.CodeFirst;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -10,10 +11,12 @@ namespace AnagramSolver.WebApp.Controllers
     public class AnagramsAPIController : ControllerBase
     {
         private readonly IAnagramSolver _anagramSolver;
+        private readonly AnagramSolverCodeFirstContext _context;
 
-        public AnagramsAPIController(IAnagramSolver anagramSolver)
+        public AnagramsAPIController(IAnagramSolver anagramSolver, AnagramSolverCodeFirstContext context)
         {
             _anagramSolver = anagramSolver;
+            _context = context;
         }
 
         [HttpGet("{word}")]
@@ -28,6 +31,8 @@ namespace AnagramSolver.WebApp.Controllers
 
                 //removing input element
                 anagrams.Remove(word);
+
+                await _context.SaveChangesAsync();
 
                 return Ok(anagrams);
             }

@@ -2,7 +2,7 @@
 
 namespace AnagramSolver.Contracts.Interfaces
 {
-    public interface ICookiesHandlerServvice
+    public interface ICookiesHandlerService
     {
         void AddCookie(string key, string value);
         void ClearAllCookies();

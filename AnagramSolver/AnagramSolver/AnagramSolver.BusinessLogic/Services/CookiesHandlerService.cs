@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AnagramSolver.BusinessLogic.Services
 {
-    public class CookiesHandlerService : ICookiesHandlerServvice
+    public class CookiesHandlerService : ICookiesHandlerService
     {
         private readonly IHttpContextAccessor _httpAccessor;
 

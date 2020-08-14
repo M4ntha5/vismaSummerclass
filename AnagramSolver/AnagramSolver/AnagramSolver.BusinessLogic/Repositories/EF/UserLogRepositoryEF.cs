@@ -31,12 +31,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
         }
 
         public async Task InsertLog(UserLog userLog)
-        {
-            if (userLog.Action == UserActionTypes.GetAnagrams.ToString() && 
-                (string.IsNullOrEmpty(userLog.Ip) || string.IsNullOrEmpty(userLog.SearchPhrase) ||
-                TimeSpan.Zero == userLog.SearchTime))
-                throw new Exception("Cannot add UserLog, because UserLog is empty");
-
+        {           
             var entity = new UserLogEntity
             {
                 Ip = userLog.Ip,
@@ -54,24 +49,9 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 x => x.Action == UserActionTypes.GetAnagrams.ToString()).ToListAsync();
         }
 
-        public async Task<int> GetAnagramsLeftForIpToSearch(string ip)
+        public Task<int> GetTimesIpMadeAction(string ip, UserActionTypes action)
         {
-            var timesSearched = await _context.UserLogs.CountAsync(
-                x => x.Ip == ip && x.Action == UserActionTypes.GetAnagrams.ToString());
-
-            var timesNewWordAdded = await _context.UserLogs.CountAsync(
-                x => x.Ip == ip && x.Action == UserActionTypes.InsertWord.ToString());
-
-            var timesWordDeleted = await _context.UserLogs.CountAsync(
-                x => x.Ip == ip && x.Action == UserActionTypes.DeleteWord.ToString());
-
-            var timesWordUpdated = await _context.UserLogs.CountAsync(
-                x => x.Ip == ip && x.Action == UserActionTypes.UpdateWord.ToString());
-
-            var timesLeftToSearch = Settings.MaxAnagramsForIp - timesSearched
-                - timesWordDeleted + timesWordUpdated + timesNewWordAdded;
-
-            return timesLeftToSearch;
+            return _context.UserLogs.CountAsync(x => x.Ip == ip && x.Action == action.ToString());
         }
     }
 }

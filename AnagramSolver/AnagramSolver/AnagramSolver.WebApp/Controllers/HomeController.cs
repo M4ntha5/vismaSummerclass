@@ -17,20 +17,20 @@ namespace AnagramSolver.WebApp.Controllers
     public class HomeController : Controller
     {
         private readonly IAnagramSolver _anagramSolver;
-        private readonly ICookiesHandlerServvice _cookiesHandler;
-        private readonly ICachedWordRepository _cachedWordRepository;
-        private readonly IUserLogRepository _userLogRepository;
+        private readonly ICookiesHandlerService _cookiesHandler;
+        private readonly ICachedWordService _cachedWordService;
+        private readonly IUserLogService _userLogService;
         private readonly IWordService _wordService;
         private readonly AnagramSolverCodeFirstContext _context;
 
-        public HomeController(IAnagramSolver anagramSolver, ICookiesHandlerServvice cookiesHandler,
-            IUserLogRepository logRepository, ICachedWordRepository cachedWordRepository,
+        public HomeController(IAnagramSolver anagramSolver, ICookiesHandlerService cookiesHandler,
+            IUserLogService logService, ICachedWordService cachedWordService,
             IWordService wordService, AnagramSolverCodeFirstContext context)
         {
             _anagramSolver = anagramSolver;
             _cookiesHandler = cookiesHandler;
-            _cachedWordRepository = cachedWordRepository;
-            _userLogRepository = logRepository;
+            _cachedWordService = cachedWordService;
+            _userLogService = logService;
             _wordService = wordService;
             _context = context;
         }
@@ -44,11 +44,11 @@ namespace AnagramSolver.WebApp.Controllers
 
                 IList<string> anagrams = new List<string>();
 
-                var solvesLeft = await _userLogRepository.GetAnagramsLeftForIpToSearch(GetUserIp());
+                var solvesLeft = await _userLogService.CountAnagramsLeftForIpToSolve();
                 if (solvesLeft <= 0)
                     throw new Exception("You reached your solve limit. Add new word to increase your limit");
 
-                var cachedWord = await _cachedWordRepository.GetCachedWord(id);
+                var cachedWord = await _cachedWordService.GetSelectedCachedWord(id);
                 if (cachedWord != null)// || cachedWord != DBNull.Value)
                 {
                     var anagramsIds = cachedWord.AnagramsIds.Split(';').ToList();
@@ -74,8 +74,7 @@ namespace AnagramSolver.WebApp.Controllers
                 anagrams = await _anagramSolver.GetAnagrams(id);
                 sw.Stop();
 
-                await _userLogRepository.InsertLog(
-                    new UserLog(GetUserIp(), id, sw.Elapsed, UserActionTypes.GetAnagrams.ToString()));
+                await _userLogService.AddLog(sw.Elapsed, UserActionTypes.GetAnagrams, id);
 
                 //removing input element
                 anagrams.Remove(id);
@@ -113,10 +112,6 @@ namespace AnagramSolver.WebApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private string GetUserIp()
-        {
-            var ip = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList[1].ToString();
-            return ip;
-        }
+
     }
 }

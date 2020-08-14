@@ -27,9 +27,6 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
         public async Task InsertCachedWord(CachedWord cachedWord)
         {
-            if (string.IsNullOrEmpty(cachedWord.SearchPhrase) || string.IsNullOrEmpty(cachedWord.AnagramsIds))
-                throw new Exception("Cannot add CachedWord, because CachedWord is empty");
-
             var entity = new CachedWordEntity
             {
                 AnagramsIds = cachedWord.AnagramsIds,

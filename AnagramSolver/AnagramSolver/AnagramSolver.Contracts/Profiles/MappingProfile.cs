@@ -22,6 +22,30 @@ namespace AnagramSolver.Contracts.Profiles
                     dest.ID,
                     opt => opt.MapFrom(src => src.ID))
                 .ReverseMap();
+
+            CreateMap<UserLogEntity, UserLog>()
+                .ForMember(dest =>
+                    dest.SearchTime,
+                    opt => opt.MapFrom(src => src.SearchTime))
+                .ForMember(dest =>
+                    dest.SearchPhrase,
+                    opt => opt.MapFrom(src => src.Phrase))
+                .ForMember(dest =>
+                    dest.Ip,
+                    opt => opt.MapFrom(src => src.Ip))
+                .ForMember(dest =>
+                    dest.Action,
+                    opt => opt.MapFrom(src => src.Action))
+                .ReverseMap();
+
+            CreateMap<CachedWordEntity, CachedWord>()
+                .ForMember(dest =>
+                    dest.AnagramsIds,
+                    opt => opt.MapFrom(src => src.AnagramsIds))
+                .ForMember(dest =>
+                    dest.SearchPhrase,
+                    opt => opt.MapFrom(src => src.Phrase))
+                .ReverseMap();
         }
     }
 }

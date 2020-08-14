@@ -12,15 +12,15 @@ namespace AnagramSolver.WebApp.Controllers
 {
     public class SearchHistoryController : Controller
     {
-        private readonly ICachedWordRepository _cachedWordRepository;
-        private readonly IUserLogRepository _userLogRepository;
+        private readonly ICachedWordService _cachedWordService;
+        private readonly IUserLogService _userLogService;
         private readonly IWordService _wordService;
 
-        public SearchHistoryController(IWordService wordService, IUserLogRepository userLogRepository,
-            ICachedWordRepository cachedWordRepository)
+        public SearchHistoryController(IWordService wordService, IUserLogService userLogService,
+            ICachedWordService cachedWordService)
         {
-            _cachedWordRepository = cachedWordRepository;
-            _userLogRepository = userLogRepository;
+            _cachedWordService = cachedWordService;
+            _userLogService = userLogService;
             _wordService = wordService;
         }
 
@@ -28,13 +28,13 @@ namespace AnagramSolver.WebApp.Controllers
         {
             try
             {
-                var logs = await _userLogRepository.GetAllAnagramSolveLogs();
+                var logs = await _userLogService.GetAllSolverLogs();
 
                 List<SearchHistory> history = new List<SearchHistory>();
                 foreach (var log in logs)
                 {
                     List<string> anagrams = new List<string>();
-                    var cached = await _cachedWordRepository.GetCachedWord(log.Phrase);
+                    var cached = await _cachedWordService.GetSelectedCachedWord(log.SearchPhrase);
                     if (cached != null)
                     {
                         var anagramsIds = cached.AnagramsIds.Split(';').ToList();
@@ -57,7 +57,7 @@ namespace AnagramSolver.WebApp.Controllers
                         {
                             Anagrams = anagrams,
                             Ip = log.Ip,
-                            SearchPhrase = log.Phrase,
+                            SearchPhrase = log.SearchPhrase,
                             SearchTime = log.SearchTime
                         });
                 }

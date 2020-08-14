@@ -1,5 +1,6 @@
 ﻿using AnagramSolver.Contracts.Entities;
 using AnagramSolver.Contracts.Interfaces;
+using AnagramSolver.Contracts.Interfaces.Services;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
 using System;
@@ -13,12 +14,12 @@ namespace AnagramSolver.BusinessLogic.Services
     public class AnagramSolver : IAnagramSolver
     {
         private readonly IWordRepository _wordRepository;
-        private readonly ICachedWordRepository _cachedWordRepository;
+        private readonly ICachedWordService _cachedWordService;
 
-        public AnagramSolver(IWordRepository wordRepository, ICachedWordRepository cachedWordRepository)
+        public AnagramSolver(IWordRepository wordRepository, ICachedWordService cachedWordService)
         {
             _wordRepository = wordRepository;
-            _cachedWordRepository = cachedWordRepository;
+            _cachedWordService = cachedWordService;
         }
 
         public async Task<IList<string>> GetAnagrams(string inputWords)
@@ -76,11 +77,9 @@ namespace AnagramSolver.BusinessLogic.Services
                 if (resultAnagrams.Count == Settings.AnagramsToGenerate)
                     break;
             }
-            //all anagrams found for search phrase       
-            var idsString = string.Join(";", idsList.Take(Settings.AnagramsToGenerate));
 
             //adding search to cached table
-            await _cachedWordRepository.InsertCachedWord(new CachedWord(inputWords, idsString));
+            await _cachedWordService.AddCachedWord(inputWords, idsList.Take(Settings.AnagramsToGenerate).ToList());
 
             return resultAnagrams.Take(Settings.AnagramsToGenerate).ToList();
         }
