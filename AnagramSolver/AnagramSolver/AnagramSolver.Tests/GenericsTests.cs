@@ -35,7 +35,7 @@ namespace AnagramSolver.Tests
         }
 
         [Test]
-        public void MapValueToEnumGenderInt()
+        public void ValueMappedToGenderEnumUsingGenericsInt()
         {
             var result = Generics.Generics.MapValueToEnum<Gender, int>(3);
 
@@ -43,7 +43,7 @@ namespace AnagramSolver.Tests
         }
 
         [Test]
-        public void MapValueToEnumGenderString()
+        public void ValueMappedToGenderEnumUsingGenericsString()
         {
             var result = Generics.Generics.MapValueToEnum<Gender, string>("Male");
 
@@ -51,7 +51,7 @@ namespace AnagramSolver.Tests
         }
 
         [Test]
-        public void MapValueToEnumWeekday()
+        public void ValueMappedToWeekdayEnumUsingGenerics()
         {
             var result = Generics.Generics.MapValueToEnum<Weekday, string>("Tuesday");
 

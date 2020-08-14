@@ -35,7 +35,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
                                 "values (@Word, @Category, @SortedWord)"
             };
             cmd.Parameters.Add(new SqlParameter("@Word", wordModel.Word));
-            cmd.Parameters.Add(new SqlParameter("@Category", wordModel.Case));
+            cmd.Parameters.Add(new SqlParameter("@Category", wordModel.Category));
             cmd.Parameters.Add(new SqlParameter("@SortedWord", String.Concat(wordModel.Word.OrderBy(x => x))));
 
             await cmd.ExecuteNonQueryAsync();
@@ -185,7 +185,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 CommandType = CommandType.Text,
                 CommandText = "update Words set Category=@case, Word=@word, SortedWord=@sorted where ID=@id"
             };
-            cmd.Parameters.Add(new SqlParameter("@case", updatedWord.Case));
+            cmd.Parameters.Add(new SqlParameter("@case", updatedWord.Category));
             cmd.Parameters.Add(new SqlParameter("@word", updatedWord.Word));
             cmd.Parameters.Add(new SqlParameter("@sorted", sortedWord));
             cmd.Parameters.Add(new SqlParameter("@id", id));

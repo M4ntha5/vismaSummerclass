@@ -90,7 +90,7 @@ namespace AnagramSolver.WebApp.Controllers
         {
             try
             {
-                if (string.IsNullOrEmpty(anagram.Word) || string.IsNullOrEmpty(anagram.Case))
+                if (string.IsNullOrEmpty(anagram.Word) || string.IsNullOrEmpty(anagram.Category))
                     throw new Exception("You must fill all the fields");
 
                 _cookiesHandler.ClearAllCookies();

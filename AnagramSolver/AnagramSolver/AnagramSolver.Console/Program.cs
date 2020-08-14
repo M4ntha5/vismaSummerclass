@@ -3,7 +3,10 @@ using AnagramSolver.BusinessLogic.Repositories;
 using AnagramSolver.BusinessLogic.Services;
 using AnagramSolver.Console.Delegate;
 using AnagramSolver.Contracts.Interfaces;
+using AnagramSolver.Contracts.Interfaces.Services;
 using AnagramSolver.Contracts.Models;
+using AnagramSolver.Contracts.Profiles;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -20,8 +23,17 @@ namespace AnagramSolver.Console
         //static readonly Display _userInterface = new Display(print => WriteToConsole(print));
         
         static readonly ApiActions _apiActions = new ApiActions();
-        static readonly IAnagramSolver _anagramSolver = new BusinessLogic.Services.AnagramSolver(
-            new FileRepository(), new CachedWordRepositoryDB());
+        static readonly IMapper Mapper = new MapperConfiguration(mc =>
+        {
+            mc.AddProfile(new MappingProfile());
+        })
+        .CreateMapper();
+
+        static readonly ICachedWordService _cachedWordService =
+            new CachedWordService(new CachedWordRepositoryDB(), Mapper);
+
+        static readonly IAnagramSolver _anagramSolver = 
+            new BusinessLogic.Services.AnagramSolver(new FileRepository(), _cachedWordService);
 
         static async Task Main(string[] args)
         {
@@ -69,7 +81,7 @@ namespace AnagramSolver.Console
             {
                 var model = new Anagram()
                 {
-                    Case = word.Category,
+                    Category = word.Category,
                     Word = word.Word,
                 };
 

@@ -13,7 +13,7 @@ namespace AnagramSolver.Contracts.Profiles
         {
             CreateMap<WordEntity, Anagram>()
                 .ForMember(dest =>
-                    dest.Case,
+                    dest.Category,
                     opt => opt.MapFrom(src => src.Category))
                 .ForMember(dest =>
                     dest.Word,

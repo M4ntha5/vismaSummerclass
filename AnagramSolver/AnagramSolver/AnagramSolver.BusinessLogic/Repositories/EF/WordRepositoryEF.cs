@@ -30,7 +30,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
         public async Task AddNewWord(Anagram anagram)
         {
-            if (anagram == null || string.IsNullOrEmpty(anagram.Case) ||
+            if (anagram == null || string.IsNullOrEmpty(anagram.Category) ||
                 string.IsNullOrEmpty(anagram.Word))
                 throw new Exception("Cannot add Word, because Word is empty");
 
@@ -38,7 +38,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
             var entity = new WordEntity
             {
-                Category = anagram.Case,
+                Category = anagram.Category,
                 SortedWord = sortedword,
                 Word = anagram.Word
             };
@@ -78,7 +78,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
             if (entity == null)
                 throw new Exception("Word you are trying to update does not exist");
 
-            entity.Category = updatedWord.Case;
+            entity.Category = updatedWord.Category;
             entity.Word = updatedWord.Word;
             entity.SortedWord = String.Concat(updatedWord.Word.OrderBy(x => x));               
         }

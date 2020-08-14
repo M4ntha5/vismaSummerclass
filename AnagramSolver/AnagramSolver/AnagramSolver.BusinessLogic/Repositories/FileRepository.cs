@@ -83,14 +83,14 @@ namespace AnagramSolver.BusinessLogic.Repositories
         {
             if (!File.Exists(FilePath))
                 throw new Exception($"File '{FilePath}' does not exist!");
-            if (string.IsNullOrEmpty(anagram.Case) || string.IsNullOrEmpty(anagram.Word))
+            if (string.IsNullOrEmpty(anagram.Category) || string.IsNullOrEmpty(anagram.Word))
                 throw new Exception("Cannot add Word, because Word is empty");
 
             var isPresent = AllData.Where(x => x.Word == anagram.Word).ToList();
             if (isPresent.Count > 0)
                 throw new Exception($"Word {anagram.Word} already exists");
 
-            string appendText = anagram.Word + '\t' + anagram.Case + '\t' + "" + '\t' + "" + '\n';
+            string appendText = anagram.Word + '\t' + anagram.Category + '\t' + "" + '\t' + "" + '\n';
             return File.AppendAllTextAsync(FilePath, appendText);
         }
     }

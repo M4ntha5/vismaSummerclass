@@ -33,6 +33,9 @@ namespace AnagramSolver.BusinessLogic.Services
 
         public async Task<List<Anagram>> GetWordsBySearch(string phrase)
         {
+            if (string.IsNullOrEmpty(phrase))
+                throw new Exception("Cannot find any words, because your phrase is empty");
+
             var resultEntity = await _additionalWordRepository.SelectWordsBySearch(phrase);
             var words = _mapper.Map<List<Anagram>>(resultEntity);
             return words;
@@ -40,7 +43,7 @@ namespace AnagramSolver.BusinessLogic.Services
 
         public async Task InsertWord(Anagram anagram)
         {
-            if (anagram == null || string.IsNullOrEmpty(anagram.Case) ||
+            if (anagram == null || string.IsNullOrEmpty(anagram.Category) ||
                 string.IsNullOrEmpty(anagram.Word))
                 throw new Exception("Canno add Word, because Word is empty");
 
@@ -54,6 +57,9 @@ namespace AnagramSolver.BusinessLogic.Services
 
         public async Task<List<Anagram>> GetWordAnagrams(string word)
         {
+            if (string.IsNullOrEmpty(word))
+                throw new Exception("Cannot find any anagrams, because word is not defined");
+
             var results = await _wordRepository.GetSelectedWordAnagrams(word);
             var anagrams = _mapper.Map<List<Anagram>>(results);
 
@@ -84,16 +90,19 @@ namespace AnagramSolver.BusinessLogic.Services
 
         public Task DeleteWordById(int id)
         {
+            if (id < 1)
+                throw new Exception("Word with provided Id do not exist");
+
             return _additionalWordRepository.DeleteSelectedWord(id);
         }
 
         public Task UpdateWord(int id, Anagram newWord)
         {
-            if (newWord == null || string.IsNullOrEmpty(newWord.Word) || string.IsNullOrEmpty(newWord.Case))
+            if (newWord == null || string.IsNullOrEmpty(newWord.Word) || 
+                string.IsNullOrEmpty(newWord.Category) || id < 1)
                 throw new Exception("Cannot update Word, because Word is empty");
 
-            return _additionalWordRepository.UpdateSelectedWord(id, newWord);
-            
+            return _additionalWordRepository.UpdateSelectedWord(id, newWord);         
         }
     }
 }
