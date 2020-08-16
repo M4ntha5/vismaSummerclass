@@ -47,9 +47,9 @@ namespace AnagramSolver.WebApp.Controllers
                             {
                                 var idToGet = int.Parse(word);
                                 var anagram = await _wordService.GetWordById(idToGet);
-                                wordFound += anagram.Word + " ";
+                                wordFound += phrase.Count == 1 ? anagram.Word : anagram.Word + " ";
                             }
-                            anagrams.Add(wordFound);
+                            anagrams.Add(wordFound.Trim());
                         }
                     }
                     history.Add(

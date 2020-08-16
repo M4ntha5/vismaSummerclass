@@ -191,10 +191,5 @@ namespace AnagramSolver.WebApp.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        private string GetUserIp()
-        {
-            var ip = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList[1].ToString();
-            return ip;
-        }
     }
 }

@@ -61,9 +61,9 @@ namespace AnagramSolver.WebApp.Controllers
                         {
                             var idToGet = int.Parse(word);
                             var anagram = await _wordService.GetWordById(idToGet);
-                            wordFound += anagram.Word + " ";
+                            wordFound += phrase.Count == 1 ? anagram.Word : anagram.Word + " ";
                         }
-                        anagrams.Add(wordFound);
+                        anagrams.Add(wordFound.Trim());
                     }
                     return View(anagrams);
                 }
@@ -97,6 +97,9 @@ namespace AnagramSolver.WebApp.Controllers
             try
             {
                 var cookies = _cookiesHandler.GetCurrentCookies();
+                if (cookies.Count < 1)
+                    return View();
+
                 return View(cookies);
             }
             catch(Exception ex)
