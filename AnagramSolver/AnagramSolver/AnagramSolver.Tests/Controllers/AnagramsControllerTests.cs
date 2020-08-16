@@ -22,7 +22,7 @@ namespace AnagramSolver.Tests.Controllers
         ICookiesHandlerService _cookiesHandlerServiceMock;
         IUserLogService _userLogServiceMock;
         IWordService _wordServiceMock;
-        AnagramSolverCodeFirstContext _context;
+        AnagramSolverCodeFirstContext _contextMock;
 
         AnagramsController _controller;
 
@@ -35,10 +35,10 @@ namespace AnagramSolver.Tests.Controllers
             _cookiesHandlerServiceMock = Substitute.For<ICookiesHandlerService>();
             _userLogServiceMock = Substitute.For<IUserLogService>();
             _wordServiceMock = Substitute.For<IWordService>();
-            _context = Substitute.For<AnagramSolverCodeFirstContext>();
+            _contextMock = Substitute.For<AnagramSolverCodeFirstContext>();
 
             _controller = new AnagramsController(
-                _cookiesHandlerServiceMock, _wordServiceMock, _userLogServiceMock, _context);
+                _cookiesHandlerServiceMock, _wordServiceMock, _userLogServiceMock, _contextMock);
 
             _anagram = new Anagram() { Word = "word1", ID = 1 };
             _anagramsList = new List<Anagram>() { _anagram };
@@ -128,14 +128,14 @@ namespace AnagramSolver.Tests.Controllers
             _cookiesHandlerServiceMock.ClearAllCookies();
             await _wordServiceMock.InsertWord(Arg.Any<Anagram>());
             await _userLogServiceMock.AddLog(Arg.Any<TimeSpan>(), Arg.Any<UserActionTypes>());
-            await _context.SaveChangesAsync();
+            await _contextMock.SaveChangesAsync();
 
             var result = await _controller.Create(_anagram) as RedirectToActionResult;
 
             _cookiesHandlerServiceMock.Received().ClearAllCookies();
             await _wordServiceMock.Received().InsertWord(Arg.Any<Anagram>());
             await _userLogServiceMock.Received().AddLog(Arg.Any<TimeSpan>(), Arg.Any<UserActionTypes>());
-            await _context.Received().SaveChangesAsync();
+            await _contextMock.Received().SaveChangesAsync();
             Assert.AreEqual("Index", result.ActionName);
         }
 
@@ -183,14 +183,14 @@ namespace AnagramSolver.Tests.Controllers
         {
             await _wordServiceMock.UpdateWord(Arg.Any<int>(), Arg.Any<Anagram>());
             await _userLogServiceMock.AddLog(Arg.Any<TimeSpan>(), Arg.Any<UserActionTypes>());
-            await _context.SaveChangesAsync();
+            await _contextMock.SaveChangesAsync();
 
             var result = await _controller.Update(1, _anagram) as RedirectToActionResult;
 
             await _wordServiceMock.Received().UpdateWord(Arg.Any<int>(), Arg.Any<Anagram>());
             await _userLogServiceMock.Received().AddLog(
                 Arg.Any<TimeSpan>(), Arg.Any<UserActionTypes>(), Arg.Any<string>());
-            await _context.Received().SaveChangesAsync();
+            await _contextMock.Received().SaveChangesAsync();
             Assert.AreEqual("Index", result.ActionName);
         }
 
@@ -208,13 +208,13 @@ namespace AnagramSolver.Tests.Controllers
         {
             await _wordServiceMock.DeleteWordById(Arg.Any<int>());
             await _userLogServiceMock.AddLog(Arg.Any<TimeSpan>(), Arg.Any<UserActionTypes>());
-            await _context.SaveChangesAsync();
+            await _contextMock.SaveChangesAsync();
 
             var result = await _controller.Delete(5) as RedirectToActionResult;
 
             await _wordServiceMock.Received().DeleteWordById(Arg.Any<int>());
             await _userLogServiceMock.Received().AddLog(Arg.Any<TimeSpan>(), Arg.Any<UserActionTypes>());
-            await _context.Received().SaveChangesAsync();
+            await _contextMock.Received().SaveChangesAsync();
             Assert.AreEqual("Index", result.ActionName);
         }
 

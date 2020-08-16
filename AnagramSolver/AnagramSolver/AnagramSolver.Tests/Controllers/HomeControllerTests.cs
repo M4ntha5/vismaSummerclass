@@ -24,7 +24,7 @@ namespace AnagramSolver.Tests.Controllers
         ICachedWordService _cachedWordServiceMock;
         IUserLogService _userLogServiceMock;
         IWordService _wordServiceMock;
-        AnagramSolverCodeFirstContext _context;
+        AnagramSolverCodeFirstContext _contextMock;
 
         HomeController _controller;
 
@@ -36,10 +36,10 @@ namespace AnagramSolver.Tests.Controllers
             _cachedWordServiceMock = Substitute.For<ICachedWordService>();
             _userLogServiceMock = Substitute.For<IUserLogService>();
             _wordServiceMock = Substitute.For<IWordService>();
-            _context = Substitute.For<AnagramSolverCodeFirstContext>();
+            _contextMock = Substitute.For<AnagramSolverCodeFirstContext>();
 
             _controller = new HomeController(_anagramSolverMock, _cookiesHandlerServiceMock, _userLogServiceMock,
-                _cachedWordServiceMock, _wordServiceMock, _context);
+                _cachedWordServiceMock, _wordServiceMock, _contextMock);
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace AnagramSolver.Tests.Controllers
             _anagramSolverMock.GetAnagrams(Arg.Any<string>()).Returns(returnList);
             await _userLogServiceMock.AddLog(Arg.Any<TimeSpan>(), Arg.Any<UserActionTypes>(), Arg.Any<string>());
             _cookiesHandlerServiceMock.AddCookie(Arg.Any<string>(), Arg.Any<string>());
-            await _context.SaveChangesAsync();
+            await _contextMock.SaveChangesAsync();
 
             var result = await _controller.Index("labas") as ViewResult;
             var data = result.ViewData.Model as List<string>;
@@ -103,7 +103,7 @@ namespace AnagramSolver.Tests.Controllers
             await _anagramSolverMock.Received().GetAnagrams(Arg.Any<string>());
             await _userLogServiceMock.Received().AddLog(Arg.Any<TimeSpan>(), Arg.Any<UserActionTypes>(), Arg.Any<string>());
             _cookiesHandlerServiceMock.Received().AddCookie(Arg.Any<string>(), Arg.Any<string>());
-            await _context.Received().SaveChangesAsync();
+            await _contextMock.Received().SaveChangesAsync();
 
             Assert.AreEqual(returnList.Count, data.Count);
             Assert.AreEqual(returnList[0], data[0]);
