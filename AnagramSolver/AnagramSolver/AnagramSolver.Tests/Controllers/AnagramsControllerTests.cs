@@ -40,7 +40,7 @@ namespace AnagramSolver.Tests.Controllers
             _controller = new AnagramsController(
                 _cookiesHandlerServiceMock, _wordServiceMock, _userLogServiceMock, _contextMock);
 
-            _anagram = new Anagram() { Word = "word1", ID = 1 };
+            _anagram = new Anagram() { Word = "word1", ID = 1, Category = "cat" };
             _anagramsList = new List<Anagram>() { _anagram };
         }
 

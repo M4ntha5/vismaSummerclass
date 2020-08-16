@@ -7,6 +7,7 @@
         public static string DataFileName { get; set; }
         public static string ConnectionString { get; set; }
         public static string ConnectionStringCodeFirst { get; set; }
+        public static string ConnectionStringTesting { get; set; }
         public static int MaxAnagramsForIp { get; set; }
     }
 }

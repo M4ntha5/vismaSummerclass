@@ -10,6 +10,7 @@ namespace AnagramSolver.Console
         public static void ReadAppSettingsFile()
         {
             var path = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(path)
                 .AddJsonFile("appsettings.json");
@@ -21,6 +22,7 @@ namespace AnagramSolver.Console
             var dataFile = configuration.GetSection("DataFileName").Value;
             var connString = configuration.GetConnectionString("Development");
             var connStringCodeFirst = configuration.GetConnectionString("CodeFirst");
+            var connStringTesting = configuration.GetConnectionString("Testing");
             int.TryParse(configuration.GetSection("MaxAnagramsForIp").Value, out int maxForIp);
 
             if (anagramsCount > 10 || anagramsCount < 1)
@@ -31,6 +33,7 @@ namespace AnagramSolver.Console
             Settings.DataFileName = dataFile;
             Settings.ConnectionString = connString;
             Settings.ConnectionStringCodeFirst = connStringCodeFirst;
+            Settings.ConnectionStringTesting = connStringTesting;
             Settings.MaxAnagramsForIp = maxForIp;
 
         }
