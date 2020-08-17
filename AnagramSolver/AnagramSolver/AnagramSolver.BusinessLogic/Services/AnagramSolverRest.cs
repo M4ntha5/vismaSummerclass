@@ -14,13 +14,12 @@ namespace AnagramSolver.BusinessLogic.Services
     public class AnagramSolverRest : IAnagramSolver
     {
         private readonly HttpClient _client;
-        private const string AnagramApiUrl = "http://www.anagramica.com/";
 
         public AnagramSolverRest()
         {
             _client = new HttpClient
             {
-                BaseAddress = new Uri(AnagramApiUrl)
+                BaseAddress = new Uri(Settings.AnagramicaApiUrl)
             };
         }
 

@@ -24,6 +24,7 @@ namespace AnagramSolver.Console
             var connStringCodeFirst = configuration.GetConnectionString("CodeFirst");
             var connStringTesting = configuration.GetConnectionString("Testing");
             int.TryParse(configuration.GetSection("MaxAnagramsForIp").Value, out int maxForIp);
+            var anagramica = configuration.GetSection("AnagramicaApiUrl").Value;
 
             if (anagramsCount > 10 || anagramsCount < 1)
                 throw new Exception("Generated anagrams count must be between 1 and 10");
@@ -35,6 +36,7 @@ namespace AnagramSolver.Console
             Settings.ConnectionStringCodeFirst = connStringCodeFirst;
             Settings.ConnectionStringTesting = connStringTesting;
             Settings.MaxAnagramsForIp = maxForIp;
+            Settings.AnagramicaApiUrl = anagramica;
 
         }
     }

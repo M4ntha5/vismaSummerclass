@@ -9,5 +9,6 @@
         public static string ConnectionStringCodeFirst { get; set; }
         public static string ConnectionStringTesting { get; set; }
         public static int MaxAnagramsForIp { get; set; }
+        public static string AnagramicaApiUrl { get; set; }
     }
 }

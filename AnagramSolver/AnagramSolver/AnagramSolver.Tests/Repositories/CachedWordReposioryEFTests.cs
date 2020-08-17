@@ -25,44 +25,42 @@ namespace AnagramSolver.Tests.Repositories
         BusinessLogic.Repositories.CachedWordRepositoryEF _repo;
 
         [SetUp]
-        public async Task Setup()
+        public void Setup()
         {
             var connStringTesting = "Data Source=.;Initial Catalog=AnagramSolverTesting;Integrated Security=True";
             Settings.ConnectionStringCodeFirst = connStringTesting;
 
-            var serviceProvider = new ServiceCollection()
-            .AddEntityFrameworkSqlServer()
-            .BuildServiceProvider();
+            var options = new DbContextOptionsBuilder<AnagramSolverCodeFirstContext>()
+              .UseSqlServer(connStringTesting).Options;
 
-            var builder = new DbContextOptionsBuilder<AnagramSolverCodeFirstContext>();
-
-            builder.UseSqlServer(Settings.ConnectionStringCodeFirst)
-                    .UseInternalServiceProvider(serviceProvider);
-
-            _context = new AnagramSolverCodeFirstContext(builder.Options);
-
-            _transaction = await _context.Database.BeginTransactionAsync();
-
+            _context = new AnagramSolverCodeFirstContext(options);
+            _context.Database.Migrate();
+          
             _repo = new BusinessLogic.Repositories.CachedWordRepositoryEF(_context);
+
+            _context.Database.BeginTransaction();
         }
 
         [TearDown]
-        public async Task Teardown()
+        public void Teardown()
         {
-            await _transaction.RollbackAsync();
+            _context.Database.RollbackTransaction();
+
+            /*await _transaction.RollbackAsync();
             await _transaction.DisposeAsync();
-            await _context.DisposeAsync();
+            await _context.DisposeAsync();*/
         }
 
         [Test]
         public async Task InsertCachedWordSuccess()
         {
-            var word = new CachedWord("test-phrase", "1;2;3");
+            var word = new CachedWord("test-phrase8", "1;2;3");
+
             await _repo.InsertCachedWord(word);
             
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
-            var item = await _context.CachedWords.FirstOrDefaultAsync(i => i.Phrase == "test-phrase");
+            var item = await _context.CachedWords.FirstOrDefaultAsync(i => i.Phrase == "test-phrase8");
             item.ShouldNotBeNull();
             item.ID.ShouldNotBe(0);
         }
