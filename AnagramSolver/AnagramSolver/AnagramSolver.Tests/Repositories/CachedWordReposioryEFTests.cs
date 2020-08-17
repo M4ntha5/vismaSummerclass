@@ -1,4 +1,5 @@
 ﻿using AnagramSolver.Console;
+using AnagramSolver.Contracts.Entities;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.Contracts.Utils;
 using AnagramSolver.EF.CodeFirst;
@@ -54,7 +55,7 @@ namespace AnagramSolver.Tests.Repositories
         }
 
         [Test]
-        public async Task AddCachedWord()
+        public async Task InsertCachedWordSuccess()
         {
             var word = new CachedWord("test-phrase", "1;2;3");
             await _repo.InsertCachedWord(word);
@@ -62,6 +63,18 @@ namespace AnagramSolver.Tests.Repositories
             await _context.SaveChangesAsync();
 
             var item = await _context.CachedWords.FirstOrDefaultAsync(i => i.Phrase == "test-phrase");
+            item.ShouldNotBeNull();
+            item.ID.ShouldNotBe(0);
+        }
+
+        [Test]
+        public async Task GetCahcedWordSuccess()
+        {
+            var word = new CachedWordEntity() { Phrase = "test-phrase", AnagramsIds = "1;2;3" };
+            await _context.AddAsync(word);
+            await _context.SaveChangesAsync();
+
+            var item = await _repo.GetCachedWord("test-phrase");
             item.ShouldNotBeNull();
             item.ID.ShouldNotBe(0);
         }
