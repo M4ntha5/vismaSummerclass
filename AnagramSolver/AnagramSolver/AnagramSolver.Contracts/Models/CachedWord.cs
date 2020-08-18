@@ -10,5 +10,8 @@
             SearchPhrase = searchPhrase;
             AnagramsIds = anagrams;
         }
+        public CachedWord()
+        {
+        }
     }
 }

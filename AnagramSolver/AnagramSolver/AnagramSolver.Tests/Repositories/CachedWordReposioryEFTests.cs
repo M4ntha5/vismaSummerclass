@@ -19,41 +19,40 @@ namespace AnagramSolver.Tests.Repositories
     [TestFixture]
     public class CachedWordReposioryEFTests
     {
-        protected AnagramSolverCodeFirstContext _context;
-        protected IDbContextTransaction _transaction;
-
+        AnagramSolverCodeFirstContext _context;
         BusinessLogic.Repositories.CachedWordRepositoryEF _repo;
 
         [SetUp]
-        public void Setup()
+        public void SetUp()
         {
-            var connStringTesting = "Data Source=.;Initial Catalog=AnagramSolverTesting;Integrated Security=True";
-            Settings.ConnectionStringCodeFirst = connStringTesting;
-
             var options = new DbContextOptionsBuilder<AnagramSolverCodeFirstContext>()
-              .UseSqlServer(connStringTesting).Options;
+               .UseInMemoryDatabase(databaseName: "Test")
+               .Options;
 
             _context = new AnagramSolverCodeFirstContext(options);
-            _context.Database.Migrate();
-          
             _repo = new BusinessLogic.Repositories.CachedWordRepositoryEF(_context);
-
-            _context.Database.BeginTransaction();
         }
 
-        [TearDown]
-        public void Teardown()
-        {
-            _context.Database.RollbackTransaction();
-
-            /*await _transaction.RollbackAsync();
-            await _transaction.DisposeAsync();
-            await _context.DisposeAsync();*/
-        }
 
         [Test]
+        public async Task InsertAndFetchCachedWord()
+        {
+            var word = new CachedWord("test-phrase8", "1;2;3");
+
+            await _repo.InsertCachedWord(word);
+            _context.SaveChanges();
+
+            var insertedWord = await _repo.GetCachedWord(word.SearchPhrase);
+
+            Assert.AreEqual(word.SearchPhrase, insertedWord.Phrase);
+            Assert.AreEqual(word.AnagramsIds, insertedWord.AnagramsIds);
+        }
+
+
+       /* [Test]
         public async Task InsertCachedWordSuccess()
         {
+
             var word = new CachedWord("test-phrase8", "1;2;3");
 
             await _repo.InsertCachedWord(word);
@@ -75,6 +74,6 @@ namespace AnagramSolver.Tests.Repositories
             var item = await _repo.GetCachedWord("test-phrase");
             item.ShouldNotBeNull();
             item.ID.ShouldNotBe(0);
-        }
+        }*/
     }
 }
