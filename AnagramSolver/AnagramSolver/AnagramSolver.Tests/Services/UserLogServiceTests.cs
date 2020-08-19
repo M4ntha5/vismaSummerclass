@@ -59,12 +59,11 @@ namespace AnagramSolver.Tests.Services
         public async Task GetAllSolverLogsWhenListIsEmpty()
         {
             _logRepoMock.GetAllAnagramSolveLogs().Returns(new List<UserLogEntity>());
-            _mapperMock.Map<List<UserLog>>(Arg.Any<List<UserLogEntity>>()).Returns(new List<UserLog>());
 
             var result = await _logService.GetAllSolverLogs();
 
             await _logRepoMock.Received().GetAllAnagramSolveLogs();
-            _mapperMock.Received().Map<List<UserLog>>(Arg.Any<List<UserLogEntity>>());
+
             Assert.AreEqual(0, result.Count);
         }
 

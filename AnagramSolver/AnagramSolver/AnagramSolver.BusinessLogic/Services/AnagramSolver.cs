@@ -30,6 +30,8 @@ namespace AnagramSolver.BusinessLogic.Services
 
             //getting all dictionary
             var allWords = await _wordRepository.GetAllWords();
+            if (allWords == null || allWords.Count < 1)
+                throw new Exception("No anagrams found for your input");
             //sorting user phrase
             var sortedInput = String.Concat(joinedInput.OrderBy(x => x));
 

@@ -37,6 +37,17 @@ namespace AnagramSolver.Tests.Services
         }
 
         [Test]
+        public async Task GetSelectedWordFailedWhenNoWordFound()
+        {
+            _cachedWordRepoMock.GetCachedWord(Arg.Any<string>()).Returns((CachedWordEntity)null);
+
+            var result = await _cachedWordService.GetSelectedCachedWord("phrase");
+
+            await _cachedWordRepoMock.Received().GetCachedWord(Arg.Any<string>());
+            Assert.IsNull(result);
+        }
+
+        [Test]
         public async Task SuccessWhenGettingSelectedCachedWord()
         {
             var model = new CachedWord("phrase", "anagrams");

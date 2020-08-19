@@ -39,6 +39,8 @@ namespace AnagramSolver.BusinessLogic.Services
         public async Task<List<UserLog>> GetAllSolverLogs()
         {
             var logsEntities = await _userLogRepository.GetAllAnagramSolveLogs();
+            if (logsEntities == null || logsEntities.Count < 1)
+                return new List<UserLog>();
 
             var logs = _mapper.Map<List<UserLog>>(logsEntities);
             return logs;

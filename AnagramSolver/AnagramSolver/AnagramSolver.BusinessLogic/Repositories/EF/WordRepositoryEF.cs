@@ -60,9 +60,6 @@ namespace AnagramSolver.BusinessLogic.Repositories
         public ValueTask<WordEntity> SelectWordById(int id)
         {
             var wordEntity = _context.Words.FindAsync(id);
-            if (wordEntity == null)
-                throw new Exception("Word with provided Id not found");
-
             return wordEntity;
         }
 
@@ -86,6 +83,8 @@ namespace AnagramSolver.BusinessLogic.Repositories
         public async Task DeleteSelectedWord(int id)
         {
             var entity = await _context.Words.FindAsync(id);
+            if (entity == null)
+                throw new Exception("Word you are trying to delete does not exist");
             _context.Words.Remove(entity);
         }
     }

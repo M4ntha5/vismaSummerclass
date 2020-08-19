@@ -48,6 +48,16 @@ namespace AnagramSolver.Tests.Services
         }
 
         [Test]
+        public async Task GetAllWordsListFailedWhenNoWordsFound()
+        {
+            _wordRepoMock.GetAllWords().Returns(new List<WordEntity>());
+
+            Assert.ThrowsAsync<Exception>(async () => await _wordService.GetAllWords());
+
+            await _wordRepoMock.Received().GetAllWords();
+        }
+
+        [Test]
         public async Task GetWordsBySearchSuccessfully()
         {
             var anagrams = new List<Anagram>()
@@ -71,6 +81,17 @@ namespace AnagramSolver.Tests.Services
         {
             Assert.ThrowsAsync<Exception>(
                async () => await _wordService.GetWordsBySearch(null));
+        }
+
+        [Test]
+        public async Task GetWordsBySearchFailedWhenPNoWordsFound()
+        {
+            _additionalWordRepoMock.SelectWordsBySearch(Arg.Any<string>()).Returns(new List<WordEntity>());
+
+            Assert.ThrowsAsync<Exception>(
+               async () => await _wordService.GetWordsBySearch("phrase"));
+
+            await _additionalWordRepoMock.Received().SelectWordsBySearch(Arg.Any<string>());
         }
 
         [Test]
@@ -121,6 +142,17 @@ namespace AnagramSolver.Tests.Services
         {
             Assert.ThrowsAsync<Exception>(
                 async () => await _wordService.GetWordAnagrams(null));
+        }
+
+        [Test]
+        public async Task GetWordAnagramsFailedWhenNoAnagramsFound()
+        {
+            _wordRepoMock.GetSelectedWordAnagrams(Arg.Any<string>()).Returns(new List<WordEntity>());
+
+            var result = await _wordService.GetWordAnagrams("word");
+
+            await _wordRepoMock.Received().GetSelectedWordAnagrams(Arg.Any<string>());
+            Assert.IsNull(result);
         }
 
         [Test]

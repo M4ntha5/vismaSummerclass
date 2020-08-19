@@ -31,7 +31,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
         }
 
         public async Task InsertLog(UserLog userLog)
-        {           
+        {
             var entity = new UserLogEntity
             {
                 Ip = userLog.Ip,

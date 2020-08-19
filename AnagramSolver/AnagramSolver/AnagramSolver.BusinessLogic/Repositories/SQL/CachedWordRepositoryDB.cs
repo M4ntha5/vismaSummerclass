@@ -15,7 +15,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
         public CachedWordRepositoryDB()
         {
             sqlConnection = new SqlConnection()
-            {
+            { 
                 ConnectionString = Settings.ConnectionString
             };
         }

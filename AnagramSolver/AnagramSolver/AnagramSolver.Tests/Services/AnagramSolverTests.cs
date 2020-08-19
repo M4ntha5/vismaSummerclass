@@ -43,6 +43,17 @@ namespace AnagramSolver.Tests.Services
         }
 
         [Test]
+        public async Task GetAnagramsFailedWhenWordsDictionaryIsEmpty()
+        {
+            _wordRepoMock.GetAllWords().Returns((List<WordEntity>)null);
+
+            Assert.ThrowsAsync<Exception>(
+               async () => await _anagramSolver.GetAnagrams("1"));
+
+            await _wordRepoMock.Received().GetAllWords();
+        }
+
+        [Test]
         public async Task GetAnagramsSuccessWhenDataOkAndSingleAndMultipleWordAnagramsFound()
         {
             Settings.AnagramsToGenerate = 5;

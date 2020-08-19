@@ -26,6 +26,9 @@ namespace AnagramSolver.BusinessLogic.Services
         public async Task<List<Anagram>> GetAllWords()
         {
             var resultEntity = await _wordRepository.GetAllWords();
+            if (resultEntity == null || resultEntity.Count < 1)
+                throw new Exception("No words found");
+
             var words = _mapper.Map<List<Anagram>>(resultEntity);
 
             return words;
@@ -37,6 +40,9 @@ namespace AnagramSolver.BusinessLogic.Services
                 throw new Exception("Cannot find any words, because your phrase is empty");
 
             var resultEntity = await _additionalWordRepository.SelectWordsBySearch(phrase);
+            if (resultEntity == null || resultEntity.Count < 1)
+                throw new Exception("No words found");
+
             var words = _mapper.Map<List<Anagram>>(resultEntity);
             return words;
         }
@@ -61,6 +67,9 @@ namespace AnagramSolver.BusinessLogic.Services
                 throw new Exception("Cannot find any anagrams, because word is not defined");
 
             var results = await _wordRepository.GetSelectedWordAnagrams(word);
+            if (results == null || results.Count < 1)
+                return null;
+
             var anagrams = _mapper.Map<List<Anagram>>(results);
 
             return anagrams;

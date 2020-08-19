@@ -26,6 +26,8 @@ namespace AnagramSolver.BusinessLogic.Services
                 throw new Exception("Cannont find CachedWord, because phrase is empty");
 
             var cachedWordEntity = await _cachedWordRepository.GetCachedWord(phrase);
+            if (cachedWordEntity == null)
+                return null;
             var cachedWord = _mapper.Map<CachedWord>(cachedWordEntity);
 
             return cachedWord;
