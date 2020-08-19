@@ -75,7 +75,7 @@ namespace AnagramSolver.Tests.Services
                 new UserLog("1233", "phrase", TimeSpan.FromSeconds(5), "action")
             };
 
-            _logRepoMock.GetAllAnagramSolveLogs().Returns(new List<UserLogEntity>());
+            _logRepoMock.GetAllAnagramSolveLogs().Returns(new List<UserLogEntity>() { new UserLogEntity() });
             _mapperMock.Map<List<UserLog>>(Arg.Any<List<UserLogEntity>>()).Returns(modelList);
 
             var result = await _logService.GetAllSolverLogs();

@@ -16,65 +16,88 @@ namespace AnagramSolver.IntegrationTests.Repositories
     {
         AnagramSolverCodeFirstContext _context;
         BusinessLogic.Repositories.UserLogRepositoryEF _repo;
-
+        DbContextOptionsBuilder<AnagramSolverCodeFirstContext> options;
         [SetUp]
         public void SetUp()
         {
-            var options = new DbContextOptionsBuilder<AnagramSolverCodeFirstContext>()
+            options = new DbContextOptionsBuilder<AnagramSolverCodeFirstContext>()
                .UseInMemoryDatabase(databaseName: "Test")
-               .Options;
+               ;
 
-            _context = new AnagramSolverCodeFirstContext(options);
+            _context = new AnagramSolverCodeFirstContext(options.Options);
             _repo = new BusinessLogic.Repositories.UserLogRepositoryEF(_context);
         }
 
         [Test]
         public async Task InsertLogSuccess()
         {
-            var log = new UserLog("169.35", "phrase1", TimeSpan.FromSeconds(5), UserActionTypes.GetAnagrams.ToString());
+            var opt = new DbContextOptionsBuilder<AnagramSolverCodeFirstContext>()
+               .UseInMemoryDatabase(databaseName: "Test")
+               .Options;
+            using (var context = new AnagramSolverCodeFirstContext(opt))
+            {
+                var repo = new BusinessLogic.Repositories.UserLogRepositoryEF(context);
+                var log = new UserLog(
+                "169.35", "phrase15", TimeSpan.FromSeconds(5), UserActionTypes.GetAnagrams.ToString());
 
-            await _repo.InsertLog(log);
-            await _context.SaveChangesAsync();
+                await repo.InsertLog(log);
+                await context.SaveChangesAsync();
 
-            var insertedLog = await _context.UserLogs.Where(x => x.Phrase == log.SearchPhrase).SingleOrDefaultAsync();
+                var all = await context.UserLogs.ToListAsync();
+                var insertedLog = await context.UserLogs.Where(x => x.Phrase == log.SearchPhrase).SingleOrDefaultAsync();
 
-            Assert.AreEqual(log.SearchPhrase, insertedLog.Phrase);
-            Assert.AreEqual(log.Ip, insertedLog.Ip);
-            Assert.AreEqual(log.Action, insertedLog.Action);
+                Assert.AreEqual(log.SearchPhrase, insertedLog.Phrase);
+                Assert.AreEqual(log.Ip, insertedLog.Ip);
+                Assert.AreEqual(log.Action, insertedLog.Action);
+            }
         }
 
         [Test]
         public async Task GetAllAnagramSolveLogsSuccess()
         {
-            var log = new UserLog("169.35", "phrase1", TimeSpan.FromSeconds(5), UserActionTypes.GetAnagrams.ToString());
-            var log2 = new UserLog("169.359.54", "phrase2", TimeSpan.FromSeconds(6), UserActionTypes.GetAnagrams.ToString());
+            var opt = new DbContextOptionsBuilder<AnagramSolverCodeFirstContext>()
+               .UseInMemoryDatabase(databaseName: "Test")
+               .Options;
+            using (var context = new AnagramSolverCodeFirstContext(opt))
+            {
+                var repo = new BusinessLogic.Repositories.UserLogRepositoryEF(context);
+                var log = new UserLog("169.35", "phrase1", TimeSpan.FromSeconds(5), UserActionTypes.GetAnagrams.ToString());
+                var log2 = new UserLog("169.359.54", "phrase2", TimeSpan.FromSeconds(6), UserActionTypes.GetAnagrams.ToString());
 
-            await _repo.InsertLog(log);
-            await _repo.InsertLog(log2);
-            await _context.SaveChangesAsync();
+                await repo.InsertLog(log);
+                await repo.InsertLog(log2);
+                await context.SaveChangesAsync();
 
-            var solveLogs = await _repo.GetAllAnagramSolveLogs();
+                var solveLogs = await repo.GetAllAnagramSolveLogs();
 
-            Assert.AreEqual(2, solveLogs.Count);
-            Assert.AreEqual(log.Ip, solveLogs[0].Ip);
-            Assert.AreEqual(log.Action, solveLogs[0].Action);
-            Assert.AreEqual(log2.Ip, solveLogs[1].Ip);
-            Assert.AreEqual(log2.Action, solveLogs[1].Action);
+                Assert.AreEqual(2, solveLogs.Count);
+                Assert.AreEqual(log.Ip, solveLogs[0].Ip);
+                Assert.AreEqual(log.Action, solveLogs[0].Action);
+                Assert.AreEqual(log2.Ip, solveLogs[1].Ip);
+                Assert.AreEqual(log2.Action, solveLogs[1].Action);
+            }
         }
 
         [Test]
         public async Task GetTimesIpMadeActionWhen2DeleteActionsMade()
         {
-            var log = new UserLog("169.359.54", "phrase1", TimeSpan.FromSeconds(5), UserActionTypes.DeleteWord.ToString());
-            var log2 = new UserLog("169.359.54", "phrase2", TimeSpan.FromSeconds(6), UserActionTypes.DeleteWord.ToString());
+            var opt = new DbContextOptionsBuilder<AnagramSolverCodeFirstContext>()
+               .UseInMemoryDatabase(databaseName: "Test")
+               .Options;
+            using (var context = new AnagramSolverCodeFirstContext(opt))
+            {
+                var repo = new BusinessLogic.Repositories.UserLogRepositoryEF(context);
+                var log = new UserLog("169.359.54", "phrase1", TimeSpan.FromSeconds(5), UserActionTypes.DeleteWord.ToString());
+                var log2 = new UserLog("169.359.54", "phrase2", TimeSpan.FromSeconds(6), UserActionTypes.DeleteWord.ToString());
 
-            await _repo.InsertLog(log);
-            await _repo.InsertLog(log2);
-            await _context.SaveChangesAsync();
+                await repo.InsertLog(log);
+                await repo.InsertLog(log2);
+                await context.SaveChangesAsync();
 
-            var timesActionMade = await _repo.GetTimesIpMadeAction(log.Ip, UserActionTypes.DeleteWord);
+                var timesActionMade = await repo.GetTimesIpMadeAction(log.Ip, UserActionTypes.DeleteWord);
 
-            Assert.AreEqual(2, timesActionMade);
+                Assert.AreEqual(2, timesActionMade);
+            }
         }
     }
 }

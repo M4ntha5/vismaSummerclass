@@ -38,7 +38,7 @@ namespace AnagramSolver.Tests.Services
             {
                 new Anagram(){Category = "cat", Word = "Word"}
             };
-            _wordRepoMock.GetAllWords().Returns(new List<WordEntity>());
+            _wordRepoMock.GetAllWords().Returns(new List<WordEntity>() { new WordEntity() });
             _mapperMock.Map<List<Anagram>>(Arg.Any<List<WordEntity>>()).Returns(anagrams);
 
             await _wordService.GetAllWords();
@@ -64,7 +64,8 @@ namespace AnagramSolver.Tests.Services
             {
                 new Anagram(){Category = "cat", Word = "Word"}
             };
-            _additionalWordRepoMock.SelectWordsBySearch(Arg.Any<string>()).Returns(new List<WordEntity>());
+            _additionalWordRepoMock.SelectWordsBySearch(Arg.Any<string>()).Returns(
+                new List<WordEntity>() { new WordEntity() });
             _mapperMock.Map<List<Anagram>>(Arg.Any<List<WordEntity>>()).Returns(anagrams);
 
             var result = await _wordService.GetWordsBySearch("phrase");
@@ -161,7 +162,8 @@ namespace AnagramSolver.Tests.Services
             var anagram = new Anagram() { Category = "cat", Word = "Word" };
             var anagramList = new List<Anagram>() { anagram };
 
-            _wordRepoMock.GetSelectedWordAnagrams(Arg.Any<string>()).Returns(new List<WordEntity>());
+            _wordRepoMock.GetSelectedWordAnagrams(Arg.Any<string>()).Returns(
+                new List<WordEntity>() { new WordEntity() });
             _mapperMock.Map<List<Anagram>>(Arg.Any<List<WordEntity>>()).Returns(anagramList);
 
             var result = await _wordService.GetWordAnagrams("word");

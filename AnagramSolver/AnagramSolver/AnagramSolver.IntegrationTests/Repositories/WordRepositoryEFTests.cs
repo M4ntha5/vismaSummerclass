@@ -34,7 +34,7 @@ namespace AnagramSolver.IntegrationTests.Repositories
             var word = new Anagram() { Category = "dkt", Word = "alus" };
 
             await _repo.AddNewWord(word);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var insertedWord = await _context.Words.Where(x => x.Word == word.Word).FirstOrDefaultAsync();
 
@@ -51,7 +51,7 @@ namespace AnagramSolver.IntegrationTests.Repositories
 
             await _repo.AddNewWord(word);
             await _repo.AddNewWord(word2);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var allWords = await _repo.GetAllWords();
 
@@ -68,7 +68,7 @@ namespace AnagramSolver.IntegrationTests.Repositories
 
             await _repo.AddNewWord(word);
             await _repo.AddNewWord(word2);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var anagrams = await _repo.GetSelectedWordAnagrams(word.Word);
 
@@ -78,16 +78,18 @@ namespace AnagramSolver.IntegrationTests.Repositories
         }
 
         [Test]
-        public async Task SelectWordByIdWhenOnlyOneRecordInDb()
+        public async Task SelectWordById()
         {
-            var word = new Anagram() { Category = "dkt", Word = "oskar" };
+            var word = new Anagram() { Category = "dkt", Word = "oskarasss" };
 
             await _repo.AddNewWord(word);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var selectedWord = await _repo.SelectWordById(1);
+            var wordEntity = await _context.Words.Where(x => x.Word == word.Word).SingleOrDefaultAsync();
 
-            Assert.AreEqual(1, selectedWord.ID);
+            var selectedWord = await _repo.SelectWordById(wordEntity.ID);
+
+            Assert.AreEqual(wordEntity.ID, selectedWord.ID);
             Assert.AreEqual(word.Word, selectedWord.Word);
             Assert.AreEqual(word.Category, selectedWord.Category);
         }
@@ -98,9 +100,9 @@ namespace AnagramSolver.IntegrationTests.Repositories
             var word = new Anagram() { Category = "dkt", Word = "oskar" };
 
             await _repo.AddNewWord(word);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var selectedWord = await _repo.SelectWordById(2);
+            var selectedWord = await _repo.SelectWordById(95);
 
             Assert.IsNull(selectedWord);
         }
@@ -113,7 +115,7 @@ namespace AnagramSolver.IntegrationTests.Repositories
 
             await _repo.AddNewWord(word);
             await _repo.AddNewWord(word2);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var wordsFound = await _repo.SelectWordsBySearch("kau");
 
@@ -127,16 +129,18 @@ namespace AnagramSolver.IntegrationTests.Repositories
         [Test]
         public async Task UpdateSelectedWordSuccess()
         {
-            var word = new Anagram() { Category = "dkt", Word = "word" };
+            var word = new Anagram() { Category = "dkt", Word = "my-word" };
             var newWord = new Anagram() { Category = "updated", Word = "updated" };
 
             await _repo.AddNewWord(word);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            await _repo.UpdateSelectedWord(1, newWord);
-            _context.SaveChanges();
+            var wordEntity = await _context.Words.Where(x => x.Word == word.Word).SingleOrDefaultAsync();
 
-            var updatedWord = await _repo.SelectWordById(1);
+            await _repo.UpdateSelectedWord(wordEntity.ID, newWord);
+            await _context.SaveChangesAsync();
+
+            var updatedWord = await _repo.SelectWordById(wordEntity.ID);
 
             Assert.AreEqual(newWord.Category, updatedWord.Category);
             Assert.AreEqual(newWord.Word, updatedWord.Word);
@@ -147,7 +151,7 @@ namespace AnagramSolver.IntegrationTests.Repositories
         {
             var newWord = new Anagram() { Category = "updated dkt", Word = "updated word" };
 
-            Assert.ThrowsAsync<Exception>(async () => await _repo.UpdateSelectedWord(5, newWord));
+            Assert.ThrowsAsync<Exception>(async () => await _repo.UpdateSelectedWord(684, newWord));
         }
 
         [Test]
@@ -156,12 +160,12 @@ namespace AnagramSolver.IntegrationTests.Repositories
             var word = new Anagram() { Category = "dkt", Word = "word" };
 
             await _repo.AddNewWord(word);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var allWordsBefore = await _context.Words.ToListAsync();
 
             await _repo.DeleteSelectedWord(allWordsBefore[0].ID);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var allWordsAfter = await _context.Words.ToListAsync();
 

@@ -33,7 +33,7 @@ namespace AnagramSolver.IntegrationTests.Repositories
             var word = new CachedWord("test-phrase8", "1;2;3");
 
             await _repo.InsertCachedWord(word);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var insertedWord = await _repo.GetCachedWord(word.SearchPhrase);
 
