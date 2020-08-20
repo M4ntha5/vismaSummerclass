@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="AnagramService.svc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="AnagramService.svc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SoapCore" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AnagramSolver.Contracts\AnagramSolver.Contracts.csproj" />
+    <ProjectReference Include="..\AnagramSolver.WebApp\AnagramSolver.WebApp.csproj" />
+  </ItemGroup>
+
+</Project>
