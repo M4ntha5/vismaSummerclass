@@ -1,4 +1,5 @@
-﻿using AnagramSolver.Contracts.Interfaces.Services;
+﻿using AnagramSolver.Contracts.Interfaces;
+using AnagramSolver.Contracts.Interfaces.Services;
 using AnagramSolver.Contracts.Models;
 using AnagramSolver.WebApp.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -14,21 +15,19 @@ namespace AnagramSolver.Tests.Controllers
     [TestFixture]
     public class SearchHistoryControllerTests
     {
-        ICachedWordService _cachedWordServiceMock;
         IUserLogService _userLogServiceMock;
-        IWordService _wordServiceMock;
+        ISearchHistoryService _searchHistoryServiceMock;
 
         SearchHistoryController _controller;
 
         [SetUp]
         public void Setup()
         {
-            _cachedWordServiceMock = Substitute.For<ICachedWordService>();
             _userLogServiceMock = Substitute.For<IUserLogService>();
-            _wordServiceMock = Substitute.For<IWordService>();
+            _searchHistoryServiceMock = Substitute.For<ISearchHistoryService>();
 
             _controller = new SearchHistoryController(
-                _wordServiceMock, _userLogServiceMock, _cachedWordServiceMock);
+                _userLogServiceMock, _searchHistoryServiceMock);
         }
 
         [Test]
@@ -38,17 +37,33 @@ namespace AnagramSolver.Tests.Controllers
             {
                 new UserLog("123", "phrase", TimeSpan.FromSeconds(4), "action")
             };
-            var words = new CachedWord("phrase", "1;2/8");
-            var anagram = new Anagram() { Category = "cat1", Word = "word" };
+            var returnList = new List<string>() { "word1", "word2" };
+
             _userLogServiceMock.GetAllSolverLogs().Returns(logs);
-            _cachedWordServiceMock.GetSelectedCachedWord(Arg.Any<string>()).Returns(words);
-            _wordServiceMock.GetWordById(Arg.Any<int>()).Returns(anagram);
+            _searchHistoryServiceMock.GetSearchedAnagrams(Arg.Any<string>()).Returns(returnList);
 
             var result = await _controller.Index() as ViewResult;
             var data = result.ViewData.Model as List<SearchHistory>;
 
+            await _userLogServiceMock.Received().GetAllSolverLogs();
+            await _searchHistoryServiceMock.Received().GetSearchedAnagrams(Arg.Any<string>());
             Assert.AreEqual(logs.Count, data.Count);
             Assert.AreEqual(logs[0].Ip, data[0].Ip);
+            Assert.AreEqual(returnList.Count, data[0].Anagrams.Count);
+            Assert.AreEqual(returnList[0], data[0].Anagrams[0]);
         }
+        [Test]
+        public async Task IndexSuccessWhenNoLogsFound()
+        {
+            _userLogServiceMock.GetAllSolverLogs().Returns(new List<UserLog>());
+
+            var result = await _controller.Index() as ViewResult;
+            var data = result.ViewData.Model as List<SearchHistory>;
+
+            await _userLogServiceMock.Received().GetAllSolverLogs();
+
+            Assert.IsEmpty(data);
+        }
+
     }
 }

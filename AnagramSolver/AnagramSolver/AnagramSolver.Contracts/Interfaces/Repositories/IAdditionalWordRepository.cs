@@ -9,8 +9,6 @@ namespace AnagramSolver.Contracts.Interfaces
     {
         ValueTask<WordEntity> SelectWordById(int id);
         Task<List<WordEntity>> SelectWordsBySearch(string phrase);
-
-
         Task UpdateSelectedWord(int id, Anagram updatedWord);
         Task DeleteSelectedWord(int id);
     }

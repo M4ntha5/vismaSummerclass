@@ -55,7 +55,7 @@ namespace AnagramSolver.SOAP.WebService
             services.AddSingleton(mapper);
 
             services.AddDbContext<AnagramSolverCodeFirstContext>(opt =>
-                opt.UseSqlServer(Settings.ConnectionStringCodeFirst));
+                opt.UseSqlServer(Settings.ConnectionStringDevelopment));
 
             services.TryAddSingleton<IAnagramService, AnagramService>();
 

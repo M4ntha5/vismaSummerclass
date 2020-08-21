@@ -38,10 +38,11 @@ namespace AnagramSolver.WebApp
 
                 .AddScoped<IAnagramSolver, BusinessLogic.Services.AnagramSolverRest>()
 
-                //.AddScoped<IAnagramSolver, BusinessLogic.Services.AnagramSolver>()
-                .AddScoped<IWordService, BusinessLogic.Services.WordService>()
+                .AddScoped<IAnagramSolver, BusinessLogic.Services.AnagramSolver>()
+                //.AddScoped<IWordService, BusinessLogic.Services.WordService>()
                 .AddScoped<IUserLogService, BusinessLogic.Services.UserLogService>()
                 .AddScoped<ICachedWordService, BusinessLogic.Services.CachedWordService>()
+                .AddScoped<ISearchHistoryService, BusinessLogic.Services.SearchHistoryService>()
 
                 .AddScoped<AnagramSolverCodeFirstContext>()
 
@@ -55,7 +56,7 @@ namespace AnagramSolver.WebApp
             services.AddSingleton(mapper);
 
             services.AddDbContext<AnagramSolverCodeFirstContext>(options =>
-                    options.UseSqlServer(Contracts.Utils.Settings.ConnectionStringCodeFirst));
+                    options.UseSqlServer(Contracts.Utils.Settings.ConnectionStringDevelopment));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

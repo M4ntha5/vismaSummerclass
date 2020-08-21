@@ -18,20 +18,18 @@ namespace AnagramSolver.WebApp.Controllers
     {
         private readonly IAnagramSolver _anagramSolver;
         private readonly ICookiesHandlerService _cookiesHandler;
-        private readonly ICachedWordService _cachedWordService;
         private readonly IUserLogService _userLogService;
-        private readonly IWordService _wordService;
+        private readonly ISearchHistoryService _searchHistoryService;
         private readonly AnagramSolverCodeFirstContext _context;
 
         public HomeController(IAnagramSolver anagramSolver, ICookiesHandlerService cookiesHandler,
-            IUserLogService logService, ICachedWordService cachedWordService,
-            IWordService wordService, AnagramSolverCodeFirstContext context)
+            IUserLogService logService, ISearchHistoryService searchHistoryService,
+            AnagramSolverCodeFirstContext context)
         {
             _anagramSolver = anagramSolver;
             _cookiesHandler = cookiesHandler;
-            _cachedWordService = cachedWordService;
             _userLogService = logService;
-            _wordService = wordService;
+            _searchHistoryService = searchHistoryService;
             _context = context;
         }
 
@@ -48,26 +46,9 @@ namespace AnagramSolver.WebApp.Controllers
                 if (solvesLeft <= 0)
                     throw new Exception("You reached your solve limit. Add new word to increase your limit");
 
-                var cachedWord = await _cachedWordService.GetSelectedCachedWord(id);
-                if (cachedWord != null)// || cachedWord != DBNull.Value)
-                {
-                    var anagramsIds = cachedWord.AnagramsIds.Split(';').ToList();
-
-                    foreach (var wordId in anagramsIds)
-                    {
-                        var phrase = wordId.Split('/').ToList();
-                        string wordFound = "";
-                        foreach (var word in phrase)
-                        {
-                            var idToGet = int.Parse(word);
-                            var anagram = await _wordService.GetWordById(idToGet);
-                            wordFound += phrase.Count == 1 ? anagram.Word : anagram.Word + " ";
-                        }
-                        anagrams.Add(wordFound.Trim());
-                    }
+                anagrams = await _searchHistoryService.GetSearchedAnagrams(id);
+                if(anagrams != null && anagrams.Count > 0)
                     return View(anagrams);
-                }
-
 
                 Stopwatch sw = new Stopwatch();
                 sw.Start();

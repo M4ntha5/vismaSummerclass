@@ -21,9 +21,8 @@ namespace AnagramSolver.Tests.Controllers
     {
         IAnagramSolver _anagramSolverMock;
         ICookiesHandlerService _cookiesHandlerServiceMock;
-        ICachedWordService _cachedWordServiceMock;
         IUserLogService _userLogServiceMock;
-        IWordService _wordServiceMock;
+        ISearchHistoryService _searchHistoryServiceMock;
         AnagramSolverCodeFirstContext _contextMock;
 
         HomeController _controller;
@@ -33,13 +32,12 @@ namespace AnagramSolver.Tests.Controllers
         {
             _anagramSolverMock = Substitute.For<IAnagramSolver>();
             _cookiesHandlerServiceMock = Substitute.For<ICookiesHandlerService>();
-            _cachedWordServiceMock = Substitute.For<ICachedWordService>();
             _userLogServiceMock = Substitute.For<IUserLogService>();
-            _wordServiceMock = Substitute.For<IWordService>();
+            _searchHistoryServiceMock = Substitute.For<ISearchHistoryService>();
             _contextMock = Substitute.For<AnagramSolverCodeFirstContext>();
 
-            _controller = new HomeController(_anagramSolverMock, _cookiesHandlerServiceMock, _userLogServiceMock,
-                _cachedWordServiceMock, _wordServiceMock, _contextMock);
+            _controller = new HomeController(_anagramSolverMock, _cookiesHandlerServiceMock,
+                _userLogServiceMock, _searchHistoryServiceMock, _contextMock);
         }
 
         [Test]
@@ -64,25 +62,21 @@ namespace AnagramSolver.Tests.Controllers
         }
 
         [Test]
-        public async Task IndexSuccessWhenResultFromCachedWord()
+        public async Task IndexSuccessWhenResultsFoundInCachedWord()
         {
-            var word = new CachedWord("phrase", "1;5/6");
-            var anagram = new Anagram() { Category = "cat1", Word = "word" };
+            var anagramsList = new List<string>() { "word1", "word2" };
 
             _userLogServiceMock.CountAnagramsLeftForIpToSolve().Returns(5);
-            _cachedWordServiceMock.GetSelectedCachedWord(Arg.Any<string>()).Returns(word);
-            _wordServiceMock.GetWordById(Arg.Any<int>()).Returns(anagram, anagram, anagram);
+            _searchHistoryServiceMock.GetSearchedAnagrams(Arg.Any<string>()).Returns(anagramsList);
 
             var result = await _controller.Index("labas") as ViewResult;
             var data = result.ViewData.Model as List<string>;
 
             await _userLogServiceMock.Received().CountAnagramsLeftForIpToSolve();
-            await _cachedWordServiceMock.Received().GetSelectedCachedWord(Arg.Any<string>());
-            await _wordServiceMock.Received(3).GetWordById(Arg.Any<int>());
-
-            Assert.AreEqual(2, data.Count);
-            Assert.AreEqual(anagram.Word, data[0]);
-            Assert.AreEqual($"{anagram.Word} {anagram.Word}", data[1]);
+            await _searchHistoryServiceMock.Received().GetSearchedAnagrams(Arg.Any<string>());
+            Assert.AreEqual(anagramsList.Count, data.Count);
+            Assert.AreEqual(anagramsList[0], data[0]);
+            Assert.AreEqual(anagramsList[1], data[1]);
         }
 
         [Test]
@@ -91,6 +85,7 @@ namespace AnagramSolver.Tests.Controllers
             var returnList = new List<string>() { "word1", "word2" };
 
             _userLogServiceMock.CountAnagramsLeftForIpToSolve().Returns(5);
+            _searchHistoryServiceMock.GetSearchedAnagrams(Arg.Any<string>()).Returns((List<string>)null);
             _anagramSolverMock.GetAnagrams(Arg.Any<string>()).Returns(returnList);
             await _userLogServiceMock.AddLog(Arg.Any<TimeSpan>(), Arg.Any<UserActionTypes>(), Arg.Any<string>());
             _cookiesHandlerServiceMock.AddCookie(Arg.Any<string>(), Arg.Any<string>());
@@ -100,6 +95,7 @@ namespace AnagramSolver.Tests.Controllers
             var data = result.ViewData.Model as List<string>;
 
             await _userLogServiceMock.Received().CountAnagramsLeftForIpToSolve();
+            await _searchHistoryServiceMock.Received().GetSearchedAnagrams(Arg.Any<string>());
             await _anagramSolverMock.Received().GetAnagrams(Arg.Any<string>());
             await _userLogServiceMock.Received().AddLog(Arg.Any<TimeSpan>(), Arg.Any<UserActionTypes>(), Arg.Any<string>());
             _cookiesHandlerServiceMock.Received().AddCookie(Arg.Any<string>(), Arg.Any<string>());

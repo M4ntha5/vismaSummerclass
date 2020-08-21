@@ -32,6 +32,7 @@ namespace AnagramSolver.WebApp.Controllers
                 //removing input element
                 anagrams.Remove(word);
 
+                //saves inserted cached word
                 await _context.SaveChangesAsync();
 
                 return Ok(anagrams);

@@ -21,7 +21,6 @@ namespace AnagramSolver.Console
             int.TryParse(configuration.GetSection("MinInputLength").Value, out int minLength);
             var dataFile = configuration.GetSection("DataFileName").Value;
             var connString = configuration.GetConnectionString("Development");
-            var connStringCodeFirst = configuration.GetConnectionString("CodeFirst");
             var connStringTesting = configuration.GetConnectionString("Testing");
             int.TryParse(configuration.GetSection("MaxAnagramsForIp").Value, out int maxForIp);
             var anagramica = configuration.GetSection("AnagramicaApiUrl").Value;
@@ -32,8 +31,7 @@ namespace AnagramSolver.Console
             Settings.AnagramsToGenerate = anagramsCount;
             Settings.MinInputLength = minLength;
             Settings.DataFileName = dataFile;
-            Settings.ConnectionString = connString;
-            Settings.ConnectionStringCodeFirst = connStringCodeFirst;
+            Settings.ConnectionStringDevelopment = connString;
             Settings.ConnectionStringTesting = connStringTesting;
             Settings.MaxAnagramsForIp = maxForIp;
             Settings.AnagramicaApiUrl = anagramica;

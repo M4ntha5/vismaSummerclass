@@ -11,6 +11,5 @@ namespace AnagramSolver.Contracts.Interfaces
         Task<List<WordEntity>> GetAllWords();
         Task<List<WordEntity>> GetSelectedWordAnagrams(string word);
         Task AddNewWord(Anagram anagram);
-
     }
 }

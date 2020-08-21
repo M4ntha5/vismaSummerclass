@@ -12,46 +12,26 @@ namespace AnagramSolver.WebApp.Controllers
 {
     public class SearchHistoryController : Controller
     {
-        private readonly ICachedWordService _cachedWordService;
         private readonly IUserLogService _userLogService;
-        private readonly IWordService _wordService;
+        private readonly ISearchHistoryService _searchHistoryService;
 
-        public SearchHistoryController(IWordService wordService, IUserLogService userLogService,
-            ICachedWordService cachedWordService)
+        public SearchHistoryController(
+            IUserLogService userLogService, ISearchHistoryService searchHistoryService)
         {
-            _cachedWordService = cachedWordService;
             _userLogService = userLogService;
-            _wordService = wordService;
+            _searchHistoryService = searchHistoryService;
         }
 
         public async Task<IActionResult> Index()
         {
             try
-            {
+            {           
                 var logs = await _userLogService.GetAllSolverLogs();
 
-                List<SearchHistory> history = new List<SearchHistory>();
+                var history = new List<SearchHistory>();
                 foreach (var log in logs)
                 {
-                    List<string> anagrams = new List<string>();
-                    var cached = await _cachedWordService.GetSelectedCachedWord(log.SearchPhrase);
-                    if (cached != null)
-                    {
-                        var anagramsIds = cached.AnagramsIds.Split(';').ToList();
-
-                        foreach (var wordId in anagramsIds)
-                        {
-                            var phrase = wordId.Split('/').ToList();
-                            string wordFound = "";
-                            foreach (var word in phrase)
-                            {
-                                var idToGet = int.Parse(word);
-                                var anagram = await _wordService.GetWordById(idToGet);
-                                wordFound += phrase.Count == 1 ? anagram.Word : anagram.Word + " ";
-                            }
-                            anagrams.Add(wordFound.Trim());
-                        }
-                    }
+                    var anagrams = await _searchHistoryService.GetSearchedAnagrams(log.SearchPhrase);
                     history.Add(
                         new SearchHistory
                         {

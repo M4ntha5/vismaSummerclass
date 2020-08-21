@@ -11,7 +11,6 @@ namespace AnagramSolver.Contracts.Interfaces.Services
         Task InsertWord(Anagram anagram);
         Task<List<Anagram>> GetWordAnagrams(string word);
         Task<Anagram> GetWordById(int? id);
-
         Task DeleteWordById(int id);
         Task UpdateWord(int id, Anagram newWord);
     }

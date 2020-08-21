@@ -20,7 +20,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
         {
             sqlConnection = new SqlConnection()
             {
-                ConnectionString = Settings.ConnectionString
+                ConnectionString = Settings.ConnectionStringDevelopment
             };
         }
 

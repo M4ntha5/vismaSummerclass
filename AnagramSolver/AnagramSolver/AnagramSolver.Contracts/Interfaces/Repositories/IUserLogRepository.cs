@@ -11,6 +11,5 @@ namespace AnagramSolver.Contracts.Interfaces
         Task InsertLog(UserLog userLog);
         Task<List<UserLogEntity>> GetAllAnagramSolveLogs();
         Task<int> GetTimesIpMadeAction(string ip, UserActionTypes action);
-       // Task<int> GetAnagramsLeftForIpToSearch(string ip);
     }
 }
