@@ -1,5 +1,6 @@
 ﻿using AnagramSolver.Contracts.Interfaces;
 using AnagramSolver.Contracts.Interfaces.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +20,9 @@ namespace AnagramSolver.BusinessLogic.Services
 
         public async Task<List<string>> GetSearchedAnagrams(string searchPhrase)
         {
+            if (string.IsNullOrEmpty(searchPhrase))
+                throw new Exception("Search phrase not defined");
+
             var anagrams = new List<string>();
             var cachedWord = await _cachedWordService.GetSelectedCachedWord(searchPhrase);
             if (cachedWord != null)

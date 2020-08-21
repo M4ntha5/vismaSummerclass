@@ -36,8 +36,6 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 throw new Exception($"File '{FilePath}' does not exist!");
             string[] lines = await File.ReadAllLinesAsync(FilePath);
 
-            //file reading using resources
-            //string[] lines = File.ReadAllLines(Resources.zodynas);
             string previousWord = string.Empty;
             var result = new List<WordEntity>();
             foreach (string line in lines)
