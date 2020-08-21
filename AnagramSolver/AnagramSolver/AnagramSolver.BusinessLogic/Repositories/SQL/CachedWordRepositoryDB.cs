@@ -58,7 +58,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
                 {
                     result = new CachedWordEntity()
                     {
-                        ID = int.Parse(reader["Phrase"].ToString()),
+                        ID = int.Parse(reader["ID"].ToString()),
                         Phrase = reader["Phrase"].ToString(),
                         AnagramsIds = reader["AnagramsIds"].ToString()
                     };

@@ -1,4 +1,5 @@
-﻿using AnagramSolver.Contracts.Models;
+﻿using AnagramSolver.BusinessLogic.Repositories;
+using AnagramSolver.Contracts.Models;
 using AnagramSolver.EF.CodeFirst;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
@@ -8,13 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnagramSolver.IntegrationTests.Repositories
+namespace AnagramSolver.IntegrationTests.Repositories.EF
 {
     [TestFixture]
     public class WordRepositoryEFTests
     {
         AnagramSolverCodeFirstContext _context;
-        BusinessLogic.Repositories.WordRepositoryEF _repo;
+        WordRepositoryEF _repo;
 
         [SetUp]
         public void SetUp()
@@ -24,7 +25,7 @@ namespace AnagramSolver.IntegrationTests.Repositories
                .Options;
 
             _context = new AnagramSolverCodeFirstContext(options);
-            _repo = new BusinessLogic.Repositories.WordRepositoryEF(_context);
+            _repo = new WordRepositoryEF(_context);
         }
 
 

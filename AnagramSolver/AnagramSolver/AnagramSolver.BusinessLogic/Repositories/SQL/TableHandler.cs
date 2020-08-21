@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnagramSolver.BusinessLogic.Repositories.SQL
+namespace AnagramSolver.BusinessLogic.Repositories
 {
     public class TableHandler : ITableHandler
     {

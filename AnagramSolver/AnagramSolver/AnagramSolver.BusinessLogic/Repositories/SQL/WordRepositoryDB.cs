@@ -63,7 +63,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
                     anagrams.Add(
                         new WordEntity()
                         {
-                            ID = int.Parse(reader["Id"].ToString()),
+                            ID = int.Parse(reader["ID"].ToString()),
                             Category = reader["Category"].ToString(),
                             Word = reader["Word"].ToString(),
                             SortedWord = reader["SortedWord"].ToString()
@@ -115,12 +115,12 @@ namespace AnagramSolver.BusinessLogic.Repositories
             {
                 Connection = sqlConnection,
                 CommandType = CommandType.Text,
-                CommandText = "select Word from Words where Id = @wordIdToGet"
+                CommandText = "select * from Words where ID = @wordIdToGet"
             };
             cmd.Parameters.Add(new SqlParameter("@wordIdToGet", id));
             SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
-            WordEntity anagram =new WordEntity();
+            WordEntity anagram = null;
             if (reader.HasRows)
             {
                 while (reader.Read())
@@ -201,7 +201,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
             {
                 Connection = sqlConnection,
                 CommandType = CommandType.Text,
-                CommandText = "delete from Word where id=@id"
+                CommandText = "delete from Words where ID = @id"
             };
             cmd.Parameters.Add(new SqlParameter("@id", id));
             await cmd.ExecuteNonQueryAsync();

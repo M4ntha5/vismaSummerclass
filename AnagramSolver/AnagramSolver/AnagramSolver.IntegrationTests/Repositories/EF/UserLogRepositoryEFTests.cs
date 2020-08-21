@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnagramSolver.IntegrationTests.Repositories
+namespace AnagramSolver.IntegrationTests.Repositories.EF
 {
     public class UserLogRepositoryEFTests
     {

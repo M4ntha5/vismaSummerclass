@@ -157,7 +157,7 @@ namespace AnagramSolver.BusinessLogic.Services
                     charList = tmpWord.ToCharArray();
                 }
             }
-            return new string(charList);
+            return charList.ToString();
         }
 
     }

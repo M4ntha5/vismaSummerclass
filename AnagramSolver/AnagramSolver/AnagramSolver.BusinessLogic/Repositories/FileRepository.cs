@@ -30,8 +30,6 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
         public async Task<List<WordEntity>> GetAllWords()
         {
-            //file reading using path
-
             if (!File.Exists(FilePath))
                 throw new Exception($"File '{FilePath}' does not exist!");
             string[] lines = await File.ReadAllLinesAsync(FilePath);

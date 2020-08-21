@@ -13,11 +13,11 @@ namespace AnagramSolver.BusinessLogic.Repositories
 {
     public class UserLogRepositoryDB : IUserLogRepository
     {
-        private readonly SqlConnection sqlConnection;
+        private readonly SqlConnection _sqlConnection;
 
         public UserLogRepositoryDB()
         {
-            sqlConnection = new SqlConnection()
+            _sqlConnection = new SqlConnection()
             {
                 ConnectionString = Settings.ConnectionStringDevelopment
             };
@@ -25,27 +25,28 @@ namespace AnagramSolver.BusinessLogic.Repositories
 
         public async Task InsertLog(UserLog log)
         {
-            sqlConnection.Open();
+            _sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
             {
-                Connection = sqlConnection,
+                Connection = _sqlConnection,
                 CommandType = CommandType.Text,
-                CommandText = "insert into UserLogs(Ip, Phrase, SearchTime) " +
-                                "values (@ip, @phrase, @time)"
+                CommandText = "insert into UserLogs(Ip, Phrase, SearchTime, Action) " +
+                                "values (@ip, @phrase, @time, @action)"
             };
             cmd.Parameters.Add(new SqlParameter("@ip", log.Ip));
             cmd.Parameters.Add(new SqlParameter("@phrase", log.SearchPhrase));
             cmd.Parameters.Add(new SqlParameter("@time", log.SearchTime));
+            cmd.Parameters.Add(new SqlParameter("@action", log.Action));
 
             await cmd.ExecuteNonQueryAsync();
-            sqlConnection.Close();
+            _sqlConnection.Close();
         }
         public async Task<List<UserLogEntity>> GetAllAnagramSolveLogs()
         {
-            sqlConnection.Open();
+            _sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
             {
-                Connection = sqlConnection,
+                Connection = _sqlConnection,
                 CommandType = CommandType.Text,
                 CommandText = "select * from UserLogs where Action = @action"
             };
@@ -61,31 +62,32 @@ namespace AnagramSolver.BusinessLogic.Repositories
                     logs.Add(
                         new UserLogEntity()
                         {
-                            ID = int.Parse(reader["Ip"].ToString()),
+                            ID = int.Parse(reader["ID"].ToString()),
                             Ip = reader["Ip"].ToString(),
                             Phrase = reader["Phrase"].ToString(),
-                            SearchTime = TimeSpan.Parse(reader["SearchTime"].ToString())
+                            SearchTime = TimeSpan.Parse(reader["SearchTime"].ToString()),
+                            Action = reader["Action"].ToString(),
                         });
                 }
             }
 
             reader.Close();
-            sqlConnection.Close();
+            _sqlConnection.Close();
             return logs;
         }
 
         public async Task<int> GetTimesIpMadeAction(string ip, UserActionTypes action)
         {
-            sqlConnection.Open();
+            _sqlConnection.Open();
             SqlCommand cmd = new SqlCommand
             {
-                Connection = sqlConnection,
+                Connection = _sqlConnection,
                 CommandType = CommandType.Text,
-                CommandText = "select count(*) as count from AnagramSolver1.dbo.UserLogs where ip = @ip and Action = @action"
+                CommandText = "select count(*) as count from UserLogs where ip = @ip and Action = @action"
 
             };
             cmd.Parameters.Add(new SqlParameter("@ip", ip));
-            cmd.Parameters.Add(new SqlParameter("@searchAction", action.ToString()));
+            cmd.Parameters.Add(new SqlParameter("@action", action.ToString()));
 
             SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
@@ -100,7 +102,7 @@ namespace AnagramSolver.BusinessLogic.Repositories
             }
 
             reader.Close();
-            sqlConnection.Close();
+            _sqlConnection.Close();
 
             return result;
         }
