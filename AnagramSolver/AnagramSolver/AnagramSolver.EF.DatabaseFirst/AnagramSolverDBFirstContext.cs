@@ -19,13 +19,6 @@ namespace AnagramSolver.EF.DatabaseFirst.Data
         public virtual DbSet<UserLogEntity> UserLogs { get; set; }
         public virtual DbSet<WordEntity> Words { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(Settings.ConnectionString);
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

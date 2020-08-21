@@ -5,11 +5,6 @@ namespace AnagramSolver.Tests
 {
     public class GenericsTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void MapIntToGender()
         {
