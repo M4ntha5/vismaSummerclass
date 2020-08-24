@@ -14,10 +14,10 @@ namespace AnagramSolver.SOAP.WebService
         {
             _anagramSolver = anagramSolver;
         }
-        public async Task<List<string>> GetAnagrams(string word)
+        public async Task<IList<string>> GetAnagrams(string word)
         {
             var anagrams = await _anagramSolver.GetAnagrams(word);
-            return (List<string>)anagrams;
+            return anagrams;
         }
     }
 }

@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnagramSolver.SOAP", "Anagr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnagramSolver.IntegrationTests", "AnagramSolver.IntegrationTests\AnagramSolver.IntegrationTests.csproj", "{5613EB51-AE09-4691-9A84-00C816563A6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnagramSolver.SOAP.WebService", "AnagramSolver.SOAP.WebService\AnagramSolver.SOAP.WebService.csproj", "{3FA4725F-0DF0-4080-8489-A00479548097}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnagramSolver.SOAP.WebService", "AnagramSolver.SOAP.WebService\AnagramSolver.SOAP.WebService.csproj", "{3FA4725F-0DF0-4080-8489-A00479548097}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

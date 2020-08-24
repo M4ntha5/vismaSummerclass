@@ -9,6 +9,6 @@ namespace AnagramSolver.SOAP.WebService
     public interface IAnagramService
     {
         [OperationContract]
-        Task<List<string>> GetAnagrams(string word);
+        Task<IList<string>> GetAnagrams(string word);
     }
 }
