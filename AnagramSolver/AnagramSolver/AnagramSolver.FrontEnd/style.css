@@ -1,0 +1,16 @@
+.center {
+    margin: auto;
+}
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+}
+.alignRight {
+    float: right;
+}
+
+h1 {
+    text-align: center;
+}

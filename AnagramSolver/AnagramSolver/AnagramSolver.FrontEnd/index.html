@@ -4,6 +4,7 @@
 		<meta charset="utf-8">
 		<title>Anagram Solver</title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="style.css">
     </head>
 	<body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -18,23 +19,127 @@
                 </div>
             </div>
         </nav>
-        <main id="app"></main>
+        
+        <div >
+            <button class="btn btn-info center" onclick="showSearchPage()">Search</button>
+            <button class="btn btn-info center" onclick="showWordsPage()">Words</button>
+            <button class="btn btn-info center" onclick="showAboutPage()">About</button>
+        </div>
 
+
+        <!-- Search page -->
+        <div class="container pt-5" id="search-page" style="display: none;">
+            <img src="https://www.mandysam.com/img/random.jpg">
+            <form class="pt-3">
+                <div class="form-group col-sm-5 center">
+                    <label for="exampleInputEmail1">Enter search phrase</label>
+                    <input type="text" class="form-control mb-3" id="search-input" maxlength="50" placeholder="labas rytas">
+                    <button class="btn btn-primary center" onclick="searchAnagrams()">Search</button>
+                </div>
+            </form>
+        </div>
+
+
+        <!-- About page  -->
+        <div id="about-page" style="display: none;">
+        </div>
+        
+
+        <!-- Words page  -->
+        <div class="container pt-5" id="words-page" style="display: none;">
+            <button type="button" class="btn btn-secondary mb-3 alignRight" data-toggle="modal" 
+                data-target="#exampleModal">Add new word</button>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Word</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td scope="row">ex word</td>
+                        <td>
+                            <a href="#/words/${word.word}">Details</a> |
+                            <a href="#/words/${word.id}/update">Update</a> |
+                            <a href="#/words/${word.id}/delete">Delete</a>
+                        </td>  
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- add/edit modal-->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Word:</label>
+                                <input type="text" class="form-control" id="word" pattern="[a-zA-Z]+" maxlength="10" >
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Category:</label>
+                                <input type="text" class="form-control" id="category" pattern="[a-zA-Z]+" maxlength="10">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onsubmit="addNewWord()">Send message</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+<!--
+    <div id="visible-div">
+            Visible div
+        </div>
+        <div class="hidden-div" hidden>
+            hidden div
+        </div>  
+
+        <main id="app"></main>
+-->
+        
         <footer v-else class="pt-5">
             <hr class="rgba-white-light" style="margin: 0 15%;">
             
             <div class="text-center py-3">© 2020 Copyright</div>
-       </footer>
+        </footer>
         
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-
-        <script src="js/app.js" charset="utf-8"></script>
+<!--
+        <script src="js/API.js" charset="utf-8"></script>
         <script src="js/router.js" charset="utf-8"></script>
+        <script src="js/app.js" charset="utf-8"></script>
         <script src="js/main.js" charset="utf-8"></script>
-
+-->
 	</body>
 </html>
 
+<script>
+
+function showSearchPage() {
+    var elem = document.getElementById("search-page");
+    elem.style.display === 'none' ? elem.style.display = "block" : elem.style.display = "none";
+}
+
+function showWordsPage() {
+    var elem = document.getElementById("words-page");
+    elem.style.display === 'none' ? elem.style.display = "block" : elem.style.display = "none";
+}
+
+function showAboutPage() {
+    var elem = document.getElementById("about-page");
+    elem.style.display === 'none' ? elem.style.display = "block" : elem.style.display = "none";
+    elem.innerHTML= '<div> <h1>Abuot page</h1> </div>';
+}
+
+</script>
