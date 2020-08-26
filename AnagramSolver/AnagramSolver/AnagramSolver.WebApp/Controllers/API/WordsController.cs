@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AnagramSolver.BusinessLogic.Services;
 using AnagramSolver.Contracts.Interfaces.Services;
 using AnagramSolver.Contracts.Models;
+using AnagramSolver.EF.CodeFirst;
 using AnagramSolver.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,10 +16,12 @@ namespace AnagramSolver.WebApp.Controllers.API
     public class WordsController : Controller
     {
         private readonly IWordService _wordService;
+        private readonly AnagramSolverCodeFirstContext _context;
 
-        public WordsController(IWordService wordService)
+        public WordsController(IWordService wordService, AnagramSolverCodeFirstContext context)
         {
             _wordService = wordService;
+            _context = context;
         }
 
         [HttpGet]
@@ -28,11 +31,37 @@ namespace AnagramSolver.WebApp.Controllers.API
             return Ok(PaginatedList<Anagram>.Create(wordsList, pageNumber ?? 1, pageSize));
         }
 
-        [HttpGet("{word}")]
-        public async Task<IActionResult> Get(string word)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
         {
-            var anagrams = await _wordService.GetWordAnagrams(word);
-            return Ok(anagrams);
+            var word = await _wordService.GetWordById(id);
+            return Ok(word);
+        }
+
+        [HttpPost("insert")]
+        public async Task<IActionResult> Post(string word, string category)
+        {
+            var anagram = new Anagram() { Category = category, Word = word };
+            await _wordService.InsertWord(anagram);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpPut("{id}/update")]
+        public async Task<IActionResult> Update(int id, string word, string category)
+        {
+            var anagram = new Anagram() { Category = category, Word = word };
+            await _wordService.UpdateWord(id, anagram);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("{id}/delete")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _wordService.DeleteWordById(id);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }
