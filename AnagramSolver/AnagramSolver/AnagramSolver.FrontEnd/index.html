@@ -8,24 +8,41 @@
     </head>
 	<body>
              
-        <div >
-            <button class="btn btn-info center" onclick="showSearchPage()">Search</button>
-            <button class="btn btn-info center" onclick="showWordsPage()">Words</button>
-            <button class="btn btn-info center" onclick="showAboutPage()">About</button>
-        </div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#" onclick="showSearchPage()">Anagram Solver</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#" onclick="showSearchPage()">Search<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showWordsPage()">Words</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showAboutPage()">About</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
         <!-- Search page -->
         <div class="container pt-5" id="search-page">
             <img src="https://www.mandysam.com/img/random.jpg">
-            <form class="pt-3">
-                <div class="form-group col-sm-5 center">
-                    <label for="exampleInputEmail1">Enter search phrase</label>
-                    <input type="text" class="form-control mb-3" id="search-input" maxlength="50" placeholder="labas rytas">
-                    <button class="btn btn-primary center" type="sumbit" onclick="searchAnagrams()">Search</button>
+            <form class="pt-3 needs-validation" novalidate onsubmit="searchAnagrams()">
+                <div class="form-group col-sm-6 center">
+                    <label for="search-input" >Enter search phrase</label>
+                    <input type="text" class="form-control mb-3" id="search-input" maxlength="50" placeholder="labas rytas" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div> 
+                    <div class="invalid-feedback">
+                        Search phrase is required and length cannot be more than 50 characters
+                    </div>                 
                 </div>
+                <button type="submit" class="btn btn-primary">Search</button>
             </form>
-            <table id="anagrams-list">
-            </table>
+            <h1 id="anagrams-heading"></h1>
+            <table id="anagrams-list" class="table center"></table>     
         </div>
 
 
@@ -42,10 +59,12 @@
                     <li class="page-item"><a class="page-link" href="#" onclick="nextPage()">Next</a></li>
                 </ul>
             </nav>
-            <button type="button" class="btn btn-secondary mb-3 alignRight" data-toggle="modal" 
-                data-target="#exampleModal">Add new word</button>
+            <div class="row mb-3">
+                <h1 class="center">Words list</h1>
+                <button type="button" class="btn btn-secondary mb-3 alignRight" onclick="openModal()">Add new word</button>        
+            </div>
+            <table class="table center" id="words-table"></table>
             
-            <table class="pt-3" id="words-table"></table>
            <!-- <table class="table">
                 <thead>
                     <tr>
@@ -71,19 +90,31 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <form>
+                        <form class="needs-validation" novalidate"> 
                             <div class="form-group">
                                 <input type="text" class="form-control" id="input-id" value="" hidden>
                             </div>
                             <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">Category:</label>
-                                <input type="text" class="form-control" id="category" pattern="[a-zA-Z]+" maxlength="10"
-                                    placeholder="daiktavardis">
+                                <label for="category" class="col-form-label">Category:</label>
+                                <input type="text" class="form-control" id="category" pattern="[a-zA-Z]+" 
+                                        maxlength="20" placeholder="daiktavardis">
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div> 
+                                <div class="invalid-feedback">
+                                    Category can have only letters and length cannot be more than 20 characters
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">Word:</label>
-                                <input type="text" class="form-control" id="word" pattern="[a-zA-Z]+" maxlength="10" 
-                                    placeholder="sula">
+                                <label for="word" class="col-form-label">Word:</label>
+                                <input type="text" class="form-control" id="word" pattern="[a-zA-Z]+" 
+                                        maxlength="10" placeholder="sula">
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div> 
+                                <div class="invalid-feedback">
+                                    Word can have only letters and length cannot be more than 10 characters
+                                </div>
                             </div>            
                         </form>
                     </div>
@@ -94,17 +125,6 @@
                 </div>
             </div>
         </div>
-
-<!--
-    <div id="visible-div">
-            Visible div
-        </div>
-        <div class="hidden-div" hidden>
-            hidden div
-        </div>  
-
-        <main id="app"></main>
--->
         
         <footer v-else class="pt-5">
             <hr class="rgba-white-light" style="margin: 0 15%;">
@@ -115,204 +135,12 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        <script src="js/wordsApi.js" charset="utf-8"></script>
-        <!--
-        <script src="js/API.js" charset="utf-8"></script>
-        <script src="js/router.js" charset="utf-8"></script>
-        <script src="js/app.js" charset="utf-8"></script>
+        
+        <script src="js/api.js" charset="utf-8"></script>
+        <script src="js/helpers.js" charset="utf-8"></script>
+        <script src="js/controller.js" charset="utf-8"></script>
         <script src="js/main.js" charset="utf-8"></script>
--->
+
 	</body>
 </html>
 
-<script>
-    const API_URL = 'https://localhost:44389/api';
-    const update_word = {};
-
-    function fetchWordsList() {
-        fetch(`${API_URL}/words`)
-            .then(function (response) {
-                return response.json();
-            }) 
-            .then(function (data) {
-                console.log(data);
-                appendData(data);
-            })
-            .catch(function (err) {
-                console.log( err);
-            });
-
-    }
-    function appendData(data) {
-        document.getElementById("words-table").innerHTML = '';
-        for (var i = 0; i < data.length; i++) {
-
-            var table = document.getElementById("words-table");
-
-            var row = table.insertRow(0);
-
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-
-            cell1.innerHTML = data[i].word;
-            cell2.innerHTML = '<a href="#" onclick="getWordById('+ data[i].id + ')">Update</a> | '
-                + '<a href="#" onclick="deleteWordAction(' + data[i].id + ')">Delete</a>';
-        }
-    }
-
-    function fetchAnagrams(word) {
-        fetch(`${API_URL}/anagrams/${word}`)
-            .then(function (response) {
-                return response.json();
-            }) 
-            .then(function (data) {
-                console.log(data);
-                appendAnagrams(data);
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
-
-    }
-
-    function appendAnagrams(data) {
-        document.getElementById("anagrams-list").innerHTML = "";
-        for (var i = 0; i < data.length; i++) {
-
-            var table = document.getElementById("anagrams-list");
-            var row = table.insertRow(0);
-
-            var cell1 = row.insertCell(0);
-
-            cell1.innerHTML = data[i];
-        }
-    }
-
-    function getWordById(id) {
-        var self = this;
-        fetch(`${API_URL}/words/${id}`)
-            .then(function (response) {
-                return response.json();
-            }) 
-            .then(function (data) {
-                console.log(data);
-                updateWordAction(data);
-            })
-            .catch(function (err) {
-                console.log(err);
-            }
-        );
-    }
-
-    function deleteWord(id) {
-        fetch(`${API_URL}/words/${id}/delete`, {
-            method: 'DELETE'
-        })
-        .then(function (data){
-            if(data.status == 200)
-                fetchWordsList();
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    }
-    function insertWord(word, category) {
-        fetch(`${API_URL}/words/insert?word=${word}&category=${category}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json'},
-        })
-        .then(function (data) {
-            //if success close modal and clear modal fields
-            if(data.status == '200'){
-                $('#exampleModal').modal('hide');
-                $('#category').val('');
-                $('#word').val('');
-                $('#input-id').val('');
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    }
-
-    function updateWord(id, word, category) {
-        fetch(`${API_URL}/words/${id}/update?word=${word}&category=${category}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json'},
-        })
-        .then(function (data) {
-            //if success close modal and clear modal fields
-            if(data.status == '200'){
-                $('#exampleModal').modal('hide');
-                $('#category').val('');
-                $('#input-id').val('');
-                $('#word').val('');
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    } 
-
-    function showSearchPage() {
-        //hide other pages
-        document.getElementById("words-page").style.display = "none";
-        document.getElementById("about-page").style.display = "none";
-
-        var elem = document.getElementById("search-page").style.display = "block";
-    }
-    function searchAnagrams() {
-        var phrase = document.getElementById("search-input").value;
-        fetchAnagrams(phrase);
-        $('#search-input').val('');
-    }
-
-    function showWordsPage() {
-        //hide other pages
-        document.getElementById("search-page").style.display = "none";
-        document.getElementById("about-page").style.display = "none";
-
-        var elem = document.getElementById("words-page").style.display = "block";  
-        fetchWordsList();
-    }
-
-    function showAboutPage() {
-        //hide other pages
-        document.getElementById("search-page").style.display = "none";
-        document.getElementById("words-page").style.display = "none";
-
-        var elem = document.getElementById("about-page")
-        elem.style.display = "block";
-        elem.innerHTML= '<div> <h1>Abuot page</h1> </div>';
-    }
-
-    function addNewWord(action){
-        var idValue = document.getElementById("input-id").value;
-
-        if(idValue == ''){
-            var cat = document.getElementById("category").value;
-            var word = document.getElementById("word").value;
-            insertWord(word, cat);      
-        }
-        else if(idValue != ''){
-            var cat = document.getElementById("category").value;
-            var word = document.getElementById("word").value;
-            updateWord(idValue, word, cat);
-        }
-        fetchWordsList();
-    }
-
-    function updateWordAction(data){
-        $('#exampleModal').modal('show');
-        $('#category').val(data.category);
-        $('#word').val(data.word);
-        $('#input-id').val(data.id);
-        console.log("update veikia", data);
-
-    }
-    function deleteWordAction(id){
-        console.log("delete veikia", id);
-        deleteWord(id);      
-    }
-
-</script>
