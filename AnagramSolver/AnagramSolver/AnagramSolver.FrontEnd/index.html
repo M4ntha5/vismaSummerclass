@@ -55,8 +55,12 @@
         <div class="container pt-5" id="words-page" style="display: none;">
             <nav>
                 <ul class="pagination">
-                    <li class="page-item"><a class="page-link" href="#" onclick="prevPage()">Previous</a></li>
-                    <li class="page-item"><a class="page-link" href="#" onclick="nextPage()">Next</a></li>
+                    <li class="page-item">
+                        <button class="btn btn-primary" onclick="prevPage()" id="prevBtn">Previous</button>
+                    </li>
+                    <li class="page-item">
+                        <button class="btn btn-primary"  onclick="nextPage()" id="nextBtn">Next</button>
+                    </li>
                 </ul>
             </nav>
             <div class="row mb-3">

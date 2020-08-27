@@ -1,5 +1,6 @@
 const controller = new Controller();
 const api = new Api();
+var page = 1;
  
 // Example starter JavaScript for disabling form submissions if there are invalid fields
 (function() {
@@ -27,7 +28,7 @@ function showSearchPage() {
     document.getElementById("about-page").style.display = "none";
     //show search page
     document.getElementById("search-page").style.display = "block";
-    
+
     document.getElementById("anagrams-list").innerHTML = '';
     document.getElementById("anagrams-heading").innerHTML = '';
     document.getElementById("search-input").value = '';  
@@ -43,10 +44,20 @@ function showWordsPage() {
     //hide other pages
     document.getElementById("search-page").style.display = "none";
     document.getElementById("about-page").style.display = "none";
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPage = urlParams.get('pagenumber');
+
+    console.log("page", page);
+    if(page < 2)
+        document.getElementById("prevBtn").disabled = true;
+    else if(page > 100)
+        document.getElementById("nextBtn").disabled = true;
+
     //show words page
     document.getElementById("words-page").style.display = "block";  
     //fetch words
-    controller.fetchWords();
+    controller.fetchWords(currentPage ?? 1);
 }
 
 function showAboutPage() {
@@ -77,7 +88,6 @@ function addNewWord(){
 
 async function updateWordAction(id){
     var data = await controller.getWordById(id);
-    console.log("main", data);
 
     $('#exampleModal').modal('show');
     document.getElementById('category').value = data.category;
@@ -85,6 +95,7 @@ async function updateWordAction(id){
     document.getElementById('input-id').value = data.id;
     controller.fetchWords();
 }
+
 function deleteWordAction(id){
     alert("You sure you want to delete this word?")
     console.log("delete veikia", id);
@@ -97,4 +108,23 @@ function openModal(){
     document.getElementById('category').value = '';
     document.getElementById('word').value = '';
     document.getElementById('input-id').value = '';
+}
+
+function prevPage() {  
+    if(page > 1) {
+        document.getElementById("prevBtn").disabled = false;
+        controller.fetchWords(page - 1);
+        page--;
+    }
+}
+
+function nextPage(){
+    if(page < 100) {  
+        document.getElementById("prevBtn").disabled = false;
+        document.getElementById("nextBtn").disabled = false;
+        controller.fetchWords(page + 1);
+        page++;
+        if(page == 100)
+            document.getElementById("nextBtn").disabled = true;
+    }
 }

@@ -9,8 +9,8 @@ class Api {
         return await res.json();
     }
 
-    async fetchWordsList() {
-        const res = await fetch(`${this.API_URL}/words`);
+    async fetchWordsList(pageNumber) {
+        const res = await fetch(`${this.API_URL}/words?pageNumber=${pageNumber}`);
         console.log("fetchWordsList-api", res);
         return await res.json();
     }

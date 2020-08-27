@@ -5,8 +5,8 @@ class Controller {
         this.helpers = new Helpers();
     }
 
-    fetchWords(){
-        this.api.fetchWordsList()
+    fetchWords(pageNumber){
+        this.api.fetchWordsList(pageNumber)
             .then(result => {
                 console.log("fetchWords-controller", result);
                 this.helpers.appendWordsData(result);         
