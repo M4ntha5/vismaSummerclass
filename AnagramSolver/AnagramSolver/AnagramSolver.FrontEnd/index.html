@@ -25,21 +25,22 @@
             </div>
         </nav>
 
+
         <!-- Search page -->
         <div class="container pt-5" id="search-page">
             <img src="https://www.mandysam.com/img/random.jpg">
-            <form class="pt-3 needs-validation" novalidate onsubmit="searchAnagrams()">
+            <form class="pt-3 center-text">
                 <div class="form-group col-sm-6 center">
                     <label for="search-input" >Enter search phrase</label>
-                    <input type="text" class="form-control mb-3" id="search-input" maxlength="50" placeholder="labas rytas" required>
-                    <div class="valid-feedback">
-                        Looks good!
+                    <input type="text" class="form-control mb-3" id="search-input" maxlength="50" placeholder="labas rytas">
+                    <div>
+                        <p id="valid-feedback" style="color: green;"></p>
                     </div> 
-                    <div class="invalid-feedback">
-                        Search phrase is required and length cannot be more than 50 characters
+                    <div >
+                        <p id="invalid-feedback" style="color: red;"></p>
                     </div>                 
                 </div>
-                <button type="submit" class="btn btn-primary">Search</button>
+                <button type="button" class="btn btn-primary" onclick="searchAnagrams()">Search</button>
             </form>
             <h1 id="anagrams-heading"></h1>
             <table id="anagrams-list" class="table center"></table>     
@@ -68,25 +69,6 @@
                 <button type="button" class="btn btn-secondary mb-3 alignRight" onclick="openModal()">Add new word</button>        
             </div>
             <table class="table center" id="words-table"></table>
-            
-           <!-- <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Word</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td scope="row">{{word}}</td>
-                        <td>
-                            <a href="#/words/${word.id}/update">Update</a> |
-                            <a href="#/words/${word.id}/delete">Delete</a>
-                        </td>  
-                    </tr>
-                </tbody>
-            </table>-->
-
         </div>
 
         <!-- add/edit modal-->
@@ -94,30 +76,28 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <form class="needs-validation" novalidate"> 
+                        <form> 
                             <div class="form-group">
                                 <input type="text" class="form-control" id="input-id" value="" hidden>
                             </div>
                             <div class="form-group">
-                                <label for="category" class="col-form-label">Category:</label>
-                                <input type="text" class="form-control" id="category" pattern="[a-zA-Z]+" 
-                                        maxlength="20" placeholder="daiktavardis">
-                                <div class="valid-feedback">
-                                    Looks good!
+                                <label for="category" class="col-form-label" style="text-align: left;">Category:</label>
+                                <input type="text" class="form-control" id="category" placeholder="daiktavardis">
+                                <div>
+                                    <p id="modal-cat-valid-feedback" style="color: green;"></p>
                                 </div> 
-                                <div class="invalid-feedback">
-                                    Category can have only letters and length cannot be more than 20 characters
+                                <div >
+                                    <p id="modal-cat-invalid-feedback" style="color: red;"></p>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="word" class="col-form-label">Word:</label>
-                                <input type="text" class="form-control" id="word" pattern="[a-zA-Z]+" 
-                                        maxlength="10" placeholder="sula">
-                                <div class="valid-feedback">
-                                    Looks good!
+                                <input type="text" class="form-control" id="word" placeholder="sula">
+                                <div>
+                                    <p id="modal-word-valid-feedback" style="color: green;"></p>
                                 </div> 
-                                <div class="invalid-feedback">
-                                    Word can have only letters and length cannot be more than 10 characters
+                                <div >
+                                    <p id="modal-word-invalid-feedback" style="color: red;"></p>
                                 </div>
                             </div>            
                         </form>
